@@ -86,11 +86,11 @@ gulp.task('build', () => {
         .pipe(debug())
         .pipe(gulpif(
             (file) => file.extname == '.js',
-            gulp.dest('../BackEnd/app/templates/js')
+            gulp.dest('../BackEnd/app/static/js')
         ))
         .pipe(gulpif(
             (file) => file.extname == '.css',
-            gulp.dest('../BackEnd/app/templates/css')
+            gulp.dest('../BackEnd/app/static/css')
         ))
         .pipe(gulpif(
             (file) => file.extname == '.html',

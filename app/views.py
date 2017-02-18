@@ -27,10 +27,9 @@ def login_page():
 
 @app.route('/logout')
 def logout():
-    if IsInSession():
-        session.pop('login', None)
-        return redirect(url_for('index'))
-    return redirect('/login')    
+    if not(IsInSession()): return redirect('/login')
+    session.pop('login', None)
+    return redirect(url_for('index'))    
 
 @app.route('/')
 def index():
@@ -38,25 +37,24 @@ def index():
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
-    if IsInSession():
-        return 'Chat page ' + str(chat_id)
-    return redirect('/login')
+    if not(IsInSession()): return redirect('/login')
+    return 'Chat page ' + str(chat_id)
 
 
 @app.route('/send_message', methods=['GET', 'POST'])
 def send_message():
-    if IsInSession():
-        try:
+    if not(IsInSession()): return redirect('/login')
+    try:
             chat_id = int(request.args['chat'])
             chats[chat_id].Send_message(request.args['message'])
-        except BaseException:
-            return 'Error'
-        return 'OK'
-    return redirect('/login')
+    except BaseException:
+        return 'Error'
+    return 'OK'
 
 
 @app.route('/get_messages', methods=['GET', 'POST'])
 def get_messages():
+    if not(IsInSession()): return redirect('/login')
     try:
         chat_id = int(request.args['chat'])
         index = int(request.args['index'])

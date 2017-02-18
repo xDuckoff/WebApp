@@ -7,41 +7,52 @@ from forms import LoginForm, BeakerSessionInterface
 from flask.sessions import SessionInterface
 from beaker.middleware import SessionMiddleware
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+login = 'login'
 
+def IsInSession():
+    if login in session:
+        return True
+    return False;
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
     form = LoginForm()
     if form.validate_on_submit():
         #if request.method == 'POST':
-        make_session(request.form)
+        make_session(form.login.data)
         return redirect('/chat/1')
-    if 'login' in session :
+    if IsInSession():
         return redirect('/chat/1')
     return render_template('login.html', form=form)
 
 @app.route('/logout')
 def logout():
-    session.pop('login', None)
-    return redirect(url_for('index'))
+    if IsInSession():
+        session.pop('login', None)
+        return redirect(url_for('index'))
+    return redirect('/login')    
 
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
-    return 'Chat page ' + str(chat_id)
+    if IsInSession():
+        return 'Chat page ' + str(chat_id)
+    return redirect('/login')
 
 
 @app.route('/send_message', methods=['GET', 'POST'])
 def send_message():
-    try:
-        chat_id = int(request.args['chat'])
-        chats[chat_id].Send_message(request.args['message'])
-    except BaseException:
-        return 'Error'
-    return 'OK'
+    if IsInSession():
+        try:
+            chat_id = int(request.args['chat'])
+            chats[chat_id].Send_message(request.args['message'])
+        except BaseException:
+            return 'Error'
+        return 'OK'
+    return redirect('/login')
 
 
 @app.route('/get_messages', methods=['GET', 'POST'])

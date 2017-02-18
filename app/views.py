@@ -12,17 +12,18 @@ login = 'login'
 def IsInSession():
     if login in session:
         return True
-    return False;
+    return False
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
     form = LoginForm()
+    numberofchat = request.args.get('chat','')
+    link = (numberofchat == '')* '/' + (not numberofchat == '') * ('chat/'+numberofchat)
     if form.validate_on_submit():
-        #if request.method == 'POST':
         make_session(form.login.data)
-        return redirect('/chat/1')
+        return redirect(link)
     if IsInSession():
-        return redirect('/chat/1')
+        return redirect(link)
     return render_template('login.html', form=form)
 
 @app.route('/logout')
@@ -37,8 +38,8 @@ def index():
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
-    if not(IsInSession()): return redirect('/login')
-    return 'Chat page ' + str(chat_id)
+    if not(IsInSession()): return redirect('/login?chat='+str(chat_id))
+    return 'Chat page ' + str(chat_id) + '<br>' + session['login']
 
 
 @app.route('/send_message', methods=['GET', 'POST'])

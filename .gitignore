@@ -62,4 +62,6 @@ fabric.properties
 # .idea/misc.xml
 # *.ipr
 
+*.pyc
+
 # End of https://www.gitignore.io/api/pycharm,dreamweaver

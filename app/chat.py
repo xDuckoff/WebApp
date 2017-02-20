@@ -1,5 +1,5 @@
 class Chat:
     def __init__(self):
-        messages = []
-        mods = []
-        user_sessions = []
+        self.messages = []
+        self.mods = []
+        self.user_sessions = []

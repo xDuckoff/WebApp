@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template
+from flask import render_template, redirect
 from app import app
 from forms import LoginForm
 
 
 @app.route('/')
 def index():
-    return render_template('index.html', title=u'Главная')
+    return render_template('index.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
-    LForm = LoginForm()
-    return render_template('login.html', title=u'Вход', form=LForm)
+def login_page():
+    form = LoginForm()
+    if form.validate_on_submit():
+        return redirect('/chat/1')
+    return render_template('login.html', form=form)
 
 
-@app.route('/my', methods=['GET', 'POST'])
-def my():
-    LForm = LoginForm()
-    return render_template('my.html', title=u'Личный кабинет', form=LForm)
+@app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
+def chat_page(chat_id):
+    return 'Chat page ' + str(chat_id)

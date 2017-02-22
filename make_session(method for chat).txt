@@ -1,0 +1,7 @@
+def make_session(self, login):
+    s = ''
+    id += 1
+    s = str(id) + '.1'
+    session[s] = login
+    s = str(id) + '.2'
+    session[s] = -1

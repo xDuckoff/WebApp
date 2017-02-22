@@ -1,8 +1,5 @@
 def make_session(self, login):
-    s = ''
-    id = len(session) / 2 + 1
-    s = str(id) + '.1'
-    session[s] = login
-    s = str(id) + '.2'
-    session[s] = -1
+    session['login'] = login
+    session['last'] = -1
+    return session
 

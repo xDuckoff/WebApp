@@ -36,8 +36,7 @@ def chat_page(chat_id):
 def send_message():
     try:
         chat_id = int(request.args['chat'])
-        message = [request.args['login'], request.args['message']]
-        chats[chat_id].messages.append(message)
+        chats[chat_id].Send_message(request.args['message'])
     except BaseException:
         return 'Error'
     return 'OK'

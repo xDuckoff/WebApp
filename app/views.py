@@ -2,8 +2,9 @@
 
 from flask import render_template, redirect, request, session, url_for, escape, request, Flask
 from app import app, chats
+from chat import make_session
 from forms import LoginForm
-from beaker.middleware import SessionMiddleware
+#from beaker.middleware import SessionMiddleware
 
 @app.route('/')
 def index():
@@ -15,15 +16,13 @@ def login_page():
     form = LoginForm()
     if form.validate_on_submit():
         #if request.method == 'POST':
-        session['username'] = request.form
-        return redirect('/chat/1')
-    if 'username' in session :
+        make_session(request.form)
         return redirect('/chat/1')
     return render_template('login.html', form=form)
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    session.pop('login', None)
     return redirect(url_for('index'))
 
 
@@ -47,7 +46,7 @@ def get_messages():
     try:
         chat_id = int(request.args['chat'])
         index = int(request.args['index'])
-        return '<br>'.join(map(lambda x: x[0] + ' ' + x[1], chats[chat_id].messages[index:]))
+        return '<br>'.join(map(lambda x: x[0] + ' ' + x[1], chats[chat_id].messages[index:].text))
     except BaseException:
         return 'Error'
 

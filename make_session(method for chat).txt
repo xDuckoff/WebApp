@@ -1,5 +1,0 @@
-def make_session(self, login):
-    session['login'] = login
-    session['last'] = -1
-    return session
-

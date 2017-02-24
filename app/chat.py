@@ -9,6 +9,6 @@ class Chat:
         self.messages.append( Message(len(self.messages), text, session['login']) )
 
 
-def make_session(self, login):
+def make_session(login):
     session['login'] = login
     session['last'] = -1

@@ -14,7 +14,7 @@
 
 		<script type="text/javascript">
 			function add_message(author, message) {
-				var text = "<b>" + author + '</b> <br><div class="well well-sm" style="word-wrap: break-word;">' + message + "</div>";
+				var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + author + '</b><br>'+ message + "</div>";
 				$("#chat-panel").append(text);
 			}
 
@@ -80,19 +80,22 @@
 						</div>
 					</div>
 					
-
-					<label for="message-input">Message</label>
-					<div class="row">
-						<div class="col-sm-10">
-	    					<input type="text" class="form-control" id="message-input" placeholder="Write here">
-    					</div>
-    					<div class="col-sm-2">
-							<button type="submit" class="btn btn-default" id="send-btn">Send</button>
-						</div>
-					</div>
+					<!-- <div class="panel panel-default">
+						<div class="panel-body"> -->
+							<label for="message-input" class="sr-only">Message</label>
+							<div class="row">
+								<div class="col-sm-10" >
+			    					<input type="text" class="form-control" id="message-input" placeholder="Write here">
+		    					</div>
+		    					<div class="col-sm-2" style="padding-left: 0;">
+									<button type="submit" class="btn btn-default btn-block" id="send-btn">Send</button>
+								</div>
+							</div>
+					<!--	</div>
+					</div> -->
 				</div>
 				<div class="col-md-6" id="column">
-					<textarea class="form-control" id="code-editor" rows="3" style="resize: vertical;"></textarea>
+					<textarea class="form-control" id="code-editor" rows="3" style="resize: vertical; min-height: 500; max-height: 500;"></textarea>
 				</div>
 			</div>
 		</div>

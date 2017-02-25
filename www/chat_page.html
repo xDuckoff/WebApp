@@ -10,11 +10,32 @@
 				$("#chat-panel").append(text);
 			}
 
+			function get_scrollHeight(element) {
+				var pr = element.scrollTop();
+				element.scrollTop(element.get(0).scrollHeight);
+				var res = element.scrollTop();
+				element.scrollTop(pr);
+				return res;
+			}
+
 			$(function () {
-			$("#send-btn").click(function() {
-  				add_message("TEst_Name", $("#message-input").val());
+				$("#send-btn").click(function() {
+					var t = false;
+					if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
+						t = true;
+	  				add_message("TEst_Name", $("#message-input").val());
+	  				$("#message-input").val('');
+	  				if (t)
+	  					$('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);    
+				});
+				$("#message-input").keypress(function(e) {
+				    if(e.which == 13) {
+				        $("#send-btn").click();
+				    }
+				});
 			});
-			});
+
+			
 		</script>
 	</head>
 	<body ><!--style ="background-color: #2ba6cb;"-->
@@ -27,7 +48,7 @@
 			<div class="row">
 				<div class="col-md-6">
 					<div class="panel panel-default">
-						<div class="panel-body" id="chat-panel" style="max-height: 500;overflow-y: scroll;">
+						<div class="panel-body" id="chat-panel" style="min-height: 500; max-height: 500;overflow-y: scroll;">
 							<b>Author</b> <br>
 							<div class="well well-sm" style="word-wrap: break-word;">
 								Text

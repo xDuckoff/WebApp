@@ -63,5 +63,6 @@ fabric.properties
 # *.ipr
 
 *.pyc
+cache/
 
 # End of https://www.gitignore.io/api/pycharm,dreamweaver

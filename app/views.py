@@ -38,7 +38,7 @@ def index():
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
     if not(IsInSession()): return redirect('/login')
-    return 'Chat page ' + str(chat_id)
+    return render_template('chat.html')
 
 
 @app.route('/send_message', methods=['GET', 'POST'])

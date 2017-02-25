@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, session, url_for, escape, request, Flask
+from flask import render_template, redirect, request
 from app import app, chats
-from forms import LoginForm, BeakerSessionInterface
-from flask.sessions import SessionInterface
-from beaker.middleware import SessionMiddleware
+from forms import LoginForm
+
 
 @app.route('/')
 def index():
@@ -15,18 +14,8 @@ def index():
 def login_page():
     form = LoginForm()
     if form.validate_on_submit():
-        #if request.method == 'POST':
-        session['login'] = request.form
-        print session
-        return redirect('/chat/1')
-    if 'login' in session :
         return redirect('/chat/1')
     return render_template('login.html', form=form)
-
-@app.route('/logout')
-def logout():
-    session.pop('username', None)
-    return redirect(url_for('index'))
 
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
@@ -53,5 +42,3 @@ def get_messages():
         return '<br>'.join(map(lambda x: x[0] + ' ' + x[1], chats[chat_id].messages[index:]))
     except BaseException:
         return 'Error'
-
-app.secret_key = '~\xe1\xa4EsQ\xf1\xf6\xfb\x92\x1e\x85\xfb\x9b\x07K\xef\x9cL`\x0e"\x07\xa8'

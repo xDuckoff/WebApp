@@ -13,7 +13,9 @@
 		<script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
 
 		<script type="text/javascript">
-			function add_message(author, message) {
+			var last_index;
+
+			function append_to_textarea(author, message) {
 				var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + author + '</b><br>'+ message + "</div>";
 				$("#chat-panel").append(text);
 			}
@@ -26,16 +28,38 @@
 				return res;
 			}
 
-			$(function () {
-				$("#send-btn").click(function() {
-					var t = false;
-					if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
-						t = true;
-	  				add_message("TEst_Name", $("#message-input").val());
-	  				$("#message-input").val('');
-	  				if (t)
-	  					$('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);    
+			function add_message(author, message) {
+				var t = false;
+				if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
+					t = true;
+  				append_to_textarea(author, message);
+  				if (t)
+  					$('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);    
+			}
+
+			function get_messages() {
+				$.get( "/get_messages?chat=0&index=" + last_index, function( data ) {
+					var messages = $.parseJSON(data);
+					for (let i = 0; i < messages.length; i++) {
+						add_message(messages[i].author, messages[i].message);
+					}
+					last_index+=messages.length;
 				});
+			}
+
+			$(function () {
+				last_index = 0;
+				var timerId = setInterval(get_messages, 1000);
+
+				$("#send-btn").click(function() {
+					//add_message("test_name", $("#message-input").val());
+					$.get( "/send_message?chat=0&message=" + $("#message-input").val(), function( data ) {
+					  //alert(data);
+					});
+					$("#message-input").val('');
+					get_messages();
+				});
+
 				$("#message-input").keypress(function(e) {
 				    if(e.which == 13) {
 				        $("#send-btn").click();
@@ -53,6 +77,7 @@
 			        value: "print('Hello World!')"
 			    });
 
+				get_messages();
 				// var myCodeMirror = CodeMirror($('#column').get(0), {
 				//   value: "print('Hello world!')\n",
 				//   mode:  "python"
@@ -73,10 +98,10 @@
 				<div class="col-md-6">
 					<div class="panel panel-default">
 						<div class="panel-body" id="chat-panel" style="min-height: 500; max-height: 500;overflow-y: scroll;">
-							<b>Author</b> <br>
+							<!-- <b>Author</b> <br>
 							<div class="well well-sm" style="word-wrap: break-word;">
 								Text
-							</div>
+							</div> -->
 						</div>
 					</div>
 					

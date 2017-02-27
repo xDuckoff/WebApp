@@ -6,6 +6,7 @@ from chat import make_session
 from forms import LoginForm, BeakerSessionInterface
 from flask.sessions import SessionInterface
 from beaker.middleware import SessionMiddleware
+from json import dumps
 
 login = 'login'
 
@@ -45,8 +46,9 @@ def chat_page(chat_id):
 def send_message():
     if not(IsInSession()): return redirect('/login')
     try:
-            chat_id = int(request.args['chat'])
-            chats[chat_id].Send_message(request.args['message'])
+        chat_id = int(request.args['chat'])
+        if len(request.args['message']) > 0:
+            chats[chat_id].send_message(request.args['message'])
     except BaseException:
         return 'Error'
     return 'OK'
@@ -58,7 +60,7 @@ def get_messages():
     try:
         chat_id = int(request.args['chat'])
         index = int(request.args['index'])
-        return '<br>'.join(map(lambda x: x[0] + ' ' + x[1], chats[chat_id].messages[index:].text))
+        return dumps(chats[chat_id].get_messages(index))
     except BaseException:
         return 'Error'
 

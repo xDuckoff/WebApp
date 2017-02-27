@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request
+from flask import render_template, redirect, request, session, url_for, escape, request, Flask
 from app import app, chats
-from forms import LoginForm
-
+from chat import make_session
+from forms import LoginForm, BeakerSessionInterface
+from flask.sessions import SessionInterface
+from beaker.middleware import SessionMiddleware
+from json import dumps
 
 login = 'login'
 
@@ -15,12 +18,13 @@ def IsInSession():
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
     form = LoginForm()
+    numberofchat = request.args.get('chat','')
+    link = (numberofchat == '')* '/' + (not numberofchat == '') * ('chat/'+numberofchat)
     if form.validate_on_submit():
-        #if request.method == 'POST':
         make_session(form.login.data)
-        return redirect('/chat/1')
+        return redirect(link)
     if IsInSession():
-        return redirect('/chat/1')
+        return redirect(link)
     return render_template('login.html', form=form)
 
 @app.route('/logout')
@@ -60,3 +64,5 @@ def get_messages():
         return dumps(chats[chat_id].get_messages(index))
     except BaseException:
         return 'Error'
+
+app.secret_key = '~\xe1\xa4EsQ\xf1\xf6\xfb\x92\x1e\x85\xfb\x9b\x07K\xef\x9cL`\x0e"\x07\xa8'

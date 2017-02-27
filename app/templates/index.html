@@ -1,26 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>EXAMPLE</title>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-</head>
-
-<body>
-	<div class="container" style="border: 1px solid red;">
-		<div class="row">
-			<div class="col-md-1" style="border: 1px solid green;">
-				1
+<html>
+	<HEAD>
+		<title> NAME_NAME_NAME </title>
+		<meta charset = "UTF-8">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	</HEAD>
+	<body>
+		<div class = "container">
+			<div class = "row" style="height: 30px;">
 			</div>
-			<div class="col-md-2 col-md-offset-4" style="border: 1px solid green;">
-				4
+			<div class = "row" style="height: 230px;">
+				<center>
+					<img src="{{ url_for('static', filename='img/yandex1.jpeg') }}" alt="yandex_img" class="img-thumbnail">
+				</center>
 			</div>
-			<div class="col-md-1 col-md-offset-4" style="border: 1px solid green;">
-				2
+			<div class = "row">
+				<center>
+					 <h3><b>Добро пожаловать на лучший чат для помощи разработчикам в мире!!!</b></h3>
+				</center>
 			</div>
-			<div class="col-md-12" style="border: 1px solid green;">
-				3
+			<div class = "row" style="height: 30px;">
+			</div>
+			<div class = "row">
+				<center>
+					<button type="button" class="btn btn-lg btn-primary" ><b>   Войти   </b></button>
+				</center>
+				<center>
+					<button type="button" class="btn btn-link">Регистрация</button>
+				</center>
 			</div>
 		</div>
-	</div>
-</body>
-</html>
+	</body>

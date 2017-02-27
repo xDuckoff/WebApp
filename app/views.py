@@ -18,12 +18,13 @@ def IsInSession():
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
     form = LoginForm()
+    numberofchat = request.args.get('chat','')
+    link = (numberofchat == '')* '/' + (not numberofchat == '') * ('chat/'+numberofchat)
     if form.validate_on_submit():
-        #if request.method == 'POST':
         make_session(form.login.data)
-        return redirect('/chat/1')
+        return redirect(link)
     if IsInSession():
-        return redirect('/chat/1')
+        return redirect(link)
     return render_template('login.html', form=form)
 
 @app.route('/logout')

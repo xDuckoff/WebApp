@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, session, url_for, escape, request, Flask
+from flask import render_template, redirect, request
 from app import app, chats
-from chat import make_session
-from forms import LoginForm, BeakerSessionInterface
-from flask.sessions import SessionInterface
-from beaker.middleware import SessionMiddleware
-from json import dumps
+from forms import LoginForm
+
 
 login = 'login'
 
@@ -63,5 +60,3 @@ def get_messages():
         return dumps(chats[chat_id].get_messages(index))
     except BaseException:
         return 'Error'
-
-app.secret_key = '~\xe1\xa4EsQ\xf1\xf6\xfb\x92\x1e\x85\xfb\x9b\x07K\xef\x9cL`\x0e"\x07\xa8'

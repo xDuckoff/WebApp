@@ -2,7 +2,7 @@
 
 from flask import render_template, redirect, request, session, url_for, escape, request, Flask
 from app import app, chats
-from chat import make_session
+from chat import Chat,make_session
 from forms import LoginForm, BeakerSessionInterface
 from flask.sessions import SessionInterface
 from beaker.middleware import SessionMiddleware
@@ -42,6 +42,10 @@ def chat_page(chat_id):
     if not(IsInSession()): return redirect('/login?chat=' + str(chat_id))
     return render_template('chat.html')
 
+@app.route('/create_chat')
+def create_chat():
+    chats.append(Chat())
+    return redirect('/chat/'+str(len(chats)))
 
 @app.route('/send_message', methods=['GET', 'POST'])
 def send_message():

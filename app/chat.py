@@ -12,7 +12,6 @@ class Chat:
         Chat.ids += 1
 
     def send_message(self, text):
-        print 'msg_add'
         db.session.add(Message(text, session['login'], self.id))
         db.session.commit()
 
@@ -23,4 +22,3 @@ class Chat:
 def make_session(login):
     session['login'] = login
     session['last'] = -1
-    

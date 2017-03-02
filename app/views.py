@@ -43,8 +43,11 @@ def index():
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
-    if not(IsInSession()): return redirect('/login?chat=' + str(chat_id))
-    return render_template('chat.html')
+    if not(IsInSession()):
+        return redirect('/login?chat=' + str(chat_id))
+    if chat_id < len(chats):
+        return render_template('chat.html')
+    return 'Not Found', 404
 
 @app.route('/create_chat')
 def create_chat():

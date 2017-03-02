@@ -1,10 +1,12 @@
 from flask import Flask
-from chat import Chat
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config.from_object('config')
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-chats = [Chat()]
+chats = []
 
-from app import views
-
+import views

@@ -1,22 +1,26 @@
 from flask import session
 from message import Message
+from app import db
+
+
 class Chat:
+    ids = 0
+
     def __init__(self):
-        self.messages = []
         self.mods = []
-        
+        self.id = Chat.ids
+        Chat.ids += 1
+
     def send_message(self, text):
-        self.messages.append( Message(len(self.messages), text, session['login']) )
+        print 'msg_add'
+        db.session.add(Message(text, session['login'], self.id))
+        db.session.commit()
 
     def get_messages(self, index):
-    	if index >= len(self.messages):
-    		return []
-    	res = []
-    	for msg in self.messages[index:]:
-    		res.append({'author': msg.author, 'message': msg.text})
-    	return res
+        return map(lambda x: {"author": x.author.encode(), "message": x.content.encode()}, Message.query.filter_by(chat=self.id))[index:]
 
 
 def make_session(login):
     session['login'] = login
     session['last'] = -1
+    

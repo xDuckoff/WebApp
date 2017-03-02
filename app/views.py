@@ -48,6 +48,10 @@ def chat_page(chat_id):
     if not(IsInSession()): return redirect('/login?chat=' + str(chat_id))
     return render_template('chat.html')
 
+@app.route('/create_chat')
+def create_chat():
+    chats.append(Chat())
+    return redirect('/chat/'+str(len(chats)))
 
 @app.route('/send_message', methods=['GET', 'POST'])
 def send_message():

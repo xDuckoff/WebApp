@@ -9,8 +9,6 @@ from chat import Chat
 
 login = 'login'
 
-chats.append(Chat())
-
 
 def IsInSession():
     if login in session:

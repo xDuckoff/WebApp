@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+</head>
+
+<body>
+	<form class="form-inline" role="form">
+        <div class="form-group">
+            <label class="sr-only" for="exampleInputEmail2">Почта</label>
+            <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email">
+        </div>
+      <div class="form-group">
+            <label class="sr-only" for="exampleInputPassword2">Пароль</label>
+            <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+      </div>
+      <div class="checkbox">
+            <label>
+                <input type="checkbox"> Запомнить меня
+            </label>
+      </div>
+        <button type="submit" class="btn btn-default">Войти</button>
+    </form>
+
+</body>
+</html>

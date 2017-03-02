@@ -52,7 +52,7 @@ def chat_page(chat_id):
 @app.route('/create_chat')
 def create_chat():
     chats.append(Chat())
-    return redirect('/chat/'+str(len(chats)))
+    return redirect('/chat/'+str(len(chats)-1))
 
 @app.route('/send_message', methods=['GET', 'POST'])
 def send_message():

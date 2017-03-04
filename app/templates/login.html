@@ -10,7 +10,7 @@
 
 		<style>
 			.bg {
-			    background: url_for('static', filename='img/backgrwk.png') repeat-y #fc0;
+			    background: url("{{ url_for('static', filename='img/backgrwk.png')}}") repeat-y #fc0;
 			    -moz-background-size: 100%; /* Firefox 3.6+ */
 			    -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
 			    -o-background-size: 100%; /* Opera 9.6+ */
@@ -45,7 +45,7 @@
 
 			<div class = "row" style="height: 50px;">
 				<center>
-					<img src="{{url_for('static', filename='img\yandexw2.png')}}" alt="yandex2_img" class="img-responsive">
+					<img src="{{url_for('static', filename='img/yandexw2.png')}}" alt="yandex2_img" class="img-responsive">
 				</center>
 			</div>			
 			<div class = "row">

@@ -40,7 +40,7 @@
 			function get_messages() {
 				$.get( "/get_messages?chat=0&index=" + last_index, function( data ) {
 					var messages = $.parseJSON(data);
-					for (let i = 0; i < messages.length; i++) {
+					for (var i = 0; i < messages.length; i++) {
 						add_message(messages[i].author, messages[i].message);
 					}
 					last_index+=messages.length;

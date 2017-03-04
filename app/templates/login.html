@@ -1,25 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>Login</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-</head>
+﻿<html>
+	
+	<HEAD>
+		
+		<title> NAME_NAME_NAME </title>
+		
+		<meta charset = "UTF-8">
+		
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 
-<body>
-    <div class="container">
-        <div class = "row">
-            <div class = "col-md-6 col-md-offset-3">
-                <form method = "POST" action = "">
-                    {{ form.hidden_tag() }}
-                    <div class="form-group">
-                        <label>Логин</label>
-                        <input type="text" class="form-control" placeholder="Логин" name="login">
-                    </div>
-                    <button type="submit" class="btn btn-default">Вход</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+		<style>
+			.bg {
+			    background: url_for('static', filename='img/backgrwk.png') repeat-y #fc0;
+			    -moz-background-size: 100%; /* Firefox 3.6+ */
+			    -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
+			    -o-background-size: 100%; /* Opera 9.6+ */
+			    background-size: 100%;
+			}
+		</style>
+	
+	</HEAD>
+	
+	<body class = "bg">
+		
+
+		<div class = "container">
+			
+			<div class = "row" style="height: 30px;">
+			</div>			
+			<div class = "row" style="height: 200px;">
+
+			</div>
+
+			<div class = "row">
+
+				<center>
+
+					<h3><b>Добро пожаловать на лучший в мире чат</b></h3>
+
+ 					<h3><b>для помощи разработчикам!!!</b></h3>
+
+				</center>
+
+			</div>
+
+			<div class = "row" style="height: 50px;">
+				<center>
+					<img src="{{url_for('static', filename='img\yandexw2.png')}}" alt="yandex2_img" class="img-responsive">
+				</center>
+			</div>			
+			<div class = "row">
+
+				<div class="col-md-4 col-md-offset-5">
+					<form role="form">
+						<div class="form-group">
+    							<label for="text">Name</label>
+    							<input type="text" class="form-control" id="exampleInputEmail1" placeholder="Name">
+  						</div>
+  						<div class="form-group">
+    							<label for="text">Username</label>
+    							<input type="text" class="form-control" id="exampleInputEmail1" placeholder="Username">
+  						</div>
+  						<div class="form-group">
+    							<label for="text">Email</label>
+    							<input type="text" class="form-control" id="exampleInputPassword1" placeholder="Email">
+  						</div>
+						<div class="form-group">
+    							<label for="Password">Password</label>
+    							<input type="Password" class="form-control" id="exampleInputEmail1" placeholder="Password">
+  						</div>
+  						<div class="form-group">
+    							<label for="Password">Сonfirm password</label>
+    							<input type="Password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+  						</div>
+						<center>
+
+							<button type="button" class="btn btn-lg btn-primary"><b>Зарегистрироваться</b></button>
+
+						</center>
+						<center>
+
+						<a href="Start_page2.html" class="btn btn-link">Войти</a>
+					</center>
+					</form>
+				</div>
+			</div>
+
+		</div>
+
+	</body>

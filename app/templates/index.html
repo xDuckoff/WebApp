@@ -1,32 +1,76 @@
-<html>
+﻿<html>
+	
 	<HEAD>
+		
 		<title> NAME_NAME_NAME </title>
+		
 		<meta charset = "UTF-8">
+		
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+		<style>
+			.bg {
+				background: url_for('static', filename='img/backgrwk.png') repeat-y #fc0;
+			    -moz-background-size: 100%; /* Firefox 3.6+ */
+			    -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
+			    -o-background-size: 100%; /* Opera 9.6+ */
+			    background-size: 100%;
+			}
+		</style>
 	</HEAD>
-	<body>
+	
+	<body class = "bg">
+	
 		<div class = "container">
+	
 			<div class = "row" style="height: 30px;">
 			</div>
-			<div class = "row" style="height: 230px;">
+			<div class = "row" style="height: 200px;">
+
+			</div>
+
+			<div class = "row">
+
 				<center>
-					<img src="{{ url_for('static', filename='img/yandex1.jpeg') }}" alt="yandex_img" class="img-thumbnail">
+
+					<h3><b>Добро пожаловать на лучший в мире чат</b></h3>
+
+ 					<h3><b>для помощи разработчикам!!!</b></h3>
+
+				</center>
+
+			</div>
+
+			<div class = "row" style="height: 70px;">
+				<center>
+					<img src= "{{url_for('static', filename='images\yandexw.png') }}" alt="yandex_img" class="img-responsive">
 				</center>
 			</div>
 			<div class = "row">
-				<center>
-					 <h3><b>Добро пожаловать на лучший чат для помощи разработчикам в мире!!!</b></h3>
-				</center>
-			</div>
-			<div class = "row" style="height: 30px;">
-			</div>
-			<div class = "row">
-				<center>
-					<button type="button" class="btn btn-lg btn-primary" ><b>   Войти   </b></button>
-				</center>
-				<center>
-					<button type="button" class="btn btn-link">Регистрация</button>
-				</center>
+				<div class="col-md-4 col-md-offset-5">
+					<form role="form">
+  						<div class="form-group">
+    							<label for="Email">Username or Email</label>
+    							<input type="Email" class="form-control" id="exampleInputEmail1" placeholder="Username or Email">
+  						</div>
+  						<div class="form-group">
+    							<label for="Password">Password</label>
+    							<input type="Password" class="form-control" id="exampleInputEmail1" placeholder="Password">
+  						</div>
+						<center>
+
+							<button type="button" class="btn btn-lg btn-primary"><b>Войти</b></button>
+
+						</center>
+					</form>			
+					<center>
+
+						<a href="Register2.html" class="btn btn-link">Регистрация</a>
+					</center>
+
+				</div>
+
 			</div>
 		</div>
+
 	</body>

@@ -3,3 +3,4 @@
 cache/
 venv/
 config.py
+*.sqlite

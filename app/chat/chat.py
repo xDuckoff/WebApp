@@ -1,5 +1,5 @@
 from flask import session
-from message import Message
+from models import Message
 from app import db
 
 
@@ -17,8 +17,3 @@ class Chat:
 
     def get_messages(self, index):
         return map(lambda x: {"author": x.author, "message": x.content}, Message.query.filter_by(chat=self.id))[index:]
-
-
-def make_session(login):
-    session['login'] = login
-    session['last'] = -1

@@ -20,3 +20,8 @@ class BeakerSessionInterface(SessionInterface):
 
     def save_session(self, app, session, response):
         session.save()
+
+
+def make_session(login):
+    session['login'] = login
+    session['last'] = -1

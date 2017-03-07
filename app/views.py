@@ -61,12 +61,12 @@ def send_message():
     chat_id = int(request.args['chat'])
     if len(request.args['message']) > 0:
         chats[chat_id].send_message(request.args['message'])
+    return 'OK'
 
 
 @app.route('/get_messages', methods=['GET', 'POST'])
 def get_messages():
     if not(IsInSession()):
-        print 'redirect'
         return redirect('/login')
     chat_id = int(request.args['chat'])
     index = int(request.args['index'])

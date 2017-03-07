@@ -16,7 +16,7 @@ class Chat:
         db.session.commit()
 
     def get_messages(self, index):
-        return map(lambda x: {"author": x.author.encode(), "message": x.content.encode()}, Message.query.filter_by(chat=self.id))[index:]
+        return map(lambda x: {"author": x.author, "message": x.content}, Message.query.filter_by(chat=self.id))[index:]
 
 
 def make_session(login):

@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from flask import render_template, redirect, session, url_for, request
-from app import app
-from forms import LoginForm, make_session
-
-
-def IsInSession():
-    if login in session:
-        return True
-    return False
+from application import app
+from forms import LoginForm, make_session, IsInSession
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -35,4 +29,5 @@ def logout():
 def index():
     return render_template('index.html')
 
-import app.chat.route
+
+import application.chat.router

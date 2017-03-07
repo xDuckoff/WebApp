@@ -1,6 +1,6 @@
 from flask import session
-from models import Message
-from app import db
+from application.models import Message
+from application import db
 
 
 class Chat:

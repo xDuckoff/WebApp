@@ -1,7 +1,8 @@
 from flask import render_template, redirect, request
-from app import app, chats
+from application import app, chats
 from json import dumps
-from app.chat import Chat
+from application.chat import Chat
+from application.forms import IsInSession
 
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])

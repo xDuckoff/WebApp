@@ -2,6 +2,7 @@ from wtforms import StringField
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
 from flask.sessions import SessionInterface
+from flask import session
 
 session_opts = {
     'session.url': '127.0.0.1:11211',
@@ -20,3 +21,14 @@ class BeakerSessionInterface(SessionInterface):
 
     def save_session(self, app, session, response):
         session.save()
+
+
+def make_session(login):
+    session['login'] = login
+    session['last'] = -1
+
+
+def IsInSession():
+    if 'login' in session:
+        return True
+    return False

@@ -9,4 +9,4 @@ migrate = Migrate(app, db)
 
 chats = []
 
-import views
+import router

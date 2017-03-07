@@ -37,3 +37,22 @@ def get_messages():
     chat_id = int(request.args['chat'])
     index = int(request.args['index'])
     return dumps(chats[chat_id].get_messages(index))
+
+
+@app.route('/send_code', methods=['GET', 'POST'])
+def send_code():
+    if not(IsInSession()):
+        return redirect('/login')
+    chat_id = int(request.args['chat'])
+    if len(request.args['code']) > 0:
+        chats[chat_id].send_code(request.args['code'])
+    return 'OK'
+
+
+@app.route('/get_code', methods=['GET', 'POST'])
+def get_code():
+    if not(IsInSession()):
+        return redirect('/login')
+    chat_id = int(request.args['chat'])
+    index = int(request.args['index'])
+    return dumps(chats[chat_id].get_code(index))

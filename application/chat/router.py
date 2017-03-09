@@ -5,19 +5,30 @@ from application.chat import Chat
 from application.forms import IsInSession
 
 
-@app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
+@app.route('/chat/<chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
     if not(IsInSession()):
         return redirect('/login?chat=' + str(chat_id))
-    if chat_id < len(chats):
+    if chat_id.isdigit():
         return render_template('chat.html')
+    else:
+        for i in chats:
+            if i.name == chat_id:
+                chat_id = i.id
+                return render_template('chat.html')
     return 'Not Found', 404
 
 
 @app.route('/create_chat')
 def create_chat():
-    chats.append(Chat())
-    return redirect('/chat/'+str(len(chats)-1))
+    if not(IsInSession()):
+        return redirect('/login')
+    try:
+        name = request.args['name']
+    except IndexError:
+        return redirect('/')
+    chats.append(Chat(name))
+    return redirect('/chat/'+chats[-1].name)
 
 
 @app.route('/send_message', methods=['GET', 'POST'])

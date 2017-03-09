@@ -1,15 +1,17 @@
 from flask import session
-from application.models import Message, Code
+from application.models import Message, Code, Chat_Model
 from application import db
 
 
 class Chat:
     ids = 0
 
-    def __init__(self):
-        self.mods = []
+    def __init__(self, name):
         self.id = Chat.ids
+        self.name = name
         Chat.ids += 1
+        db.session.add(Chat_Model(self.id, self.name))
+        db.session.commit()
 
     def send_message(self, text):
         db.session.add(Message(text, session['login'], self.id))

@@ -4,8 +4,10 @@ from application import db
 
 
 def create_chat(name):
-    db.session.add(Chat(name))
+    chat_to_create = Chat(name)
+    db.session.add(chat_to_create)
     db.session.commit()
+    return chat_to_create.id
 
 def send_message(id, text):
     db.session.add(Message(text, session['login'], id))

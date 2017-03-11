@@ -9,22 +9,17 @@ from application.forms import IsInSession
 def chat_page(chat_id):
     if not(IsInSession()):
         return redirect('/login?chat=' + str(chat_id))
-    if chat_id.isdigit():
-        chat_id = int(chat_id)
-        return render_template('chat.html')
-    else:
-        chat_id = chat.find_chat(chat_id)
-        if chat_id == -1:
-            return 'Not Found', 404
-        return render_template('chat.html')
+    chat_id = int(chat_id)
+    return render_template('chat.html')
 
 
 @app.route('/create_chat', methods=['GET', 'POST'])
 def create_chat(name="default"):
     if not(IsInSession()):
         return redirect('/login')
-    chat.create_chat(name)
-    return redirect('/chat/' + name)
+
+    chat_id = chat.create_chat(name)
+    return redirect('/chat/' + str(chat_id))
 
 
 @app.route('/send_message', methods=['GET', 'POST'])

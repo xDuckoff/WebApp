@@ -18,7 +18,26 @@
 			function append_to_textarea(author, message) {
 				var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + author + '</b><br>'+ message + "</div>";
 				$("#chat-panel").append(text);
+				tell_message();
 			}
+
+			function tell_message(){
+				var text = document. getElementById('message').value;
+				var audio = document. getElementById('audio');
+				var url = 'https://tts.voicetech.yandex.net/generate?'+
+				'key=2308bf65-4316-45e9-bcec-0f9d86a7ab63'+
+				'&text='+encodeURI(text)+
+				'&fornat=wav'+
+				'&lang=ru-RU'+
+				'&speaker=ermil';
+
+				audio.src = url;
+				audio.load();
+				audio.onloadeddata = function(){
+					audio.play();
+				}
+
+			};
 
 			function get_scrollHeight(element) {
 				var pr = element.scrollTop();

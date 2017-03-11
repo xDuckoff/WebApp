@@ -9,9 +9,11 @@ from application.forms import IsInSession
 def chat_page(chat_id):
     if not(IsInSession()):
         return redirect('/login?chat=' + str(chat_id))
-    chat_id = int(chat_id)
-    return render_template('chat.html')
-
+    try:
+        chat_id = int(chat_id)
+        return render_template('chat.html')
+    except ValueError:
+        return 'Not Found', 404
 
 @app.route('/create_chat', methods=['GET', 'POST'])
 def create_chat():

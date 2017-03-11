@@ -32,8 +32,9 @@ def send_message():
     if not(IsInSession()):
         return redirect('/login')
     chat_id = int(request.args['chat'])
-    if len(request.args['message']) > 0:
-        chat.send_message(chat, message)
+    message = request.args['message']
+    if len(message) > 0:
+        chat.send_message(chat_id, message)
     return 'OK'
 
 
@@ -43,7 +44,7 @@ def get_messages():
         return redirect('/login')
     chat_id = int(request.args['chat'])
     index = int(request.args['index'])
-    return dumps(chat.get_messages(chat, index))
+    return dumps(chat.get_messages(chat_id, index))
 
 
 @app.route('/send_code', methods=['GET', 'POST'])
@@ -51,8 +52,9 @@ def send_code():
     if not(IsInSession()):
         return redirect('/login')
     chat_id = int(request.args['chat'])
-    if len(request.args['code']) > 0:
-        chat.send_code(chat, message)
+    code = request.args['code']
+    if len(code) > 0:
+        chat.send_code(chat_id, code)
     return 'OK'
 
 
@@ -62,4 +64,4 @@ def get_code():
         return redirect('/login')
     chat_id = int(request.args['chat'])
     index = int(request.args['index'])
-    return dumps(chat.get_code(chat, index))
+    return dumps(chat.get_code(chat_id, index))

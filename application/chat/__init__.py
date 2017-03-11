@@ -9,6 +9,10 @@ def create_chat(name):
     db.session.commit()
     return chat_to_create.id
 
+def get_chat_info(id):
+    result = Chat.query.get(id)
+    return {'name':result.name}
+
 def send_message(id, text):
     db.session.add(Message(text, session['login'], id))
     db.session.commit()

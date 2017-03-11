@@ -64,3 +64,8 @@ def get_code():
     chat_id = int(request.args['chat'])
     index = int(request.args['index'])
     return dumps(chat.get_code(chat_id, index))
+
+@app.route('/get_chat_info', methods=['GET', 'POST'])
+def get_chat_info():
+    chat_id = int(request.args['chat'])
+    return dumps(chat.get_chat_info(chat_id))

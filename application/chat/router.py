@@ -13,12 +13,8 @@ def chat_page(chat_id):
     return render_template('chat.html')
 
 
-@app.route('/create_chat')
+@app.route('/create_chat', methods=['GET', 'POST'])
 def create_chat():
-    return render_template("chat.html") #edit later - show special page
-
-@app.route('/upload_chat', methods=['GET', 'POST'])
-def upload_chat():
     if not(IsInSession()):
         return redirect('/login')
 

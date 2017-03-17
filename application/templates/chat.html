@@ -18,7 +18,7 @@
 			function append_to_textarea(author, message) {
 				var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + author + '</b><br>'+ message + "</div>";
                 $("#chat-panel").append(text);
-                var text_to_tell = author + 'cказал' + message;
+                var text_to_tell = author + '   skazal   ' + message;
                 voice(text_to_tell);
 			}
 

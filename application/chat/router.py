@@ -3,6 +3,28 @@ from application import app
 from json import dumps
 from application import chat
 from application.forms import IsInSession
+from flask_socketio import send, join_room, leave_room
+
+@socketio.on('message')
+def handle_message(json):
+    chat_id = int(json['room'])
+    chat.send_message(chat_id, json['msg'])
+    send({'msg':json['msg'], 'user':session['login']}, json=True, room=json['room'], broadcast=True)
+
+@socketio.on('join')
+def on_join(room):
+    join_room(room)
+
+@socketio.on('leave')
+def on_leave(room):
+    leave_room(room)
+
+@socketio.on('system')
+def system_message(json):
+    chat_id = int(json['room'])
+    chat.send_message(chat_id, json['msg'])
+    send({'msg':json['msg'], 'user':'system'}, json=True, room=json['room'], broadcast=True)
+
 
 
 @app.route('/chat/<chat_id>', methods=['GET', 'POST'])

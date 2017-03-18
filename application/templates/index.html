@@ -1,6 +1,52 @@
 ﻿{% extends "base.html" %}
 {% block content %}
-	<a href="/create_chat" class="btn btn-lg btn-primary" style="margin-bottom:10px">Создать чат</a>
+	<button class="btn btn-lg btn-primary" style="margin-bottom:10px" data-toggle="modal" data-target="#myModal">
+	    Создать чат
+	</button>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+	   	<div class="modal-dialog" >
+			<div class="modal-content" style="border: 2px solid #424f5e; background: #1b2c3e; padding: 2%;">
+				<form role = "form" action = "/create_chat">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        		<h4 class="modal-title" id="myModalLabel">Создание чата</h4>
+		      		</div>
+					<div class="modal-body">
+						<center>
+							<div class = "row">
+								<div class="col-md-6 col-md-offset-3">
+										<div class="form-group">
+										    <label for="exampleInputEmail1">Название чата</label>
+										    <input type="text" class="form-control" id="chatname" placeholder="" name = "name">
+										</div>
+										<select class="form-control" id="Compile">
+										  	<option>C++</option>
+										  	<option>Python 2.7</option>
+										  	<option>Java</option>
+										  	<option>Pascal</option>
+										  	<option>Python 3.5</option>
+										  	<option>BrainFuck</option>
+										  	<option>Basic</option>
+										  	<option>Другое</option>
+										</select>
+										<div class="form-group">
+										    <label for="exampleInputFile">Прикрепить код</label>
+										    <input type="file" id="exampleInputFile" name = "code">
+										</div>
+								</div>
+								<div class="col-md-10 col-md-offset-1">
+									<textarea class="form-control" rows="5"></textarea>
+								</div>
+							</div>
+						</center>
+		   			</div>
+					<div class="modal-footer">
+	 					<button type="submit" class="btn btn-lg btn-primary">Создать</button>
+		      		</div>
+	      		</form>
+	   		</div>
+		</div>
+	</div>
 	<div class="input-group">
 		<span class="input-group-btn">
 	        <button class="btn btn-primary" type="button" onclick="location.href='/chat/'+$('#chat-id').val();">Подключиться к чату</button>

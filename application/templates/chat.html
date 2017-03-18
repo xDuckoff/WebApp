@@ -18,30 +18,60 @@
 			function append_to_textarea(message) {
 				var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
 				$("#chat-panel").append(text);
-				var text_to_tell = messages_obj.author + ' сказал ' + messages_obj.message;
-				if (message.type == 'other_message') {
-					voice_mesages(text_to_tell);
-				}
+				//var text_to_tell = message.author + ' сказал ' + message.message;
+				//if (message.type == 'other_message') {
+				//	voice_messages(text_to_tell);
+				//}
 				//if (message.type == 'sys_message') {
-				//	voice_sys_mesages(text_to_tell);
+				//	voice_sys_messages(text_to_tell);
 				//}
 			}
 
-			var voice_messages = function (text_to_tell){
-                var audio = document. getElementById('audio');
-                var url = 'https://tts.voicetech.yandex.net/generate?'+
-                'key=2308bf65-4316-45e9-bcec-0f9d86a7ab63'+
-                '&text='+encodeURI(text_to_tell)+
-                '&fornat=wav'+
-                '&lang=ru-RU'+
-                '&speaker=jane';
+			//var voice_messages = function (text_to_tell){
+            //    var audio = document. getElementById('audio');
+            //    var url = 'https://tts.voicetech.yandex.net/generate?'+
+            //    'key=2308bf65-4316-45e9-bcec-0f9d86a7ab63'+
+            //    '&text='+encodeURI(text_to_tell)+
+            //    '&fornat=wav'+
+            //    '&lang=ru-RU'+
+            //    '&speaker=jane';
 
-                audio.src = url;
-                audio.load();
-                audio.onloadeddata = function(){
-                    audio.play();
-                }
-            };
+             //   audio.src = url;
+             //   audio.load();
+             //   audio.onloadeddata = function(){
+             //       audio.play();
+              //  }
+            //};
+
+            voice = {
+            	stack: [],
+            	currentIndex: 0,
+            	isBusy:false,
+            	play: function(){
+            		currentIndex += 1;
+            		var audio = document. getElementById('audio');
+					var url = 'https://tts.voicetech.yandex.net/generate?'+
+					'key=2308bf65-4316-45e9-bcec-0f9d86a7ab63'+
+					'&text='+encodeURI(stack[currentIndex])+
+					'&fornat=wav'+
+					'&lang=ru-RU'+
+					'&speaker=jane';
+
+					audio.src = url;
+					audio.load();
+					audio.onloadeddata = function(){
+						audio.play();
+					}
+            	},
+            	checkEnd: function(){
+            		isBusy = false;
+            	}
+            	//проверка на то, что нужно ли озвучивать еще сообщения и поместить в CheckEnd
+            }
+
+            audio.onended = function(){
+            	voice.checkEnd;
+            }
 
 			function get_scrollHeight(element) {
 				var pr = element.scrollTop();
@@ -104,7 +134,7 @@
 				// var myCodeMirror = CodeMirror($('#column').get(0), {
 				//   value: "print('Hello world!')\n",
 				//   mode:  "python"
-				// }); 
+				// });
 
 			});
 		</script>

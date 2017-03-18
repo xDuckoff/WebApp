@@ -55,10 +55,17 @@
 {% endblock %}
 {% block search_chat %}
 
-		<p>
-			<input type="search" name="q" placeholder="Поиск чатов">
-			<input type="button" class="btn btn-default" value="Найти" onclick= "" >
-		</p>
+		<div class="input-group">
+
+				<input type="search" class="form-control" name="q" placeholder="Поиск чатов">
+				<span class="input-group-btn">
+					<input type="button" class="btn btn-info" value="Найти" onclick= "" >
+				</span>
+</div>
+
+{% endblock %}
+{% block search_res %}
+
 		<table class="table">
   			<tr>
 				<th>Название</th>
@@ -71,5 +78,5 @@
 				<td>Unknown</td>
 			</tr>
 		</table>
-	</div>
+
 {% endblock %}

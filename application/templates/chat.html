@@ -14,7 +14,7 @@
 
 		<script type="text/javascript">
 			var last_index;
-
+			var chat_index;
 			function append_to_textarea(author, message) {
 				var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + author + '</b><br>'+ message + "</div>";
 				$("#chat-panel").append(text);
@@ -38,7 +38,7 @@
 			}
 
 			function get_messages() {
-				$.get( "/get_messages?chat=0&index=" + last_index, function( data ) {
+				$.get( "/get_messages?chat="+chat_index + "&index=" + last_index, function( data ) {
 					var messages = $.parseJSON(data);
 					for (var i = 0; i < messages.length; i++) {
 						add_message(messages[i].author, messages[i].message);
@@ -50,10 +50,10 @@
 			$(function () {
 				last_index = 0;
 				var timerId = setInterval(get_messages, 1000);
-
+				chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
 				$("#send-btn").click(function() {
 					//add_message("test_name", $("#message-input").val());
-					$.get( "/send_message?chat=0&message=" + $("#message-input").val(), function( data ) {
+					$.get( "/send_message?chat="+chat_index + "&message=" + $("#message-input").val(), function( data ) {
 					  //alert(data);
 					});
 					$("#message-input").val('');

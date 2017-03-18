@@ -4,22 +4,33 @@ from application import db
 
 
 def create_chat(name):
-    db.session.add(Chat(name))
+    chat_to_create = Chat(name)
+    db.session.add(chat_to_create)
     db.session.commit()
+    return chat_to_create.id
+
+def get_chat_info(id):
+    result = Chat.query.get(id)
+    return {'name':result.name}
 
 def send_message(id, text):
-    db.session.add(Message(text, session['login']), id)
+    db.session.add(Message(text, session['login'], id))
     db.session.commit()
 
 def get_messages(id, index):
-    return map(lambda x: {"author": x.author, "message": x.content}, Message.query.filter_by(chat=id))[index:]
+    result = Message.query.filter_by(chat=id)[index:]
+    ret = []
+    for i in result:
+        ret.append({"author": i.author, "message": i.content})
+    return ret
 
 def send_code(id, text):
     db.session.add(Code(text, session['login'], id))
     db.session.commit()
 
 def get_code(id, index):
-    return (lambda x: {"author": x.author, "code": x.content})(Code.query.filter_by(chat=id)[index])
+    result = Code.query.filter_by(chat=id)[index]
+    return {"author": result.author, "code": result.content}
 
 def find_chat(name):
     try:

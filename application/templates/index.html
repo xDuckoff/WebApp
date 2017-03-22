@@ -53,3 +53,30 @@
 	    </span><input type="text" class="form-control" placeholder="ID" id="chat-id" />
 	</div>
 {% endblock %}
+{% block search_chat %}
+
+		<div class="input-group">
+
+				<input type="search" class="form-control" name="q" placeholder="Поиск чатов">
+				<span class="input-group-btn">
+					<input type="button" class="btn btn-info" value="Найти" onclick= "" >
+				</span>
+</div>
+
+{% endblock %}
+{% block search_res %}
+
+		<table class="table">
+  			<tr>
+				<th>Название</th>
+				<th>Автор</th>
+				<th>Язык</th>
+			</tr>
+  			<tr>
+				<td>Unknown</td>
+				<td>Unknown</td>
+				<td>Unknown</td>
+			</tr>
+		</table>
+
+{% endblock %}

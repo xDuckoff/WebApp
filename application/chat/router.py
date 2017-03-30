@@ -3,6 +3,8 @@ from application import app
 from json import dumps
 from application import chat
 from application.forms import IsInSession
+from werkzeug.utils import secure_filename
+import werkzeug.exceptions
 
 
 @app.route('/chat/<chat_id>', methods=['GET', 'POST'])
@@ -15,13 +17,38 @@ def chat_page(chat_id):
     except ValueError:
         return 'Not Found', 404
 
+#@app.route('/upload_anyfile', methods=['GET', 'POST'])#This function allows to download u anyfile
+#def upload_code():
+#    if request.method == 'POST':
+#        if 'file' not in request.files:
+#            flash('No file part')
+#            return redirect(request.url)
+#        try:
+#            file = request.files["file"]
+#        except RequestEnityTooLarge as e:
+#            return "ERROR", 200
+#        if file.filename == '':
+#            flash('No selected file')
+#            return redirect(request.url)
+#        if file and allowed_file(file.filename):
+#            filename = secure_filename(file.filename)
+#            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+#            return redirect('page, that u want')
+
 @app.route('/create_chat', methods=['GET', 'POST'])
 def create_chat():
     if not(IsInSession()):
         return redirect('/login')
-
     name = request.args['name']
-    code = request.args['code']
+    if 'file' in request.files:
+        try:
+            file = request.files["file"]
+        except RequestEnityTooLarge as e:
+            return "ERROR", 200
+        if file and allowed_file(file.filename):
+            code = string(file)
+    else:	
+        code = request.args['code']
     chat_id = chat.create_chat(name)
     chat.send_code(chat_id, code)
     

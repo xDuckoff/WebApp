@@ -32,3 +32,7 @@ def IsInSession():
     if 'login' in session:
         return True
     return False
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

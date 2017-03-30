@@ -6,11 +6,13 @@ class Message(db.Model):
     content = db.Column(db.Text)
     author = db.Column(db.String(256))
     chat = db.Column(db.Integer)
+    type = db.Column(db.String(3)) # types: sys, usr
 
-    def __init__(self, content, author, chat):
+    def __init__(self, content, author, chat, type):
         self.content = content
         self.author = author
         self.chat = chat
+        self.type = type
 
 
 class Code(db.Model):

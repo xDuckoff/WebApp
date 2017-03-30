@@ -22,13 +22,13 @@ def get_messages(id, index):
     ret = []
     for i in result:
 
-    	if i.type == "usr":
-    		if i.author == session['login']:
-    			type = "mine"
-    		else:
-    			type = "others"
-    	else:
-    		type = "system"
+        if i.type == "usr":
+            if i.author == session['login']:
+                type = "mine"
+            else:
+                type = "others"
+        else:
+            type = "system"
 
         ret.append({"author": i.author, "message": i.content, "type": type})
     return ret

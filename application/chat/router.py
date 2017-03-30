@@ -34,9 +34,8 @@ def send_message():
         return redirect('/login')
     chat_id = int(request.args['chat'])
     message = request.args['message']
-    type = request.args['type']
     if len(message) > 0:
-        chat.send_message(chat_id, message, type)
+        chat.send_message(chat_id, message, "usr")
     return 'OK'
 
 

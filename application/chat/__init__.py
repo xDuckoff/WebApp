@@ -13,15 +13,24 @@ def get_chat_info(id):
     result = Chat.query.get(id)
     return {'name':result.name}
 
-def send_message(id, text):
-    db.session.add(Message(text, session['login'], id))
+def send_message(id, text, type):
+    db.session.add(Message(text, session['login'], id, type))
     db.session.commit()
 
 def get_messages(id, index):
     result = Message.query.filter_by(chat=id)[index:]
     ret = []
     for i in result:
-        ret.append({"author": i.author, "message": i.content})
+
+        if i.type == "usr":
+            if i.author == session['login']:
+                type = "mine"
+            else:
+                type = "others"
+        else:
+            type = "system"
+
+        ret.append({"author": i.author, "message": i.content, "type": type})
     return ret
 
 def send_code(id, text):

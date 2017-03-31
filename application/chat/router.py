@@ -1,5 +1,5 @@
-from flask import render_template, redirect, request
-from application import app
+from flask import render_template, redirect, request, session
+from application import app, socketio
 from json import dumps
 from application import chat
 from application.forms import IsInSession
@@ -8,12 +8,14 @@ from flask_socketio import send, join_room, leave_room
 @socketio.on('message')
 def handle_message(json):
     chat_id = int(json['room'])
-    chat.send_message(chat_id, json['msg'])
+    chat.send_message(chat_id, json['msg'], "usr")
     send({'msg':json['msg'], 'user':session['login']}, json=True, room=json['room'], broadcast=True)
 
 @socketio.on('join')
 def on_join(room):
     join_room(room)
+    print("messaged")
+
 
 @socketio.on('leave')
 def on_leave(room):
@@ -22,7 +24,7 @@ def on_leave(room):
 @socketio.on('system')
 def system_message(json):
     chat_id = int(json['room'])
-    chat.send_message(chat_id, json['msg'])
+    chat.send_message(chat_id, json['msg'], "sys")
     send({'msg':json['msg'], 'user':'system'}, json=True, room=json['room'], broadcast=True)
 
 

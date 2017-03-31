@@ -36,7 +36,7 @@
 	            });
 
 	            $("#send-btn").click(function() {
-					socket.json.send({'msg':$("#message-input").val(), 'room':chat_id})
+					socket.emit('message', {'msg':$("#message-input").val(), 'room':chat_id});
 					$("#message-input").val('');
 				});
 	        });
@@ -68,7 +68,8 @@
 			}
 
 			function get_messages() {
-				$.get( "/get_messages?chat="+chat_index + "&index=" + last_index, function( data ) {
+				chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
+				$.get( "/get_messages?chat="+chat_index + "&index=0", function( data ) {
 					var messages = $.parseJSON(data);
 					for (var i = 0; i < messages.length; i++) {
 						add_message(messages[i].author, messages[i].message);

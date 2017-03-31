@@ -3,7 +3,7 @@ Flask==0.12
 Flask-Migrate==2.0.3
 Flask-SQLAlchemy==2.1
 Flask-WTF==0.14.2
+Flask-SocketIO==2.8.6
 SQLAlchemy==1.1.5
 mysql==0.0.1
-python-socketio==1.7.4
 eventlet==0.20.1

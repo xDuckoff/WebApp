@@ -17,8 +17,8 @@ def send_message(id, text, type):
     db.session.add(Message(text, session['login'], id, type))
     db.session.commit()
 
-def get_messages(id, index):
-    result = Message.query.filter_by(chat=id)[index:]
+def get_messages(id):
+    result = Message.query.filter_by(chat=id)
     ret = []
     for i in result:
 

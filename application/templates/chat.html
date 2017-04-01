@@ -43,8 +43,7 @@
         </script>
 
 		<script type="text/javascript">
-			var last_index;
-			var chat_index;
+			var chat_index = location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
 			function append_to_textarea(author, message) {
 				var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + author + '</b><br>'+ message + "</div>";
 				$("#chat-panel").append(text);
@@ -68,8 +67,7 @@
 			}
 
 			function get_messages() {
-				chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
-				$.get( "/get_messages?chat="+chat_index + "&index=0", function( data ) {
+				$.get( "/get_messages?chat="+chat_index, function( data ) {
 					var messages = $.parseJSON(data);
 					for (var i = 0; i < messages.length; i++) {
 						add_message(messages[i].author, messages[i].message);
@@ -79,7 +77,6 @@
 			}
 
 			$(function () {
-				chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
 				$("#message-input").keypress(function(e) {
 				    if(e.which == 13) {
 				        $("#send-btn").click();

@@ -11,22 +11,20 @@ def handle_message(json):
     chat.send_message(chat_id, json['msg'], "usr")
     send({'msg':json['msg'], 'user':session['login']}, json=True, room=json['room'], broadcast=True)
 
+@socketio.on('system')
+def system_message(json):
+    chat_id = int(json['room'])
+    print chat_id
+    chat.send_message(chat_id, json['msg'], "sys")
+    send({'msg':json['msg'], 'user':'system'}, json=True, room=json['room'], broadcast=True)
+
 @socketio.on('join')
 def on_join(room):
     join_room(room)
-    print("messaged")
-
 
 @socketio.on('leave')
 def on_leave(room):
     leave_room(room)
-
-@socketio.on('system')
-def system_message(json):
-    chat_id = int(json['room'])
-    chat.send_message(chat_id, json['msg'], "sys")
-    send({'msg':json['msg'], 'user':'system'}, json=True, room=json['room'], broadcast=True)
-
 
 
 @app.route('/chat/<chat_id>', methods=['GET', 'POST'])
@@ -52,24 +50,12 @@ def create_chat():
     return redirect('/chat/' + str(chat_id))
 
 
-@app.route('/send_message', methods=['GET', 'POST'])
-def send_message():
-    if not(IsInSession()):
-        return redirect('/login')
-    chat_id = int(request.args['chat'])
-    message = request.args['message']
-    if len(message) > 0:
-        chat.send_message(chat_id, message, "usr")
-    return 'OK'
-
-
 @app.route('/get_messages', methods=['GET', 'POST'])
 def get_messages():
     if not(IsInSession()):
         return redirect('/login')
     chat_id = int(request.args['chat'])
-    index = int(request.args['index'])
-    return dumps(chat.get_messages(chat_id, index))
+    return dumps(chat.get_messages(chat_id))
 
 
 @app.route('/send_code', methods=['GET', 'POST'])

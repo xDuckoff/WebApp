@@ -6,7 +6,7 @@
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
 	   	<div class="modal-dialog" >
 			<div class="modal-content" style="border: 2px solid #424f5e; background: #1b2c3e; padding: 2%;">
-				<form role = "form" action = "/create_chat">
+				<form method="POST" action = "/create_chat" enctype="multipart/form-data">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		        		<h4 class="modal-title" id="myModalLabel">Создание чата</h4>
@@ -19,7 +19,7 @@
 										    <label for="exampleInputEmail1">Название чата</label>
 										    <input type="text" class="form-control" id="chatname" placeholder="" name = "name">
 										</div>
-										<select class="form-control" id="Compile">
+										<select class="form-control" id="Compile" name="code_type">
 										  	<option>C++</option>
 										  	<option>Python 2.7</option>
 										  	<option>Java</option>
@@ -30,12 +30,11 @@
 										  	<option>Другое</option>
 										</select>
 										<div class="form-group">
-										    <label for="exampleInputFile">Прикрепить код</label>
-										    <input type="file" id="exampleInputFile" name = "code">
+											<input type="file" name = "file">
 										</div>
 								</div>
 								<div class="col-md-10 col-md-offset-1">
-									<textarea class="form-control" rows="5"></textarea>
+									<textarea class="form-control" rows="5" name="code"></textarea>
 								</div>
 							</div>
 						</center>

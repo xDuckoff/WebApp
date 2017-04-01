@@ -1,8 +1,9 @@
-from wtforms import StringField
-from wtforms.validators import DataRequired
+from wtforms import StringField, FileField
+from wtforms.validators import DataRequired, ValidationError
 from flask_wtf import FlaskForm
 from flask.sessions import SessionInterface
 from flask import session
+from application import app
 
 session_opts = {
     'session.url': '127.0.0.1:11211',
@@ -32,3 +33,13 @@ def IsInSession():
     if 'login' in session:
         return True
     return False
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+class CreateChatForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
+    code_type = StringField('codetype', validators=[DataRequired()])
+    file = FileField('file')
+    code = StringField('code')

@@ -54,13 +54,15 @@
 {% endblock %}
 {% block search_chat %}
 
+    <form>
 		<div class="input-group">
 
-				<input type="search" class="form-control" name="q" placeholder="Поиск чатов">
+				<input type="search" class="form-control" name="search_title_text" placeholder="Поиск чатов">
 				<span class="input-group-btn">
-					<input type="button" class="btn btn-info" value="Найти" onclick= "" >
+					<input type="submit" class="btn btn-info" value="Найти"  formmethod="get">
 				</span>
 </div>
+</form>
 
 {% endblock %}
 {% block search_res %}

@@ -35,7 +35,7 @@ def send_message():
     chat_id = int(request.args['chat'])
     message = request.args['message']
     if len(message) > 0:
-        chat.send_message(chat_id, message)
+        chat.send_message(chat_id, message, "usr")
     return 'OK'
 
 

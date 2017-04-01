@@ -1,0 +1,17 @@
+CSRF_ENABLED = True
+SECRET_KEY = '1+$VEPUx@pTtn@s$$$$$woRt'
+
+SQLALCHEMY_TRACK_MODIFICATIONS = True
+DATABASE_USER = ''
+DATABASE_PASSWORD = ''
+DATABASE_PORT = ''
+DATABASE_NAME = ''
+
+if DATABASE_NAME=='MySQL':
+    SQLALCHEMY_DATABASE_URI = 'mysql://'+DATABASE_USER+':' + DATABASE_PASSWORD + '@localhost:' + DATABASE_PORT + '/test'
+if DATABASE_NAME=="PostgreSQL":
+    SQLALCHEMY_DATABASE_URI = 'postgresql://' + DATABASE_USER + ':'+ DATABASE_PASSWORD +'@localhost/test'
+if DATABASE_NAME=="SQLite":
+    import os
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite')

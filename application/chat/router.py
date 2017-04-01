@@ -3,9 +3,6 @@ from application import app
 from json import dumps
 from application import chat
 from application.forms import IsInSession, CreateChatForm, allowed_file
-from werkzeug.utils import secure_filename
-import os
-import werkzeug.exceptions
 
 
 @app.route('/chat/<chat_id>', methods=['GET', 'POST'])

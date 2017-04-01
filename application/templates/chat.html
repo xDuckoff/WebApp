@@ -31,12 +31,8 @@
 	            	add_message(data['user'], data['msg']);
 	            });
 
-	            socket.on('system', function(data) {
-	            	//TODO add_system(data['msg']);
-	            });
-
 	            $("#send-btn").click(function() {
-					socket.emit('message', {'msg':$("#message-input").val(), 'room':chat_id});
+					socket.emit('message', {'msg':$("#message-input").val(), 'room':chat_id, 'type':'usr'});
 					$("#message-input").val('');
 				});
 	        });

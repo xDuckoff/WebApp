@@ -3,24 +3,22 @@ from application import app, socketio
 from json import dumps
 from application import chat
 from application.forms import IsInSession
-from flask_socketio import send, join_room, leave_room
+from flask_socketio import send, emit, join_room, leave_room
 
 @socketio.on('message')
 def handle_message(json):
     chat_id = int(json['room'])
-    chat.send_message(chat_id, json['msg'], "usr")
-    send({'msg':json['msg'], 'user':session['login']}, json=True, room=json['room'], broadcast=True)
-
-@socketio.on('system')
-def system_message(json):
-    chat_id = int(json['room'])
-    print chat_id
-    chat.send_message(chat_id, json['msg'], "sys")
-    send({'msg':json['msg'], 'user':'system'}, json=True, room=json['room'], broadcast=True)
+    chat.send_message(chat_id, json['msg'], 'usr')
+    send({'msg':json['msg'], 'user':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
 
 @socketio.on('join')
 def on_join(room):
     join_room(room)
+    sys_message(str(session['login']) + " joined", room)
+
+def sys_message(data, room):
+    chat.send_message(int(room), data, 'sys')
+    send({'msg':data, 'user':'System', 'type':'sys'}, json=True, room=room, broadcast=True)
 
 @socketio.on('leave')
 def on_leave(room):

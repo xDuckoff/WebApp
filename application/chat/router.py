@@ -2,7 +2,7 @@ from flask import render_template, redirect, request
 from application import app
 from json import dumps
 from application import chat
-from application.forms import IsInSession
+from application.forms import IsInSession, CreateChatForm, allowed_file
 
 
 @app.route('/chat/<chat_id>', methods=['GET', 'POST'])
@@ -15,16 +15,23 @@ def chat_page(chat_id):
     except ValueError:
         return 'Not Found', 404
 
+
 @app.route('/create_chat', methods=['GET', 'POST'])
 def create_chat():
     if not(IsInSession()):
         return redirect('/login')
-
-    name = request.args['name']
-    code = request.args['code']
+    form = CreateChatForm()
+    name = form.name.data
+    if form.file.data.filename == '':
+        code = form.code.data
+    else:
+        file = form.file.data
+        if file and allowed_file(file.filename):
+            code = file.read()
+        else:
+            return redirect('/')
     chat_id = chat.create_chat(name)
     chat.send_code(chat_id, code)
-    
     return redirect('/chat/' + str(chat_id))
 
 

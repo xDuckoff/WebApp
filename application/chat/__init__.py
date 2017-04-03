@@ -37,8 +37,10 @@ def get_messages(id):
     return ret
 
 def send_code(id, text):
-    db.session.add(Code(text, session['login'], id))
+    CodeToSend = Code(text, session['login'], id)
+    db.session.add(CodeToSend)
     db.session.commit()
+    return CodeToSend.id
 
 def get_code(id, index):
     result = Code.query.filter_by(chat=id)[index]

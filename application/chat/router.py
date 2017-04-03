@@ -9,7 +9,7 @@ from flask_socketio import send, emit, join_room, leave_room
 def handle_message(json):
     chat_id = int(json['room'])
     chat.send_message(chat_id, json['message'], 'usr')
-    send({'message':json['message'], 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
+    socketio.emit('message', {'message':json['message'], 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
 
 @socketio.on('join')
 def on_join(room):
@@ -18,7 +18,7 @@ def on_join(room):
 
 def sys_message(data, room):
     chat.send_message(int(room), data, 'sys')
-    socketio.send({'message':data, 'author':'System', 'type':'sys'}, json=True, room=room, broadcast=True)
+    socketio.emit('message', {'message':data, 'author':'System', 'type':'sys'}, room=room, broadcast=True)
 
 @socketio.on('leave')
 def on_leave(room):
@@ -62,7 +62,6 @@ def get_messages():
     chat_id = int(request.args['chat'])
     return dumps(chat.get_messages(chat_id))
 
-
 @app.route('/send_code', methods=['GET', 'POST'])
 def send_code():
     if not(IsInSession()):
@@ -71,7 +70,7 @@ def send_code():
     code = request.args['code']
     if len(code) > 0:
         code_id = chat.send_code(chat_id, code)
-        sys_message("New Commit " + str(code_id), chat_id)
+        sys_message("New Commit " + str(code_id), str(chat_id))
     return 'OK'
 
 

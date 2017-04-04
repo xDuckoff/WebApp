@@ -14,11 +14,14 @@ def get_chat_info(id):
     return {'name':result.name}
 
 def send_message(id, text, type):
-    db.session.add(Message(text, session['login'], id, type))
+    if type == "usr":
+        db.session.add(Message(text, session['login'], id, type))
+    else:
+        db.session.add(Message(text, "System", id, type))
     db.session.commit()
 
-def get_messages(id, index):
-    result = Message.query.filter_by(chat=id)[index:]
+def get_messages(id):
+    result = Message.query.filter_by(chat=id)
     ret = []
     for i in result:
 
@@ -34,8 +37,10 @@ def get_messages(id, index):
     return ret
 
 def send_code(id, text):
-    db.session.add(Code(text, session['login'], id))
+    CodeToSend = Code(text, session['login'], id)
+    db.session.add(CodeToSend)
     db.session.commit()
+    return CodeToSend.id
 
 def get_code(id, index):
     result = Code.query.filter_by(chat=id)[index]

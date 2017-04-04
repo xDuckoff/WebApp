@@ -1,8 +1,28 @@
-from flask import render_template, redirect, request
-from application import app
+from flask import render_template, redirect, request, session
+from application import app, socketio
 from json import dumps
 from application import chat
 from application.forms import IsInSession, CreateChatForm, allowed_file
+from flask_socketio import send, emit, join_room, leave_room
+
+@socketio.on('message')
+def handle_message(json):
+    chat_id = int(json['room'])
+    chat.send_message(chat_id, json['message'], 'usr')
+    socketio.emit('message', {'message':json['message'], 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
+
+@socketio.on('join')
+def on_join(room):
+    join_room(room)
+    sys_message(str(session['login']) + " joined", room)
+
+def sys_message(data, room):
+    chat.send_message(int(room), data, 'sys')
+    socketio.emit('message', {'message':data, 'author':'System', 'type':'sys'}, room=room, broadcast=True)
+
+@socketio.on('leave')
+def on_leave(room):
+    leave_room(room)
 
 
 @app.route('/chat/<chat_id>', methods=['GET', 'POST'])
@@ -35,25 +55,12 @@ def create_chat():
     return redirect('/chat/' + str(chat_id))
 
 
-@app.route('/send_message', methods=['GET', 'POST'])
-def send_message():
-    if not(IsInSession()):
-        return redirect('/login')
-    chat_id = int(request.args['chat'])
-    message = request.args['message']
-    if len(message) > 0:
-        chat.send_message(chat_id, message, "usr")
-    return 'OK'
-
-
 @app.route('/get_messages', methods=['GET', 'POST'])
 def get_messages():
     if not(IsInSession()):
         return redirect('/login')
     chat_id = int(request.args['chat'])
-    index = int(request.args['index'])
-    return dumps(chat.get_messages(chat_id, index))
-
+    return dumps(chat.get_messages(chat_id))
 
 @app.route('/send_code', methods=['GET', 'POST'])
 def send_code():
@@ -62,7 +69,8 @@ def send_code():
     chat_id = int(request.args['chat'])
     code = request.args['code']
     if len(code) > 0:
-        chat.send_code(chat_id, code)
+        code_id = chat.send_code(chat_id, code)
+        sys_message("New Commit " + str(code_id), str(chat_id))
     return 'OK'
 
 

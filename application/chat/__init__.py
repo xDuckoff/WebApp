@@ -1,13 +1,16 @@
 from flask import session
 from application.models import Message, Code, Chat
-from application import db
+from application import db, socketio
+from flask_socketio import emit
 
 
-def create_chat(name):
+def create_chat(name, code):
     chat_to_create = Chat(name)
     db.session.add(chat_to_create)
     db.session.commit()
-    return chat_to_create.id
+    chat_id = chat_to_create.id
+    send_code(chat_id, code)
+    return chat_id
 
 def get_chat_info(id):
     result = Chat.query.get(id)
@@ -40,7 +43,9 @@ def send_code(id, text):
     CodeToSend = Code(text, session['login'], id)
     db.session.add(CodeToSend)
     db.session.commit()
-    return CodeToSend.id
+    code_id = CodeToSend.id
+    sys_message("New Commit " + str(code_id), str(id))
+    return code_id
 
 def get_code(id, index):
     result = Code.query.filter_by(chat=id)[index]
@@ -51,3 +56,7 @@ def find_chat(name):
         return Chat.query.filter_by(name=name).limit(1)[0].id
     except IndexError:
         return -1
+
+def sys_message(data, room):
+    send_message(int(room), data, 'sys')
+    socketio.emit('message', {'message':data, 'author':'System', 'type':'sys'}, room=room, broadcast=True)

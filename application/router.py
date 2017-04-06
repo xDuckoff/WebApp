@@ -2,27 +2,27 @@
 
 from flask import render_template, redirect, session, url_for, request
 from application import app
-from forms import LoginForm, make_session, IsInSession
+from forms import LoginForm, login_user, IsInSession
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
     form = LoginForm()
-    numberofchat = request.args.get('chat','')
-    link = (numberofchat == '')* '/' + (not numberofchat == '') * ('chat/'+numberofchat)
+    numberofchat = request.args['chat']
+    if numberofchat == '':
+        link = '/'
+    else:
+        link = '/chat/' + numberofchat 
     if form.validate_on_submit():
-        make_session(form.login.data)
-        return redirect(link)
-    if IsInSession():
+        login_user(form.login.data)
         return redirect(link)
     return render_template('login.html', form=form)
 
 
 @app.route('/logout')
 def logout():
-    if not(IsInSession()): return redirect('/login')
     session.pop('login', None)
-    return redirect(url_for('index'))    
+    return redirect('/')    
 
 
 @app.route('/')

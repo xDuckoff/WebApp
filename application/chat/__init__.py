@@ -4,32 +4,29 @@ from application import db, socketio
 from flask_socketio import emit
 
 
-def create_chat(name, code):
+def create_chat(name, code, username):
     chat_to_create = Chat(name)
     db.session.add(chat_to_create)
     db.session.commit()
     chat_id = chat_to_create.id
-    send_code(chat_id, code)
+    send_code(chat_id, code, username)
     return chat_id
 
 def get_chat_info(id):
     result = Chat.query.get(id)
     return {'name':result.name}
 
-def send_message(id, text, type):
-    if type == "usr":
-        db.session.add(Message(text, session['login'], id, type))
-    else:
-        db.session.add(Message(text, "System", id, type))
+def send_message(id, text, type, username):
+    db.session.add(Message(text, username, id, type))
     db.session.commit()
 
-def get_messages(id):
+def get_messages(id, username):
     result = Message.query.filter_by(chat=id)
     ret = []
     for i in result:
 
         if i.type == "usr":
-            if i.author == session['login']:
+            if i.author == username:
                 type = "mine"
             else:
                 type = "others"
@@ -39,8 +36,8 @@ def get_messages(id):
         ret.append({"author": i.author, "message": i.content, "type": type})
     return ret
 
-def send_code(id, text):
-    CodeToSend = Code(text, session['login'], id)
+def send_code(id, text, username):
+    CodeToSend = Code(text, username, id)
     db.session.add(CodeToSend)
     db.session.commit()
     code_id = CodeToSend.id
@@ -58,5 +55,5 @@ def find_chat(name):
         return -1
 
 def sys_message(data, room):
-    send_message(int(room), data, 'sys')
+    send_message(int(room), data, 'sys', 'System')
     socketio.emit('message', {'message':data, 'author':'System', 'type':'sys'}, room=room, broadcast=True)

@@ -8,32 +8,25 @@ from flask_socketio import send, emit, join_room, leave_room
 @socketio.on('message')
 def handle_message(json):
     chat_id = int(json['room'])
-    chat.send_message(chat_id, json['message'], 'usr')
+    chat.send_message(chat_id, json['message'], 'usr', session['login'])
     socketio.emit('message', {'message':json['message'], 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
 
 @socketio.on('join')
 def on_join(room):
     join_room(room)
-    sys_message(str(session['login']) + " joined", room)
+    chat.sys_message(str(session['login']) + " joined", room)
 
-def sys_message(data, room):
-    chat.send_message(int(room), data, 'sys')
-    socketio.emit('message', {'message':data, 'author':'System', 'type':'sys'}, room=room, broadcast=True)
 
 @socketio.on('leave')
 def on_leave(room):
     leave_room(room)
 
 
-@app.route('/chat/<chat_id>', methods=['GET', 'POST'])
+@app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
     if not(IsInSession()):
         return redirect('/login?chat=' + str(chat_id))
-    try:
-        chat_id = int(chat_id)
-        return render_template('chat.html')
-    except ValueError:
-        return 'Not Found', 404
+    return render_template('chat.html')
 
 
 @app.route('/create_chat', methods=['GET', 'POST'])
@@ -50,8 +43,7 @@ def create_chat():
             code = file.read()
         else:
             return redirect('/')
-    chat_id = chat.create_chat(name)
-    chat.send_code(chat_id, code)
+    chat_id = chat.create_chat(name, code, session['login'])
     return redirect('/chat/' + str(chat_id))
 
 
@@ -60,7 +52,7 @@ def get_messages():
     if not(IsInSession()):
         return redirect('/login')
     chat_id = int(request.args['chat'])
-    return dumps(chat.get_messages(chat_id))
+    return dumps(chat.get_messages(chat_id, session['login']))
 
 @app.route('/send_code', methods=['GET', 'POST'])
 def send_code():
@@ -68,9 +60,7 @@ def send_code():
         return redirect('/login')
     chat_id = int(request.args['chat'])
     code = request.args['code']
-    if len(code) > 0:
-        code_id = chat.send_code(chat_id, code)
-        sys_message("New Commit " + str(code_id), str(chat_id))
+    code_id = chat.send_code(chat_id, code, session['login'])
     return 'OK'
 
 

@@ -24,7 +24,7 @@ class BeakerSessionInterface(SessionInterface):
         session.save()
 
 
-def make_session(login):
+def login_user(login):
     session['login'] = login
     session['last'] = -1
 

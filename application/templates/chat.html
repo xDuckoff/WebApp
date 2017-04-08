@@ -1,4 +1,64 @@
+
 <html>
+<<<<<<< HEAD
+	<head>
+		<title>SUPER CRAZY NAME</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+		<script src="{{ url_for('static', filename='js/jquery.min.js') }}" type="text/javascript"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" type="text/javascript"></script>
+
+		<!-- CODEMIRROR -->
+		<script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
+		<link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/lib/codemirror.css') }}">
+		<script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
+
+		<script type="text/javascript">
+			var last_index;
+			var chat_index;
+			function append_to_textarea(author, message) {
+				var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + author + '</b><br>'+ message + "</div>";
+				$("#chat-panel").append(text);
+			}
+
+			function get_scrollHeight(element) {
+				var pr = element.scrollTop();
+				element.scrollTop(element.get(0).scrollHeight);
+				var res = element.scrollTop();
+				element.scrollTop(pr);
+				return res;
+			}
+
+			function add_message(author, message) {
+				var t = false;
+				if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
+					t = true;
+  				append_to_textarea(author, message);
+  				if (t)
+  					$('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);    
+			}
+
+			function get_messages() {
+				$.get( "/get_messages?chat="+chat_index + "&index=" + last_index, function( data ) {
+					var messages = $.parseJSON(data);
+					for (var i = 0; i < messages.length; i++) {
+						add_message(messages[i].author, messages[i].message);
+					}
+					last_index+=messages.length;
+				});
+			}
+
+			$(function () {
+				last_index = 0;
+				var timerId = setInterval(get_messages, 1000);
+				chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
+				$("#send-btn").click(function() {
+					//add_message("test_name", $("#message-input").val());
+					$.get( "/send_message?chat="+chat_index + "&message=" + $("#message-input").val(), function( data ) {
+					  //alert(data);
+					});
+=======
     <head>
         <title>SUPER CRAZY NAME</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -33,12 +93,102 @@
 
 	            $("#send-btn").click(function() {
 					socket.emit('message', {'message':$("#message-input").val(), 'room':chat_id, 'type':'usr'});
+>>>>>>> origin/master
 					$("#message-input").val('');
 				});
 	        });
         </script>
 
 
+<<<<<<< HEAD
+				$('#code-editor').val("print('Hello World!')");
+				var editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
+			        mode: {name: "python",
+			               version: 2,
+			               singleLineStringErrors: false},
+			        lineNumbers: true,
+			        indentUnit: 4,
+			        matchBrackets: true,
+			        value: "print('Hello World!')"
+			    });
+
+				get_messages();
+				// var myCodeMirror = CodeMirror($('#column').get(0), {
+				//   value: "print('Hello world!')\n",
+				//   mode:  "python"
+				// }); 
+
+			});
+		</script>
+	</head>
+	<body style="width: 100%; height: 100%; background-color: #2f3e4e;" >
+		<div class="container-fluid">
+			<div class="row" style="color: #ffffff;">
+				<center>
+					NAME OF THIS SUPER CHAT
+				</center>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="panel panel-default">
+						<div class="panel-body" id="chat-panel" style="min-height: 500; max-height: 500;overflow-y: scroll;">
+							<!-- <b>Author</b> <br>
+							<div class="well well-sm" style="word-wrap: break-word;">
+								Text
+							</div> -->
+						</div>
+					</div>
+					
+					<!-- <div class="panel panel-default">
+						<div class="panel-body"> -->
+							<label for="message-input" class="sr-only">Message</label>
+							<div class="row">
+								<div class="col-sm-10" >
+			    					<input type="text" class="form-control" id="message-input" placeholder="Write here">
+		    					</div>
+		    					<div class="col-sm-2" style="padding-left: 0;">
+									<button type="submit" class="btn btn-default btn-block" id="send-btn">Send</button>
+								</div>
+							</div>
+					<!--	</div>
+					</div> -->
+				</div>
+				<div class="col-md-6" id="column">
+					<textarea class="form-control" id="code-editor" rows="3" style="resize: vertical; "></textarea>
+					<button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px; margin-right:16px">Commit</button>
+					<div class="row">
+						<div class="col-sm-6" id="column">
+							<button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px">Перейти</button>
+						</div>
+						<div class="col-sm-6" id="column">
+							<button type="submit" class="btn btn-default btn-block" data-toggle="modal" data-target="#compare" id="compare-btn" style="margin-top:10px">Сравнить с</button>
+						</div>						
+					</div>	
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+						   	<div class="modal-dialog" >
+								<div class="modal-content" style="border: 2px solid #424f5e; background: #1b2c3e; padding: 2%;">
+									<form role = "form" action = "/create_chat">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<center>
+							        			<h4 class="modal-title" style="color: #dddddd" id="myLabel">Сравнить с</h4>
+							      			</center>
+							      		</div>
+										<div class="modal-body">
+											<centre>
+												<input type="text" class="form-control" placeholder="Commit">
+												<button type="submit" class="btn btn-default btn-block" id="com-btn" style="margin-top:20px">Сравнить</button> 
+											</centre>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+	</body>
+=======
         <script type="text/javascript">
             var last_index;
             var chat_index;
@@ -192,4 +342,5 @@
             </div>
         </div>
     </body>
+>>>>>>> origin/master
 </html>

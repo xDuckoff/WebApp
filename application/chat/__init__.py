@@ -4,6 +4,14 @@ from application import db, socketio
 from flask_socketio import emit
 
 
+def html_special_chars(text):
+    return text \
+    .replace(u"&", u"&amp;") \
+    .replace(u'"', u"&quot;") \
+    .replace(u"'", u"&#039;") \
+    .replace(u"<", u"&lt;") \
+    .replace(u">", u"&gt;")
+
 def create_chat(name, code, username):
     chat_to_create = Chat(name)
     db.session.add(chat_to_create)

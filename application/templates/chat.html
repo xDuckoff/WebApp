@@ -45,9 +45,12 @@
             function append_to_textarea(message) {
                 var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
                 $("#chat-panel").append(text);
-                var text_to_play = message.author + ' сказал ' + message.message;
                 if ($("#payt1").prop("checked")){
-                    if (message.type != 'other_message') {
+                    if (message.type != 'sys') {
+                        var text_to_play = message.author + ' сказал ' + message.message;
+                        voice.addText(text_to_play);
+                    } else {
+                        var text_to_play = message.message;
                         voice.addText(text_to_play);
                     }
                 };

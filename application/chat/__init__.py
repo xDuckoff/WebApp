@@ -4,9 +4,14 @@ from application import db, socketio
 from flask_socketio import emit
 from markdown import Markdown
 
-def markdown(text):
-    md = Markdown(str(text))
-    return md.toString()
+
+def html_special_chars(text):
+    return text \
+    .replace(u"&", u"&amp;") \
+    .replace(u'"', u"&quot;") \
+    .replace(u"'", u"&#039;") \
+    .replace(u"<", u"&lt;") \
+    .replace(u">", u"&gt;")
 
 def create_chat(name, code, username):
     chat_to_create = Chat(name)
@@ -21,7 +26,7 @@ def get_chat_info(id):
     return {'name':result.name}
 
 def send_message(id, text, type, username):
-    text = markdown(text)
+    text = html_special_chars(text)
     db.session.add(Message(text, username, id, type))
     db.session.commit()
 

@@ -50,7 +50,7 @@ def get_code(id, index):
 
 def find_chat(name):
     try:
-        return Chat.query.filter_by(name=name).limit(1)[0].id
+        return Chat.query.filter(Chat.name.like('%'+name+'%')).all()
     except IndexError:
         return -1
 

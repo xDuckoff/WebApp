@@ -29,7 +29,7 @@ def logout():
 def index():
     chat_title = request.args.get('search_title_text', '')
     if chat_title == '':
-        return render_template('index.html')
+        return render_template('index.html', chats=[])
     else:
         return render_template('index.html',chats=chat.find_chat(str(chat_title)))
 

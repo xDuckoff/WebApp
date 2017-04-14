@@ -2,7 +2,7 @@ from flask import session
 from application.models import Message, Code, Chat
 from application import db, socketio
 from flask_socketio import emit
-from markdown import Markdown
+
 
 
 def html_special_chars(text):
@@ -14,6 +14,8 @@ def html_special_chars(text):
     .replace(u">", u"&gt;")
 
 def create_chat(name, code, username):
+    name = html_special_chars(name)
+	code = html_special_chars(code)
     chat_to_create = Chat(name)
     db.session.add(chat_to_create)
     db.session.commit()
@@ -47,6 +49,7 @@ def get_messages(id, username):
     return ret
 
 def send_code(id, text, username):
+    text = html_special_chars(text)
     CodeToSend = Code(text, username, id)
     db.session.add(CodeToSend)
     db.session.commit()

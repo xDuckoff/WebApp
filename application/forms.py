@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from flask.sessions import SessionInterface
 from flask import session
 from application import app
-from application.chat.__init__ import html_special_chars
+from application.chat import html_special_chars
 
 session_opts = {
     'session.url': '127.0.0.1:11211',

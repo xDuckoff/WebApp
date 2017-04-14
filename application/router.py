@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import render_template, redirect, session, url_for, request
-from application import app
+from application import app, chat
 from forms import LoginForm, login_user, IsInSession
 
 
@@ -27,7 +27,11 @@ def logout():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    chat_title = request.args.get('search_title_text', '')
+    if chat_title == '':
+        return render_template('index.html', chats=[])
+    else:
+        return render_template('index.html',chats=chat.find_chat(str(chat_title)))
 
 
 import application.chat.router

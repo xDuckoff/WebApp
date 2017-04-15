@@ -12,7 +12,7 @@ def html_special_chars(text):
     .replace(u"<", u"&lt;") \
     .replace(u">", u"&gt;")
 
-def markdown_to_hrml(mrkdwn)
+def markdown_to_html(mrkdwn)
     html = markdown(mrkdwn)
     return html
 

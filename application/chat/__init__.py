@@ -2,8 +2,7 @@ from flask import session
 from application.models import Message, Code, Chat
 from application import db, socketio
 from flask_socketio import emit
-
-
+from markdown import markdown
 
 def html_special_chars(text):
     return text \
@@ -12,6 +11,10 @@ def html_special_chars(text):
     .replace(u"'", u"&#039;") \
     .replace(u"<", u"&lt;") \
     .replace(u">", u"&gt;")
+
+def markdown_to_hrml(mrkdwn)
+    html = markdown(mrkdwn)
+    return html
 
 def create_chat(name, code, username):
     name = html_special_chars(name)

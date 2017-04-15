@@ -76,7 +76,7 @@ def get_chat_info():
     chat_id = int(request.args['chat'])
     return dumps(chat.get_chat_info(chat_id))
 
-@app.route('/get_chat_commits', methods=['GET', 'POST'])
+@app.route('/get_commits', methods=['GET', 'POST'])
 def get_chat_commits():
     chat_id = int(request.args['chat'])
     return dumps(chat.generate_tree(chat_id))

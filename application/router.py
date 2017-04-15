@@ -8,11 +8,10 @@ from forms import LoginForm, login_user, IsInSession
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
     form = LoginForm()
-    numberofchat = request.args['chat']
-    if numberofchat == '':
-        link = '/'
+    if 'chat' in request.args:
+        link = '/chat/' + request.args['chat']
     else:
-        link = '/chat/' + numberofchat 
+        link = '/'
     if form.validate_on_submit():
         login_user(form.login.data)
         return redirect(link)

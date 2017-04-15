@@ -31,7 +31,6 @@ def get_chat_info(id):
     return {'name':result.name}
 
 def send_message(id, text, type, username):
-    text = html_special_chars(text)
     text = markdown_to_html(text)
     db.session.add(Message(text, username, id, type))
     db.session.commit()

@@ -3,14 +3,11 @@ from application.models import Message, Code, Chat
 from application import db, socketio
 from flask_socketio import emit
 from markdown import markdown
+import html
 
 def html_special_chars(text):
-    return text \
-    .replace(u"&", u"&amp;") \
-    .replace(u'"', u"&quot;") \
-    .replace(u"'", u"&#039;") \
-    .replace(u"<", u"&lt;") \
-    .replace(u">", u"&gt;")
+    text = html.escape(text)
+    return text
 
 def markdown_to_html(mrkdwn)
     html = markdown(mrkdwn)

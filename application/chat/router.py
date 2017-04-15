@@ -68,11 +68,15 @@ def send_code():
 def get_code():
     if not(IsInSession()):
         return redirect('/login')
-    chat_id = int(request.args['chat'])
     index = int(request.args['index'])
-    return dumps(chat.get_code(chat_id, index))
+    return dumps(chat.get_code(index))
 
 @app.route('/get_chat_info', methods=['GET', 'POST'])
 def get_chat_info():
     chat_id = int(request.args['chat'])
     return dumps(chat.get_chat_info(chat_id))
+
+@app.route('/get_chat_commits', methods=['GET', 'POST'])
+def get_chat_commits():
+    chat_id = int(request.args['chat'])
+    return dumps(chat.generate_tree(chat_id))

@@ -44,8 +44,8 @@ def send_code(id, text, username):
     sys_message("New Commit " + str(code_id), str(id))
     return code_id
 
-def get_code(id, index):
-    result = Code.query.filter_by(chat=id)[index]
+def get_code(index):
+    result = Code.query.get(index)
     return {"author": result.author, "code": result.content}
 
 def find_chat(name):
@@ -54,3 +54,13 @@ def find_chat(name):
 def sys_message(data, room):
     send_message(int(room), data, 'sys', 'System')
     socketio.emit('message', {'message':data, 'author':'System', 'type':'sys'}, room=room, broadcast=True)
+
+def get_commits_in_chat(chat):
+    return Code.query.filter_by(chat=chat)
+
+def generate_tree(chat):
+    commits = get_commits_in_chat(chat)
+    commits_data = []
+    for commit in commits:
+        commits_data.append({"id":int(commit.id)})
+    return {"commits":commits_data}

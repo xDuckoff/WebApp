@@ -21,12 +21,33 @@ def on_join(room):
 def on_leave(room):
     leave_room(room)
 
+@app.route('/treePage', methods=['GET', 'POST'])
+def treePage():
+    return render_template('treeTest.html')
+
+@app.route('/tree', methods=['GET', 'POST'])
+def tree():
+    coms = [
+        {'id':1, 'parent':0, 'head': "1"},
+        {'id':2, 'parent':1, 'head': "0"},
+        {'id':3, 'parent':1, 'head': "0"},
+        {'id':4, 'parent':2, 'head': "0"}
+    ]
+    return render_template('commitsTree.html',commits = coms)
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
     if not(IsInSession()):
         return redirect('/login?chat=' + str(chat_id))
-    return render_template('chat.html')
+    coms = [
+        {'id':1, 'parent':0, 'head': "1"},
+        {'id':2, 'parent':1, 'head': "0"},
+        {'id':3, 'parent':1, 'head': "0"},
+        {'id':4, 'parent':1, 'head': "0"},
+        {'id':5, 'parent':2, 'head': "0"},
+        {'id':6, 'parent':2, 'head': "0"}
+    ]
+    return render_template('chat.html',commits = coms)
 
 
 @app.route('/create_chat', methods=['GET', 'POST'])

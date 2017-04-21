@@ -1,6 +1,11 @@
 import unittest
+import os
+import flask_migrate
 from application import chat
+from application import app
 
+TEST_DB = 'test'
+PATH_TO_DATABASE = os.path.join(os.path.abspath(os.path.curdir), TEST_DB + ".slite")
 
 USERNAME = 'Bot'
 CHAT_NAME = 'Test Chat'
@@ -12,11 +17,17 @@ CHAT_ID = 0
 
 class TestBaseChatFunctions(unittest.TestCase):
 
-    def test_chat_creating(self):
+    def setUp(self):
         global CHAT_ID
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + PATH_TO_DATABASE
+        with app.app_context():
+            flask_migrate.upgrade()
         CHAT_ID = chat.create_chat(CHAT_NAME, CHAT_CODE, USERNAME)
         self.assertEquals(chat.get_chat_info(CHAT_ID), {'name': CHAT_NAME})
         self.assertEquals(chat.get_code(CHAT_ID, 0), {'author': USERNAME, 'code': CHAT_CODE})
+
+    def tearDown(self):
+        os.remove(PATH_TO_DATABASE)
 
     def test_message_sending(self):
         chat.send_message(CHAT_ID, TEST_MESSAGE, 'usr', USERNAME)

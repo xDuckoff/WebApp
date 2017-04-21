@@ -1,4 +1,3 @@
-import unittest
-from tests import *
-
-unittest.main()
+if __name__ == '__main__':
+    import nose2
+    nose2.discover()

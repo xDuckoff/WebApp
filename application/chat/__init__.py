@@ -62,5 +62,5 @@ def generate_tree(chat):
     commits = get_commits_in_chat(chat)
     commits_data = []
     for commit in commits:
-        commits_data.append({"id":int(commit.id), "author":str(commit.author)})
-    return {"commits":commits_data}
+        commits_data.append({"id":int(commit.id), "author":str(commit.author), "parent":0})
+    return commits_data

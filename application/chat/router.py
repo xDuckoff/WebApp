@@ -31,7 +31,14 @@ def tree():
         {'id':1, 'parent':0, 'head': "1"},
         {'id':2, 'parent':1, 'head': "0"},
         {'id':3, 'parent':1, 'head': "0"},
-        {'id':4, 'parent':2, 'head': "0"}
+        {'id':4, 'parent':2, 'head': "0"},
+        {'id':5, 'parent':2, 'head': "0"},
+        {'id':6, 'parent':2, 'head': "0"},
+        {'id':7, 'parent':5, 'head': "0"},
+        {'id':8, 'parent':7, 'head': "0"},
+        {'id':9, 'parent':8, 'head': "0"},
+        {'id':10, 'parent':9, 'head': "0"},
+        {'id':11, 'parent':10, 'head': "0"}
     ]
     return render_template('commitsTree.html',commits = coms)
 

@@ -215,9 +215,18 @@
                     <!--    </div>
                     </div> -->
                 </div>
+
                 <div class="col-md-6" id="column">
                     <textarea class="form-control" id="code-editor" rows="3" style="resize: vertical; "></textarea>
                     <button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px; margin-right:16px">Commit</button>
+                                        <div class="row">
+                                        <div class="col-sm-12" id="tree"></div>
+                                            <script type="text/javascript">
+                                                $.get( '/tree', function( data ) {
+                                                    $('#tree').html(data);
+                                                });
+                                            </script>
+                                        </div>
                                         <div class="row">
                                             <div class="col-sm-6" id="column">
                                                 <button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px">Перейти</button>
@@ -228,7 +237,7 @@
                                         </div>  
                 </div>
         </div>
-        <div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+        <div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 						   	<div class="modal-dialog" >
 								<div class="modal-content" style="border: 2px solid #424f5e; background: #1b2c3e; padding: 2%;">
 									<form role = "form" action = "/create_chat">
@@ -238,10 +247,8 @@
 							        			<h4 class="modal-title" style="color: #dddddd" id="myLabel">Сравнить с</h4>
 							      			</center>
 							      		</div>
-                                        <div id="tree"></div>
 										<div class="modal-body">
 											<centre>
-                                                <div class="chart" id="tree"></div>
 												<input type="text" class="form-control" placeholder="Commit">
 												<button type="submit" class="btn btn-default btn-block" id="com-btn" style="margin-top:20px">Сравнить</button> 
 											</centre>

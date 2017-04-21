@@ -37,6 +37,10 @@
                     socket.emit('message', {'message':$("#message-input").val(), 'room':chat_id, 'type':'usr'});
                     $("#message-input").val('');
                 });
+                $("#login-btn").click(function() {
+                if (chat_id == '') window.location = "/login";
+                else window.location = "/login?chat=" + chat_id;
+                });
             });
         </script>
 
@@ -162,8 +166,15 @@
    <nav class="navbar navbar-inverse navbar-static-top" >
   <div class="container">
     
-<li class="active"><a href="/"><button type="button" class="btn btn-primary navbar-btn">Home</button>
-<span class="sr-only">(current)</span></a></li>
+<li class="active">
+    <a href="/">
+        <button type="button" class="btn btn-primary navbar-btn">Главная</button>
+        <span class="sr-only">(current)</span>
+    </a>
+    <a style = "padding-left: 20px">
+        <button type="button" class="btn btn-primary navbar-btn" id="login-btn">Вход</button>
+    </a>
+</li>
     
 
   </div>

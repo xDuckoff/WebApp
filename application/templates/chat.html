@@ -223,12 +223,12 @@
                                                 <button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px">Перейти</button>
                                             </div>
                                             <div class="col-sm-6" id="column">
-                                                <button type="submit" class="btn btn-default btn-block" data-toggle="modal" data-target="#compare" id="compare-btn" style="margin-top:10px">Сравнить с</button>
+                                                <button type="submit" class="btn btn-default btn-block" data-toggle="modal" data-target="#compare" id="compare-btn" style="margin-top:10px" onclick="$.get( '/tree', function( data ) {$('#tree').html(data);});">Сравнить с</button>
                                             </div>
                                         </div>  
                 </div>
-        </div>       
-        <div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+        </div>
+        <div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
 						   	<div class="modal-dialog" >
 								<div class="modal-content" style="border: 2px solid #424f5e; background: #1b2c3e; padding: 2%;">
 									<form role = "form" action = "/create_chat">
@@ -238,26 +238,10 @@
 							        			<h4 class="modal-title" style="color: #dddddd" id="myLabel">Сравнить с</h4>
 							      			</center>
 							      		</div>
-
+                                        <div id="tree"></div>
 										<div class="modal-body">
 											<centre>
-                                                <div id="tree-simple" class="chart"> </div>
-                                                <script type="text/javascript">
-                                                    config = {
-                                                        container: "#tree-simple",
-                                                    };
-                                                    {% for commit in commits %}
-                                                    node{{ commit['id'] }} = {
-                                                        {% if commit['head'] == "0" %}parent: node{{ commit['parent'] }},{% endif %}
-                                                        text: { name: "{{ commit['id'] }}" }
-                                                    };
-                                                    {% endfor %}
-
-                                                    simple_chart_config = [
-                                                        config{% for commit in commits %}, node{{ commit['id'] }}{% endfor %}
-                                                    ];
-                                                    var tree = new Treant(simple_chart_config);
-                                                </script>
+                                                <div class="chart" id="tree"></div>
 												<input type="text" class="form-control" placeholder="Commit">
 												<button type="submit" class="btn btn-default btn-block" id="com-btn" style="margin-top:20px">Сравнить</button> 
 											</centre>
@@ -265,7 +249,5 @@
 									</form>
 								</div>
 							</div>
-	
-		</div>
     </body>
 </html>

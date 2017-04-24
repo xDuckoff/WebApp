@@ -3,11 +3,11 @@ from application.models import Message, Code, Chat
 from application import db, socketio
 from flask_socketio import emit
 from markdown import markdown
-import html
+import cgi
 
 def create_chat(name, code, username):
-    name = html.escape(name)
-    code = html.escape(code)
+    name = cgi.escape(name)
+    code = cgi.escape(code)
     chat_to_create = Chat(name)
     db.session.add(chat_to_create)
     db.session.commit()
@@ -20,7 +20,7 @@ def get_chat_info(id):
     return {'name':result.name}
 
 def send_message(id, text, type, username):
-    text = html.escape(text)
+    text = cgi.escape(text)
     text = markdown(text)
     db.session.add(Message(text, username, id, type))
     db.session.commit()
@@ -42,7 +42,7 @@ def get_messages(id, username):
     return ret
 
 def send_code(id, text, username):
-    text = html.escape(text)
+    text = cgi.escape(text)
     CodeToSend = Code(text, username, id)
     db.session.add(CodeToSend)
     db.session.commit()

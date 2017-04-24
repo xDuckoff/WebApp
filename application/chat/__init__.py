@@ -5,10 +5,6 @@ from flask_socketio import emit
 from markdown import markdown
 import html
 
-def html_special_chars(text):
-    text = html.escape(text)
-    return text
-
 def create_chat(name, code, username):
     name = html.escape(name)
     code = html.escape(code)
@@ -24,7 +20,7 @@ def get_chat_info(id):
     return {'name':result.name}
 
 def send_message(id, text, type, username):
-    text = html_special_chars(text)
+    text = html.escape(text)
     text = markdown(text)
     db.session.add(Message(text, username, id, type))
     db.session.commit()
@@ -46,7 +42,7 @@ def get_messages(id, username):
     return ret
 
 def send_code(id, text, username):
-    text = html_special_chars(text)
+    text = html.escape(text)
     CodeToSend = Code(text, username, id)
     db.session.add(CodeToSend)
     db.session.commit()

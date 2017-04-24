@@ -9,10 +9,6 @@ def html_special_chars(text):
     text = html.escape(text)
     return text
 
-def markdown_to_html(mrkdwn)
-    html = markdown(mrkdwn)
-    return html
-
 def create_chat(name, code, username):
     name = html_special_chars(name)
     code = html_special_chars(code)
@@ -29,7 +25,7 @@ def get_chat_info(id):
 
 def send_message(id, text, type, username):
     text = html_special_chars(text)
-    text = markdown_to_html(text)
+    text = markdown(text)
     db.session.add(Message(text, username, id, type))
     db.session.commit()
 

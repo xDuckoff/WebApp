@@ -63,10 +63,7 @@ def get_code(id, index):
     return {"author": result.author, "code": result.content}
 
 def find_chat(name):
-    try:
-        return Chat.query.filter_by(name=name).limit(1)[0].id
-    except IndexError:
-        return -1
+    return Chat.query.filter(Chat.name.like('%'+name+'%')).all()
 
 def sys_message(data, room):
     send_message(int(room), data, 'sys', 'System')

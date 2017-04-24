@@ -9,3 +9,5 @@ mysql==0.0.1
 eventlet==0.20.1
 Markdown==2.6.8
 html==1.16
+nose2==0.6.5
+

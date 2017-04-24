@@ -10,8 +10,8 @@ def html_special_chars(text):
     return text
 
 def create_chat(name, code, username):
-    name = html_special_chars(name)
-    code = html_special_chars(code)
+    name = html.escape(name)
+    code = html.escape(code)
     chat_to_create = Chat(name)
     db.session.add(chat_to_create)
     db.session.commit()

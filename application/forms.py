@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from flask.sessions import SessionInterface
 from flask import session
 from application import app
-from application.chat import html_special_chars
+import html
 
 session_opts = {
     'session.url': '127.0.0.1:11211',
@@ -26,7 +26,7 @@ class BeakerSessionInterface(SessionInterface):
 
 
 def login_user(login):
-    session['login'] = html_special_chars(login)
+    session['login'] = html.escape(login)
     session['last'] = -1
 
 

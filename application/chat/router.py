@@ -27,19 +27,8 @@ def treePage():
 
 @app.route('/tree', methods=['GET', 'POST'])
 def tree():
-    coms = [
-        {'id':1, 'parent':0, 'head': "1"},
-        {'id':2, 'parent':1, 'head': "0"},
-        {'id':3, 'parent':1, 'head': "0"},
-        {'id':4, 'parent':2, 'head': "0"},
-        {'id':5, 'parent':2, 'head': "0"},
-        {'id':6, 'parent':2, 'head': "0"},
-        {'id':7, 'parent':5, 'head': "0"},
-        {'id':8, 'parent':7, 'head': "0"},
-        {'id':9, 'parent':8, 'head': "0"},
-        {'id':10, 'parent':9, 'head': "0"},
-        {'id':11, 'parent':10, 'head': "0"}
-    ]
+    chat_id = int(request.args['chat'])
+    coms = chat.generate_commits_tree(chat_id)
     return render_template('commitsTree.html',commits = coms)
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
@@ -80,7 +69,8 @@ def send_code():
         return redirect('/login')
     chat_id = int(request.args['chat'])
     code = request.args['code']
-    code_id = chat.send_code(chat_id, code, session['login'])
+    parent = request.args['parent']
+    code_id = chat.send_code(chat_id, code, session['login'], parent)
     return 'OK'
 
 
@@ -88,8 +78,9 @@ def send_code():
 def get_code():
     if not(IsInSession()):
         return redirect('/login')
+    chat_id = int(request.args['chat'])
     index = int(request.args['index'])
-    return dumps(chat.get_code(index))
+    return dumps(chat.get_code(chat_id, index))
 
 @app.route('/get_chat_info', methods=['GET', 'POST'])
 def get_chat_info():

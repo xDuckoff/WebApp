@@ -12,8 +12,9 @@
 	};
 	{% for commit in commits %}
 	node{{ commit['id'] }} = {
-		{% if commit['head'] == "0" %}parent: node{{ commit['parent'] }},{% endif %}
-		text: { name: "{{ commit['id'] }}" },	
+		{% if commit['id'] != 0 %}parent: node{{ commit['parent'] }},{% endif %}
+		text: { name: "{{ commit['id'] }}" },
+		innerHTML: "<div id='button{{ commit['id'] }}'>{{ commit['id'] }}</div>"	
 	};
 	{% endfor %}
 
@@ -21,4 +22,11 @@
 		config{% for commit in commits %}, node{{ commit['id'] }}{% endfor %}
 	];
 	var tree = new Treant(simple_chart_config);
+
+
+	{% for commit in commits %}
+	$("#button{{ commit['id'] }}").click(function() {
+		get_code({{ commit['id'] }});
+    });
+    {% endfor %}
 </script>

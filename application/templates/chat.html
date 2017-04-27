@@ -36,6 +36,10 @@
                     add_message(data);
                 });
 
+                socket.on('commit', function() {
+                    get_tree("tree");
+                });
+
                 $("#send-btn").click(function() {
                     socket.emit('message', {'message':$("#message-input").val(), 'room':chat_id, 'type':'usr'});
                     $("#message-input").val('');
@@ -50,7 +54,7 @@
 
         <script type="text/javascript">
             var last_index;
-            var chat_index;
+            var chat_index = location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
             function append_to_textarea(message) {
                 var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
                 $("#chat-panel").append(text);
@@ -142,9 +146,9 @@
                 });
             }
 
+            var editor;
             jQuery(function ($) {
                 voice.init();
-                chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
                 $("#message-input").keypress(function(e) {
                     if(e.which == 13) {
                         $("#send-btn").click();
@@ -152,7 +156,7 @@
                 });
 
                 $('#code-editor').val("print('Hello World!')");
-                var editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
+                editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
                     mode: {name: "python",
                            version: 2,
                            singleLineStringErrors: false},
@@ -162,6 +166,28 @@
                     value: "print('Hello World!')"
                 });
             });
+
+            function get_tree(objecy_id) {
+                $.get( '/tree?chat='+chat_index, function( data ) {
+                    $('#'+objecy_id).html(data);
+                });
+            }
+            function get_code(commit_index){
+                code = ""
+                $.ajax({
+                    url:"/get_code",
+                    type:"GET",
+                    data:{
+                        chat: chat_index,
+                        index: commit_index
+                    },
+                    dataType: "json",
+                    success: function(data){
+                        editor.getDoc().setValue(data.code);
+                    }
+                });
+            }
+            get_tree("tree");
         </script>
     </head>
     <body style="width: 100%; height: 100%; background-color: #2f3e4e;" >
@@ -232,18 +258,13 @@
                     <button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px; margin-right:16px">Commit</button>
                                         <div class="row">
                                         <div class="col-sm-12" id="tree"></div>
-                                            <script type="text/javascript">
-                                                $.get( '/tree', function( data ) {
-                                                    $('#tree').html(data);
-                                                });
-                                            </script>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-6" id="column">
                                                 <button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px">Перейти</button>
                                             </div>
                                             <div class="col-sm-6" id="column">
-                                                <button type="submit" class="btn btn-default btn-block" data-toggle="modal" data-target="#compare" id="compare-btn" style="margin-top:10px" onclick="$.get( '/tree', function( data ) {$('#tree').html(data);});">Сравнить с</button>
+                                                <button type="submit" class="btn btn-default btn-block" data-toggle="modal" data-target="#compare" id="compare-btn" style="margin-top:10px" onclick="get_tree('tree');">Сравнить с</button>
                                             </div>
                                         </div>  
                 </div>

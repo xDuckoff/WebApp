@@ -122,11 +122,33 @@
             }
             function add_message(message) {
                 var t = false;
+
                 if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
                     t = true;
                 append_to_textarea(message);
                 if (t)
                     $('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);
+                if (!("Notification" in window)) {
+				    alert("This browser does not support desktop notification");
+				}
+ 
+				  // Проверка разрешения на отправку уведомлений
+				else if (Notification.permission === "granted") {
+				    // Если разрешено то создаем уведомлений
+					var notification = new Notification(message.message);
+					Notification.sound; 
+				}
+
+				  // В противном случает мы запрашиваем разрешение
+				else if (Notification.permission !== 'denied') {
+					Notification.requestPermission(function (permission) {
+				      // Если пользователь разрешил, то создаем уведомление 
+				    	if (permission === "granted") {
+				    		var notification = new Notification(message.message);
+				    		Notification.sound;
+				    	}	
+					});
+				}
             }
 
             function get_messages() {

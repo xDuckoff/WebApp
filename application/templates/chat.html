@@ -21,15 +21,15 @@
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
         <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" charset="utf-8">
+            var chat_index = {{ chat_id }}
             $(document).ready(function(){
                 var socket = io.connect('http://' + document.domain + ':' + location.port);
-                var chat_id = location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
                 socket.on('connect', function() {
                     get_messages();
-                    socket.emit('join', chat_id);
+                    socket.emit('join', chat_index);
                 });
                 socket.on('disconnect', function() {
-                    socket.emit('leave', chat_id);
+                    socket.emit('leave', chat_index);
                 });
 
                 socket.on('message', function(data) {
@@ -41,12 +41,12 @@
                 });
 
                 $("#send-btn").click(function() {
-                    socket.emit('message', {'message':$("#message-input").val(), 'room':chat_id, 'type':'usr'});
+                    socket.emit('message', {'message':$("#message-input").val(), 'room':chat_index, 'type':'usr'});
                     $("#message-input").val('');
                 });
                 $("#login-btn").click(function() {
-                if (chat_id == '') window.location = "/login";
-                else window.location = "/login?chat=" + chat_id;
+                if (chat_index == '') window.location = "/login";
+                else window.location = "/login?chat=" + chat_index;
                 });
             });
         </script>
@@ -54,7 +54,7 @@
 
         <script type="text/javascript">
             var last_index;
-            var chat_index = location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
+            
             function append_to_textarea(message) {
                 var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
                 $("#chat-panel").append(text);
@@ -154,8 +154,6 @@
                         $("#send-btn").click();
                     }
                 });
-
-                $('#code-editor').val("print('Hello World!')");
                 editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
                     mode: {name: "python",
                            version: 2,

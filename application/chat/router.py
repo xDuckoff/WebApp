@@ -35,7 +35,7 @@ def tree():
 def chat_page(chat_id):
     if not(IsInSession()):
         return redirect('/login?chat=' + str(chat_id))
-    return render_template('chat.html')
+    return render_template('chat.html', chat_id=chat_id)
 
 
 @app.route('/create_chat', methods=['GET', 'POST'])

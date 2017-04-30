@@ -8,7 +8,7 @@ from flask_socketio import send, emit, join_room, leave_room
 @socketio.on('message')
 def handle_message(json):
     chat_id = int(json['room'])
-	message = cgi.escape(json['message'])
+    message = cgi.escape(json['message'])
     chat.send_message(chat_id, message, 'usr', session['login'])
     socketio.emit('message', {'message':message, 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
 

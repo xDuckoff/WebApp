@@ -20,8 +20,6 @@ def get_chat_info(id):
     return {'name':result.name}
 
 def send_message(id, text, type, username):
-    #FIXME text = cgi.escape(text)
-    #FIXME text = markdown(text)
     db.session.add(Message(text, username, id, type))
     db.session.commit()
 

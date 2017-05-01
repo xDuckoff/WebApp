@@ -141,7 +141,7 @@
                 voice.init();
                 last_index = 0;
                 {% if not socket_mode %}
-                var timerId = setInterval(get_messages, 1000);
+                var timerId = setInterval(get_messages, 5000);
                 {% endif %}
                 chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
                 $("#message-input").keypress(function(e) {

@@ -128,15 +128,21 @@
             }
 
             function get_messages() {
-                $.get( "/get_messages?chat="+chat_index, function( data ) {
-                    var messages = $.parseJSON(data);
-                    for (var i = last_index; i < messages.length; i++) {
-                        add_message(messages[i]);
+                $.ajax({
+                    url: "/get_messages",
+                    data: {
+                        "chat": chat_index
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        var messages = data;
+                        for (var i = last_index; i < messages.length; i++){
+                            add_message(messages[i]);
+                        }
+                        last_index=messages.length;
                     }
-                    last_index=messages.length;
                 });
             }
-
             jQuery(function ($) {
                 voice.init();
                 last_index = 0;
@@ -162,7 +168,12 @@
                 });
                 {% if not socket_mode %}
                 $("#send-btn").click(function() {
-                    $.get( "/send_message?chat="+chat_index + "&message=" + $("#message-input").val(), function( data ) {
+                    $.ajax({
+                        url: "/send_message",
+                        data: {
+                            "chat": chat_index,
+                            "message" : $("#message-input").val()
+                        }
                     });
                     $("#message-input").val('');
                 });

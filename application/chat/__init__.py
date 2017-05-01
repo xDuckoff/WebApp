@@ -1,7 +1,11 @@
 from flask import session
 from application.models import Message, Code, Chat
-from application import db, socketio
-from flask_socketio import emit
+from application import db
+from application import app
+
+if app.config['SOCKET_MODE'] == 'True':
+    from application import socketio
+    from flask_socketio import emit
 
 
 def create_chat(name, code, username):
@@ -53,4 +57,5 @@ def find_chat(name):
 
 def sys_message(data, room):
     send_message(int(room), data, 'sys', 'System')
-    socketio.emit('message', {'message':data, 'author':'System', 'type':'sys'}, room=room, broadcast=True)
+    if app.config['SOCKET_MODE'] == 'True':
+        socketio.emit('message', {'message':data, 'author':'System', 'type':'sys'}, room=room, broadcast=True)

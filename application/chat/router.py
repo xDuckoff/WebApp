@@ -21,10 +21,6 @@ def on_join(room):
 def on_leave(room):
     leave_room(room)
 
-@app.route('/treePage', methods=['GET', 'POST'])
-def treePage():
-    return render_template('treeTest.html')
-
 @app.route('/tree', methods=['GET', 'POST'])
 def tree():
     chat_id = int(request.args['chat'])

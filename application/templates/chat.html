@@ -21,8 +21,8 @@
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
         <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" charset="utf-8">
-            var chat_index = {{ chat_id }}
-            $(document).ready(function(){
+            var chat_index = {{ chat_id }};
+            jQuery(function ($) {
                 var socket = io.connect('http://' + document.domain + ':' + location.port);
                 socket.on('connect', function() {
                     get_messages();
@@ -166,8 +166,16 @@
             });
 
             function get_tree(objecy_id) {
-                $.get( '/tree?chat='+chat_index, function( data ) {
-                    $('#'+objecy_id).html(data);
+                $.ajax({
+                    url:"/tree",
+                    type:"GET",
+                    data:{
+                        chat: chat_index
+                    },
+                    dataType: "html",
+                    success: function( data ) {
+                        $('#'+objecy_id).html(data);
+                    }
                 });
             }
             function get_code(commit_index){

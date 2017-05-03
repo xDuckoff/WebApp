@@ -150,12 +150,7 @@
                     }
                 });
             }
-<<<<<<< HEAD
-
             var editor;
-            jQuery(function ($) {
-                voice.init();
-=======
             jQuery(function ($) {
                 voice.init();
                 last_index = 0;
@@ -163,7 +158,6 @@
                 var timerId = setInterval(get_messages, 5000);
                 {% endif %}
                 chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
->>>>>>> master
                 $("#message-input").keypress(function(e) {
                     if(e.which == 13) {
                         $("#send-btn").click();

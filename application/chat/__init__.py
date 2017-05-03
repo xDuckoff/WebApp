@@ -45,8 +45,8 @@ def send_code(id, text, username, parent):
     db.session.add(CodeToSend)
     db.session.commit()
     code_id = CodeToSend.id
-    sys_message("New Commit " + str(code_id), id)
-    socketio.emit('commit', room=id, broadcast=True)
+    sys_message("New Commit " + str(code_id), str(id))
+    socketio.emit('commit', room=str(id), broadcast=True)
     return code_id
 
 def get_code(id, index):

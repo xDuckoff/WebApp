@@ -17,6 +17,7 @@
         <script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
         <script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
 
+        {% if socket_mode %}
         <!--socketIO-->
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
         <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -44,12 +45,9 @@
                     socket.emit('message', {'message':$("#message-input").val(), 'room':chat_index, 'type':'usr'});
                     $("#message-input").val('');
                 });
-                $("#login-btn").click(function() {
-                if (chat_index == '') window.location = "/login";
-                else window.location = "/login?chat=" + chat_index;
-                });
             });
         </script>
+        {% endif %}
 
 
         <script type="text/javascript">
@@ -137,18 +135,35 @@
             }
 
             function get_messages() {
-                $.get( "/get_messages?chat="+chat_index, function( data ) {
-                    var messages = $.parseJSON(data);
-                    for (var i = 0; i < messages.length; i++) {
-                        add_message(messages[i]);
+                $.ajax({
+                    url: "/get_messages",
+                    data: {
+                        "chat": chat_index
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        var messages = data;
+                        for (var i = last_index; i < messages.length; i++){
+                            add_message(messages[i]);
+                        }
+                        last_index=messages.length;
                     }
-                    last_index+=messages.length;
                 });
             }
+<<<<<<< HEAD
 
             var editor;
             jQuery(function ($) {
                 voice.init();
+=======
+            jQuery(function ($) {
+                voice.init();
+                last_index = 0;
+                {% if not socket_mode %}
+                var timerId = setInterval(get_messages, 5000);
+                {% endif %}
+                chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
+>>>>>>> master
                 $("#message-input").keypress(function(e) {
                     if(e.which == 13) {
                         $("#send-btn").click();
@@ -162,6 +177,22 @@
                     indentUnit: 4,
                     matchBrackets: true,
                     value: "print('Hello World!')"
+                });
+                {% if not socket_mode %}
+                $("#send-btn").click(function() {
+                    $.ajax({
+                        url: "/send_message",
+                        data: {
+                            "chat": chat_index,
+                            "message" : $("#message-input").val()
+                        }
+                    });
+                    $("#message-input").val('');
+                });
+                {% endif %}
+                $("#login-btn").click(function() {
+                if (chat_id == '') window.location = "/login";
+                else window.location = "/login?chat=" + chat_id;
                 });
             });
 
@@ -245,7 +276,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="message-input" placeholder="Write here">
+                                        <input type="text" class="form-control" id="message-input" placeholder="Write here" maxlength="1000">
                                         <div class="input-group-btn"> 
                                                 <button type="button" class="btn btn-default btn-block" id="send-btn">Send</button>
                                         </div>

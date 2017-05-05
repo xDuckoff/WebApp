@@ -17,12 +17,16 @@
         <script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
         <script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
 
+        <script type="text/javascript" charset="utf-8">
+            var chat_index = {{ chat_id }};
+        </script>
+
         {% if socket_mode %}
         <!--socketIO-->
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
         <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" charset="utf-8">
-            var chat_index = {{ chat_id }};
+        var chat_index = {{ chat_id }};
             jQuery(function ($) {
                 var socket = io.connect('http://' + document.domain + ':' + location.port);
                 socket.on('connect', function() {
@@ -150,12 +154,46 @@
                     }
                 });
             }
+
+            
+            function get_tree(objecy_id) {
+                $.ajax({
+                    url:"/tree",
+                    type:"GET",
+                    data:{
+                        chat: chat_index
+                    },
+                    dataType: "html",
+                    success: function( data ) {
+                        $('#'+objecy_id).html(data);
+                    }
+                });
+            }
+
             var editor;
+            function get_code(commit_index){
+                code = ""
+                $.ajax({
+                    url:"/get_code",
+                    type:"GET",
+                    data:{
+                        chat: chat_index,
+                        index: commit_index
+                    },
+                    dataType: "json",
+                    success: function(data){
+                        editor.getDoc().setValue(data.code);
+                    }
+                });
+            }
+            get_tree("tree");
+
             jQuery(function ($) {
                 voice.init();
                 last_index = 0;
                 {% if not socket_mode %}
-                var timerId = setInterval(get_messages, 5000);
+                var timerIdMessage = setInterval(get_messages, 5000);
+                var timerIdTree = setInterval('get_tree("tree")', 5000);
                 {% endif %}
                 chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
                 $("#message-input").keypress(function(e) {
@@ -189,36 +227,6 @@
                 else window.location = "/login?chat=" + chat_id;
                 });
             });
-
-            function get_tree(objecy_id) {
-                $.ajax({
-                    url:"/tree",
-                    type:"GET",
-                    data:{
-                        chat: chat_index
-                    },
-                    dataType: "html",
-                    success: function( data ) {
-                        $('#'+objecy_id).html(data);
-                    }
-                });
-            }
-            function get_code(commit_index){
-                code = ""
-                $.ajax({
-                    url:"/get_code",
-                    type:"GET",
-                    data:{
-                        chat: chat_index,
-                        index: commit_index
-                    },
-                    dataType: "json",
-                    success: function(data){
-                        editor.getDoc().setValue(data.code);
-                    }
-                });
-            }
-            get_tree("tree");
         </script>
     </head>
     <body style="width: 100%; height: 100%; background-color: #2f3e4e;" >

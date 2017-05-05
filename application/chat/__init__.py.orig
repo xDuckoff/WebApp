@@ -1,5 +1,6 @@
 from flask import session
 from application.models import Message, Code, Chat
+<<<<<<< HEAD
 from application import db
 from application import app
 
@@ -7,6 +8,12 @@ if app.config['SOCKET_MODE'] == 'True':
     from application import socketio
     from flask_socketio import emit
 
+=======
+from application import db, socketio
+from flask_socketio import emit
+from markdown import markdown
+import cgi
+>>>>>>> origin/markdown
 
 def create_chat(name, code, username):
     name = cgi.escape(name)
@@ -42,9 +49,14 @@ def get_messages(id, username):
         ret.append({"author": i.author, "message": i.content, "type": type})
     return ret
 
+<<<<<<< HEAD
 def send_code(id, text, username, parent):
-    text = cgi.escape(text)
     CodeToSend = Code(text, username, id, parent)
+=======
+def send_code(id, text, username):
+    text = cgi.escape(text)
+    CodeToSend = Code(text, username, id)
+>>>>>>> origin/markdown
     db.session.add(CodeToSend)
     db.session.commit()
     code_id = CodeToSend.id

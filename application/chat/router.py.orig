@@ -4,11 +4,19 @@ from json import dumps
 from application import chat
 from application.forms import IsInSession, CreateChatForm, allowed_file
 from application import app
-import markdown
 
+<<<<<<< HEAD
 if app.config['SOCKET_MODE'] == 'True':
     from application import socketio
     from flask_socketio import send, emit, join_room, leave_room
+=======
+@socketio.on('message')
+def handle_message(json):
+    chat_id = int(json['room'])
+    message = cgi.escape(json['message'])
+    chat.send_message(chat_id, message, 'usr', session['login'])
+    socketio.emit('message', {'message':message, 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
+>>>>>>> origin/markdown
 
 if app.config['SOCKET_MODE'] == 'True':
     @socketio.on('message')
@@ -16,11 +24,9 @@ if app.config['SOCKET_MODE'] == 'True':
         chat_id = int(json['room'])
         if len(json['message']) > 1000:
             return
-        chat_id = int(json['room'])
-        message = cgi.escape(json['message'])
-        message = markdown.Markdown(message)
-        chat.send_message(chat_id, message, 'usr', session['login'])
-        socketio.emit('message', {'message':message, 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
+        chat.send_message(chat_id, json['message'], 'usr', session['login'])
+        socketio.emit('message', {'message':json['message'], 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
+
 
     @socketio.on('join')
     def on_join(room):
@@ -107,3 +113,8 @@ def get_code():
 def get_chat_info():
     chat_id = int(request.args['chat'])
     return dumps(chat.get_chat_info(chat_id))
+
+@app.route('/get_commits', methods=['GET', 'POST'])
+def get_chat_commits():
+    chat_id = int(request.args['chat'])
+    return dumps(chat.generate_tree(chat_id))

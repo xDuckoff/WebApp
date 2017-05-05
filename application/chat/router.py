@@ -29,12 +29,17 @@ if app.config['SOCKET_MODE'] == 'True':
     def on_leave(room):
         leave_room(room)
 
+@app.route('/tree', methods=['GET', 'POST'])
+def tree():
+    chat_id = int(request.args['chat'])
+    coms = chat.generate_commits_tree(chat_id)
+    return render_template('commitsTree.html',commits = coms)
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
     if not(IsInSession()):
         return redirect('/login?chat=' + str(chat_id))
-    return render_template('chat.html', socket_mode=(app.config['SOCKET_MODE'] == 'True'))
+    return render_template('chat.html',chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'))
 
 
 @app.route('/create_chat', methods=['GET', 'POST'])
@@ -82,7 +87,8 @@ def send_code():
         return redirect('/login')
     chat_id = int(request.args['chat'])
     code = request.args['code']
-    code_id = chat.send_code(chat_id, code, session['login'])
+    parent = request.args['parent']
+    code_id = chat.send_code(chat_id, code, session['login'], parent)
     return 'OK'
 
 
@@ -98,3 +104,8 @@ def get_code():
 def get_chat_info():
     chat_id = int(request.args['chat'])
     return dumps(chat.get_chat_info(chat_id))
+
+@app.route('/get_commits', methods=['GET', 'POST'])
+def get_chat_commits():
+    chat_id = int(request.args['chat'])
+    return dumps(chat.generate_tree(chat_id))

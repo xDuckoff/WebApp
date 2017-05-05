@@ -20,11 +20,13 @@ class Code(db.Model):
     content = db.Column(db.Text)
     author = db.Column(db.String(256))
     chat = db.Column(db.Integer)
+    parent = db.Column(db.Integer)
 
-    def __init__(self, content, author, chat):
+    def __init__(self, content, author, chat, parent):
         self.content = content
         self.author = author
         self.chat = chat
+        self.parent = parent
 
 
 class Chat(db.Model):

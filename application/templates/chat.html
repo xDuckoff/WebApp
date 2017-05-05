@@ -6,7 +6,10 @@
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}" type="text/javascript"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" type="text/javascript"></script>
 
-
+        <!--Treant-->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/Treant.css') }}" type="text/css"/>
+        <script src="{{ url_for('static', filename='js/vendor/raphael.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/Treant.js') }}"></script>
 
         <!-- CODEMIRROR -->
         <script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
@@ -19,23 +22,27 @@
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
         <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" charset="utf-8">
-            $(document).ready(function(){
+            var chat_index = {{ chat_id }};
+            jQuery(function ($) {
                 var socket = io.connect('http://' + document.domain + ':' + location.port);
-                var chat_id = location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
                 socket.on('connect', function() {
                     get_messages();
-                    socket.emit('join', chat_id);
+                    socket.emit('join', chat_index);
                 });
                 socket.on('disconnect', function() {
-                    socket.emit('leave', chat_id);
+                    socket.emit('leave', chat_index);
                 });
 
                 socket.on('message', function(data) {
                     add_message(data);
                 });
 
+                socket.on('commit', function() {
+                    get_tree("tree");
+                });
+
                 $("#send-btn").click(function() {
-                    socket.emit('message', {'message':$("#message-input").val(), 'room':chat_id, 'type':'usr'});
+                    socket.emit('message', {'message':$("#message-input").val(), 'room':chat_index, 'type':'usr'});
                     $("#message-input").val('');
                 });
             });
@@ -45,7 +52,7 @@
 
         <script type="text/javascript">
             var last_index;
-            var chat_index;
+            
             function append_to_textarea(message) {
                 var text =  '<div class="well well-sm" style="word-wrap: break-word;">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
                 $("#chat-panel").append(text);
@@ -143,6 +150,7 @@
                     }
                 });
             }
+            var editor;
             jQuery(function ($) {
                 voice.init();
                 last_index = 0;
@@ -155,9 +163,7 @@
                         $("#send-btn").click();
                     }
                 });
-
-                $('#code-editor').val("print('Hello World!')");
-                var editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
+                editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
                     mode: {name: "python",
                            version: 2,
                            singleLineStringErrors: false},
@@ -183,6 +189,36 @@
                 else window.location = "/login?chat=" + chat_id;
                 });
             });
+
+            function get_tree(objecy_id) {
+                $.ajax({
+                    url:"/tree",
+                    type:"GET",
+                    data:{
+                        chat: chat_index
+                    },
+                    dataType: "html",
+                    success: function( data ) {
+                        $('#'+objecy_id).html(data);
+                    }
+                });
+            }
+            function get_code(commit_index){
+                code = ""
+                $.ajax({
+                    url:"/get_code",
+                    type:"GET",
+                    data:{
+                        chat: chat_index,
+                        index: commit_index
+                    },
+                    dataType: "json",
+                    success: function(data){
+                        editor.getDoc().setValue(data.code);
+                    }
+                });
+            }
+            get_tree("tree");
         </script>
     </head>
     <body style="width: 100%; height: 100%; background-color: #2f3e4e;" >
@@ -215,6 +251,7 @@
                     NAME OF THIS SUPER CHAT
                 </center>
             </div>
+	    
             <div class="row">
                 <div class="col-md-6">
                     <div class="panel panel-default">
@@ -246,20 +283,24 @@
                     <!--    </div>
                     </div> -->
                 </div>
+
                 <div class="col-md-6" id="column">
                     <textarea class="form-control" id="code-editor" rows="3" style="resize: vertical; "></textarea>
                     <button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px; margin-right:16px">Commit</button>
+                                        <div class="row">
+                                        <div class="col-sm-12" id="tree"></div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-sm-6" id="column">
                                                 <button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px">Перейти</button>
                                             </div>
                                             <div class="col-sm-6" id="column">
-                                                <button type="submit" class="btn btn-default btn-block" data-toggle="modal" data-target="#compare" id="compare-btn" style="margin-top:10px">Сравнить с</button>
+                                                <button type="submit" class="btn btn-default btn-block" data-toggle="modal" data-target="#compare" id="compare-btn" style="margin-top:10px" onclick="get_tree('tree');">Сравнить с</button>
                                             </div>
                                         </div>  
                 </div>
         </div>
-        <div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+        <div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 						   	<div class="modal-dialog" >
 								<div class="modal-content" style="border: 2px solid #424f5e; background: #1b2c3e; padding: 2%;">
 									<form role = "form" action = "/create_chat">
@@ -278,7 +319,5 @@
 									</form>
 								</div>
 							</div>
-	
-		</div>
     </body>
 </html>

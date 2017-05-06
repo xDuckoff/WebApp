@@ -6,6 +6,7 @@ Flask-WTF==0.14.2
 Flask-SocketIO==2.8.6
 SQLAlchemy==1.1.5
 eventlet==0.20.1
+Markdown==2.6.8
 nose2==0.6.5
 psycopg2==2.7.1
 gunicorn==19.7.1

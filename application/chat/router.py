@@ -6,6 +6,8 @@ from json import dumps
 from application import chat
 from application.forms import IsInSession, CreateChatForm, allowed_file
 from application import app
+import markdown
+import cgi
 
 if app.config['SOCKET_MODE'] == 'True':
     from application import socketio
@@ -17,9 +19,11 @@ if app.config['SOCKET_MODE'] == 'True':
         chat_id = int(json['room'])
         if len(json['message']) > 1000:
             return
-        chat.send_message(chat_id, json['message'], 'usr', session['login'])
-        socketio.emit('message', {'message':json['message'], 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
-
+        chat_id = int(json['room'])
+        message = cgi.escape(json['message'])
+        message = markdown.markdown(message)
+        chat.send_message(chat_id, message, 'usr', session['login'])
+        socketio.emit('message', {'message':message, 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
 
     @socketio.on('join')
     def on_join(room):

@@ -1,4 +1,6 @@
-from flask import render_template, redirect, request, session
+# -*- coding: utf-8 -*-
+
+from flask import render_template, redirect, request, session, flash
 from application import app
 from json import dumps
 from application import chat
@@ -39,6 +41,9 @@ def tree():
 def chat_page(chat_id):
     if not(IsInSession()):
         return redirect('/login?chat=' + str(chat_id))
+    if not chat.get_chat_info(chat_id):
+        flash(u'Такого чата не существует!')
+        return redirect('/')
     return render_template('chat.html',chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'))
 
 

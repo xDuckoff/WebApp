@@ -31,7 +31,7 @@ class TestBaseChatFunctions(unittest.TestCase):
 
     def test_message_sending(self):
         chat.send_message(CHAT_ID, TEST_MESSAGE, 'usr', USERNAME)
-        self.assertEquals(chat.get_messages(CHAT_ID, USERNAME)[-1], {'message': '<p>' + TEST_MESSAGE + '</p>', 'type': 'mine', 'author': USERNAME})
+        self.assertEquals(chat.get_messages(CHAT_ID, USERNAME)[-1], {'message': TEST_MESSAGE, 'type': 'mine', 'author': USERNAME})
 
     def test_code_sending(self):
         chat.send_code(CHAT_ID, TEST_CODE, USERNAME, 0)

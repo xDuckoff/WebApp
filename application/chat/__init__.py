@@ -2,6 +2,7 @@ from flask import session
 from application.models import Message, Code, Chat
 from application import db
 from application import app
+import cgi
 
 if app.config['SOCKET_MODE'] == 'True':
     from application import socketio

@@ -5,6 +5,7 @@ from application import chat
 from application.forms import IsInSession, CreateChatForm, allowed_file
 from application import app
 import markdown
+import cgi
 
 if app.config['SOCKET_MODE'] == 'True':
     from application import socketio
@@ -18,7 +19,7 @@ if app.config['SOCKET_MODE'] == 'True':
             return
         chat_id = int(json['room'])
         message = cgi.escape(json['message'])
-        message = markdown.Markdown(message)
+        message = markdown.markdown(message)
         chat.send_message(chat_id, message, 'usr', session['login'])
         socketio.emit('message', {'message':message, 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
 

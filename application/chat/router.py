@@ -38,7 +38,7 @@ def add_chat():
     if chat_id not in session['joined_chats']:
         session['joined_chats'].append(chat_id)
         session.modified = True
-    return "OK. Chat added to session"
+    return dumps({"success": True})
 
 @app.route('/tree', methods=['GET', 'POST'])
 def tree():

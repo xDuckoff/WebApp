@@ -24,12 +24,21 @@ if app.config['SOCKET_MODE'] == 'True':
     @socketio.on('join')
     def on_join(room):
         join_room(room)
-        chat.sys_message(str(session['login']) + " joined", room)
+        if room not in session['joined_chats']:
+            chat.sys_message(str(session['login']) + " joined", room)
 
 
     @socketio.on('leave')
     def on_leave(room):
         leave_room(room)
+
+@app.route('/add_chat')
+def add_chat():
+    chat_id = request.args['chat_id']
+    if chat_id not in session['joined_chats']:
+        session['joined_chats'].append(chat_id)
+        session.modified = True
+    return "OK. Chat added to session"
 
 @app.route('/tree', methods=['GET', 'POST'])
 def tree():

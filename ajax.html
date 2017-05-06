@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+      <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript">
+        jQuery(function($)
+        {
+        $('klick').click(function()
+        {
+            $.ajax({
+                url:"text.txt",
+                type:"GET":,
+                success: function(data){
+                    $("#res").html(data);
+                }
+                error: function() {
+                    alert('ошибка запроса');
+                }
+            });
+        });
+
+        });
+    </script>
+</head>
+<body>
+    <button id="klick" type="button">KEK</button>
+    <div id="res">hello world</div>
+</body>
+</html>

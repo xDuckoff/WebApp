@@ -1,4 +1,6 @@
-from flask import render_template, redirect, request, session
+# -*- coding: utf-8 -*-
+
+from flask import render_template, redirect, request, session, flash
 from application import app
 from json import dumps
 from application import chat
@@ -26,12 +28,21 @@ if app.config['SOCKET_MODE'] == 'True':
     @socketio.on('join')
     def on_join(room):
         join_room(room)
-        chat.sys_message(str(session['login']) + " joined", room)
+        if room not in session['joined_chats']:
+            chat.sys_message(str(session['login']) + " joined", room)
 
 
     @socketio.on('leave')
     def on_leave(room):
         leave_room(room)
+
+@app.route('/add_chat')
+def add_chat():
+    chat_id = request.args['chat_id']
+    if chat_id not in session['joined_chats']:
+        session['joined_chats'].append(chat_id)
+        session.modified = True
+    return dumps({"success": True})
 
 @app.route('/tree', methods=['GET', 'POST'])
 def tree():
@@ -43,6 +54,9 @@ def tree():
 def chat_page(chat_id):
     if not(IsInSession()):
         return redirect('/login?chat=' + str(chat_id))
+    if not chat.get_chat_info(chat_id):
+        flash(u'Такого чата не существует!')
+        return redirect('/')
     return render_template('chat.html',chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'))
 
 

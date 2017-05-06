@@ -21,6 +21,8 @@ def create_chat(name, code, username):
 
 def get_chat_info(id):
     result = Chat.query.get(id)
+    if not result:
+        return {}
     return {'name':result.name}
 
 def send_message(id, text, type, username):

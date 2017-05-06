@@ -133,7 +133,9 @@
                 append_to_textarea(message);
                 if (t)
                     $('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);
-                if (Notification.permission === "granted") {
+                if (!("Notification" in window)) {
+                }
+                else if (Notification.permission === "granted") {
 					var notification = new Notification(message.author, {body:message.message});
 					Notification.sound; 
 				}

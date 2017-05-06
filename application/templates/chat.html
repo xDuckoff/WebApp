@@ -41,6 +41,14 @@
                     get_tree("tree");
                 });
 
+                $.ajax({
+                    type: "GET",
+                    url: "/add_chat",
+                    data: {
+                        chat_id: chat_index
+                    }
+                });
+
                 $("#send-btn").click(function() {
                     socket.emit('message', {'message':$("#message-input").val(), 'room':chat_index, 'type':'usr'});
                     $("#message-input").val('');

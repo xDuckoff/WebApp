@@ -26,7 +26,7 @@ class BeakerSessionInterface(SessionInterface):
 
 def login_user(login):
     session['login'] = login
-    session['last'] = -1
+    session['joined_chats'] = []
 
 
 def IsInSession():

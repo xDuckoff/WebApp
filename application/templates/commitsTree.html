@@ -1,32 +1,31 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/Treant.css') }}" type="text/css"/>
 <script src="{{ url_for('static', filename='js/vendor/raphael.js') }}"></script>
 <script src="{{ url_for('static', filename='js/Treant.js') }}"></script>
-
-<div id="tree-simple" style="width: 100%; height: 300px; margin:0 auto;"> </div>
+<div id="tree-simple" style="width: 100%; height: 300px; margin:0 auto;"></div>
 <script type="text/javascript">
-	config = {
-		container: "#tree-simple",
-		levelSeparation: 70,
-		siblingSeparation: 70,
-		rootOrientation: "WEST"
-	};
-	{% for commit in commits %}
-	node{{ commit['id'] }} = {
-		{% if commit['id'] != 0 %}parent: node{{ commit['parent'] }},{% endif %}
-		text: { name: "{{ commit['id'] }}" },
-		innerHTML: "<div id='button{{ commit['id'] }}'>{{ commit['id'] }}</div>"	
-	};
-	{% endfor %}
+    config = {
+        container: "#tree-simple",
+        levelSeparation: 70,
+        siblingSeparation: 70,
+        rootOrientation: "WEST"
+    };
+    {% for commit in commits %}
+    node{{ commit['id'] }} = {
+        {% if commit['id'] != 0 %}parent: node{{ commit['parent'] }},{% endif %}
+        text: { name: "{{ commit['id'] }}" },
+        innerHTML: "<div id='button{{ commit['id'] }}'>{{ commit['id'] }}</div>"    
+    };
+    {% endfor %}
 
-	simple_chart_config = [
-		config{% for commit in commits %}, node{{ commit['id'] }}{% endfor %}
-	];
-	var tree = new Treant(simple_chart_config);
+    simple_chart_config = [
+        config{% for commit in commits %}, node{{ commit['id'] }}{% endfor %}
+    ];
+    var tree = new Treant(simple_chart_config);
 
 
-	{% for commit in commits %}
-	$("#button{{ commit['id'] }}").click(function() {
-		get_code({{ commit['id'] }});
+    {% for commit in commits %}
+    $("#button{{ commit['id'] }}").click(function() {
+        get_code({{ commit['id'] }});
     });
     {% endfor %}
 </script>

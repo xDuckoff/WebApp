@@ -142,18 +142,18 @@
                 if (t)
                     $('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);
                 if (("Notification" in window) && (Notification.permission === "granted")) {
-					var notification = new Notification(message.author, {body:message.message});
-					Notification.sound; 
-				}
-				else if (Notification.permission !== 'denied') {
-					Notification.requestPermission(function (permission) {
-				    	if (permission === "granted") {
-				    		var notification = new Notification(message.author, {body:message.message});
-				    		Notification.sound;
-				    	}	
-					});
+                    var notification = new Notification(message.author, {body:message.message});
+                    Notification.sound; 
+                }
+                else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission(function (permission) {
+                        if (permission === "granted") {
+                            var notification = new Notification(message.author, {body:message.message});
+                            Notification.sound;
+                        }   
+                    });
                     
-				}
+                }
             }
 
             function get_messages() {
@@ -244,26 +244,22 @@
             get_tree("tree");
         </script>
     </head>
-    <body style="width: 100%; height: 100%; background-color: #2f3e4e;" >
-
-   <nav class="navbar navbar-inverse navbar-static-top" >
-  <div class="container">
-    
-<li class="active">
-    <a href="/">
-        <button type="button" class="btn btn-primary navbar-btn">Главная</button>
-        <span class="sr-only">(current)</span>
-    </a>
-    <a style = "padding-left: 20px">
-        <button type="button" class="btn btn-primary navbar-btn" id="login-btn">Вход</button>
-    </a>
-</li>
-    
-
-  </div>
-</nav>
-
-
+    <body style="width: 100%; height: 100%; background-color: #2f3e4e;">
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <li class="active">
+                    <a href="/">
+                        <button type="button" class="btn btn-primary navbar-btn">Главная</button>
+                        <span class="sr-only">(current)</span>
+                    </a>
+                    <a style = "padding-left: 20px">
+                        <button class="btn btn-primary navbar-btn" style="margin-bottom:10px" disabled="disabled">
+                            Вход
+                        </button>
+                    </a>
+                </li>
+            </div>
+        </nav>
         <audio src="" id="audio">
         </audio>
         <audio src="" id="sys_audio">
@@ -274,73 +270,63 @@
                     NAME OF THIS SUPER CHAT
                 </center>
             </div>
-	    
             <div class="row">
                 <div class="col-md-6">
                     <div class="panel panel-default">
                         <div class="panel-body" id="chat-panel" style="min-height: 500; max-height: 500;overflow-y: scroll;">
-
-                            <!-- <b>Author</b> <br>
-                            <div class="well well-sm" style="word-wrap: break-word;">
-                                Text
-                            </div> -->
                         </div>
                     </div>
-
-                    <!-- <div class="panel panel-default">
-                        <div class="panel-body"> -->
-                            <label for="message-input" class="sr-only">Message</label>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="message-input" placeholder="Write here" maxlength="1000">
-                                        <div class="input-group-btn"> 
-                                                <button type="button" class="btn btn-default btn-block" id="send-btn">Send</button>
-                                        </div>
-                                        <span class="input-group-addon">
-                                            <input type="checkbox" id="voice-check"> Voice
-                                        </span>
-                                    </div>
+                    <label for="message-input" class="sr-only">Message</label>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="message-input" placeholder="Write here" maxlength="1000">
+                                <div class="input-group-btn"> 
+                                        <button type="button" class="btn btn-default btn-block" id="send-btn">Send</button>
                                 </div>
+                                <span class="input-group-addon">
+                                    <input type="checkbox" id="voice-check"> Voice
+                                </span>
                             </div>
-                    <!--    </div>
-                    </div> -->
+                        </div>
+                    </div>
                 </div>
-
                 <div class="col-md-6" id="column">
                     <textarea class="form-control" id="code-editor" rows="3" style="resize: vertical; "></textarea>
                     <button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px; margin-right:16px">Commit</button>
-                                        <div class="row">
-                                        <div class="col-sm-12" id="tree"></div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6" id="column">
-                                                <button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px">Перейти</button>
-                                            </div>
-                                            <div class="col-sm-6" id="column">
-                                                <button type="submit" class="btn btn-default btn-block" data-toggle="modal" data-target="#compare" id="compare-btn" style="margin-top:10px" onclick="get_tree('tree');">Сравнить с</button>
-                                            </div>
-                                        </div>  
+                    <div class="row">
+                        <div class="col-sm-12" id="tree"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6" id="column">
+                            <button type="submit" class="btn btn-default btn-block" id="go-btn" style="margin-top:10px">Перейти</button>
+                        </div>
+                        <div class="col-sm-6" id="column">
+                            <button type="submit" class="btn btn-default btn-block" data-toggle="modal" data-target="#compare" id="compare-btn" style="margin-top:10px" onclick="get_tree('tree');">Сравнить с</button>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" >
+                    <div class="modal-content" style="border: 2px solid #424f5e; background: #1b2c3e; padding: 2%;">
+                        <form role = "form" action = "/create_chat">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <center>
+                                    <h4 class="modal-title" style="color: #dddddd" id="myLabel">Сравнить с</h4>
+                                </center>
+                            </div>
+                            <div class="modal-body">
+                                <centre>
+                                    <input type="text" class="form-control" placeholder="Commit">
+                                    <button type="submit" class="btn btn-default btn-block" id="com-btn" style="margin-top:20px">Сравнить</button> 
+                                </centre>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-						   	<div class="modal-dialog" >
-								<div class="modal-content" style="border: 2px solid #424f5e; background: #1b2c3e; padding: 2%;">
-									<form role = "form" action = "/create_chat">
-										<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-											<center>
-							        			<h4 class="modal-title" style="color: #dddddd" id="myLabel">Сравнить с</h4>
-							      			</center>
-							      		</div>
-										<div class="modal-body">
-											<centre>
-												<input type="text" class="form-control" placeholder="Commit">
-												<button type="submit" class="btn btn-default btn-block" id="com-btn" style="margin-top:20px">Сравнить</button> 
-											</centre>
-										</div>
-									</form>
-								</div>
-							</div>
     </body>
 </html>

@@ -30,12 +30,16 @@
                     <form action="" method="POST">
                         {{ form.hidden_tag() }}
                         <div class="form-group">
-                            <label>Логин</label>
-                            <input type="text" class="form-control" placeholder="Login" name="login" />
+                            <div class="modal-header">
+                                <label class="center-block">Логин</label>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" class="form-control" placeholder="Login" name="login" />
+                            </div>
+                            <div class="modal-footer">
+                                <input class="btn btn-lg btn-primary" type="submit" value="Вход">
+                            </div>
                         </div>
-                        <center>
-                            <input class="btn btn-lg btn-primary" type="submit" value="Вход">
-                        </center>
                     </form>
                 </div>
             </div>
@@ -49,32 +53,30 @@
                             <h4 class="modal-title" id="myModalLabel">Создание чата</h4>
                         </div>
                         <div class="modal-body">
-                            <center>
-                                <div class = "row">
-                                    <div class="col-md-6 col-md-offset-3">
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Название чата</label>
-                                                <input type="text" class="form-control" id="chatname" placeholder="" name = "name">
-                                            </div>
-                                            <select class="form-control" id="Compile" name="code_type">
-                                                <option>C++</option>
-                                                <option>Python 2.7</option>
-                                                <option>Java</option>
-                                                <option>Pascal</option>
-                                                <option>Python 3.5</option>
-                                                <option>BrainFuck</option>
-                                                <option>Basic</option>
-                                                <option>Другое</option>
-                                            </select>
-                                            <div class="form-group">
-                                                <input type="file" name = "file">
-                                            </div>
-                                    </div>
-                                    <div class="col-md-10 col-md-offset-1">
-                                        <textarea class="form-control" rows="5" name="code"></textarea>
-                                    </div>
+                            <div class = "row">
+                                <div class="col-md-6 col-md-offset-3">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Название чата</label>
+                                            <input type="text" class="form-control" id="chatname" placeholder="" name = "name">
+                                        </div>
+                                        <select class="form-control" id="Compile" name="code_type">
+                                            <option>C++</option>
+                                            <option>Python 2.7</option>
+                                            <option>Java</option>
+                                            <option>Pascal</option>
+                                            <option>Python 3.5</option>
+                                            <option>BrainFuck</option>
+                                            <option>Basic</option>
+                                            <option>Другое</option>
+                                        </select>
+                                        <div class="form-group">
+                                            <input type="file" name = "file">
+                                        </div>
                                 </div>
-                            </center>
+                                <div class="col-md-10 col-md-offset-1">
+                                    <textarea class="form-control" rows="5" name="code"></textarea>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-lg btn-primary">Создать</button>
@@ -83,57 +85,55 @@
                 </div>
             </div>
         </div>
-        <center>
-            <div class = "container" style="padding-top:75px">
-                <div class = "row">
-                    <div class="col-md-10 col-md-offset-1">
-                        <h3>Добро пожаловать на лучший в мире чат</h3>
-                        <h3>для помощи разработчикам!!!</h3>
-                    </div>
-                </div>
-                <div class = "row">
-                    <div class="col-md-4 col-md-offset-4" style="border: 2px solid #424f5e; background: #1b2c3e; padding: 2%;">
-                        {% if in_session %}
-                        <button class="btn btn-lg btn-primary" style="margin-bottom:10px" data-toggle="modal" data-target="#myModal">
-                            Создать чат
-                        </button>
-                        {% else %}
-                        <button class="btn btn-lg btn-primary disabled" style="margin-bottom:10px">
-                            Создать чат
-                        </button>
-                        {% endif %}
-                        <div>
-                            {% with messages = get_flashed_messages()%}
-                            {% for message in messages %}
-                            <div>{{ message }}</div>
-                            {% endfor %}
-                            {% endwith %}
-                        </div>
-                        <form>
-                            <div class="input-group">
-                                <input type="search" class="form-control" name="search_title_text" placeholder="Поиск чатов">
-                                <span class="input-group-btn">
-                                    <input type="submit" class="btn btn-primary" value="Найти"  formmethod="get">
-                                </span>
-                            </div>
-                        </form>
-                        <table class="table">
-                                <tr>
-                                <th>Название</th>
-                                <th>Автор</th>
-                                <th>Язык</th>
-                            </tr>
-                            {% for chat in chats %}
-                                <tr>
-                                <td>{{chat.name}}</td>
-                                <td>UNKNOWN</td>
-                                <td>UNKNOWN</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
+        <div class = "container" style="padding-top:75px">
+            <div class = "row">
+                <div class="col-md-10 col-md-offset-1">
+                    <h3 class="text-center">Добро пожаловать на лучший в мире чат</h3>
+                    <h3 class="text-center">для помощи разработчикам!!!</h3>
                 </div>
             </div>
-        </center>
+            <div class = "row">
+                <div class="col-md-4 col-md-offset-4" style="border: 2px solid #424f5e; background: #1b2c3e; padding: 2%;">
+                    {% if in_session %}
+                    <button class="btn btn-lg btn-primary center-block" style="margin-bottom:10px" data-toggle="modal" data-target="#myModal">
+                        Создать чат
+                    </button>
+                    {% else %}
+                    <button class="btn btn-lg btn-primary disabled center-block" style="margin-bottom:10px">
+                        Создать чат
+                    </button>
+                    {% endif %}
+                    <div>
+                        {% with messages = get_flashed_messages()%}
+                        {% for message in messages %}
+                        <div>{{ message }}</div>
+                        {% endfor %}
+                        {% endwith %}
+                    </div>
+                    <form>
+                        <div class="input-group">
+                            <input type="search" class="form-control" name="search_title_text" placeholder="Поиск чатов">
+                            <span class="input-group-btn">
+                                <input type="submit" class="btn btn-primary" value="Найти"  formmethod="get">
+                            </span>
+                        </div>
+                    </form>
+                    <table class="table">
+                            <tr>
+                            <th>Название</th>
+                            <th>Автор</th>
+                            <th>Язык</th>
+                        </tr>
+                        {% for chat in chats %}
+                            <tr>
+                            <td>{{chat.name}}</td>
+                            <td>UNKNOWN</td>
+                            <td>UNKNOWN</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

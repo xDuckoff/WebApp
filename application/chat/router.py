@@ -48,6 +48,8 @@ def add_chat():
 
 @app.route('/tree', methods=['GET', 'POST'])
 def tree():
+    if not IsInSession():
+        return 'Login error'
     chat_id = int(request.args['chat'])
     coms = chat.generate_commits_tree(chat_id)
     return render_template('commitsTree.html',commits = coms)
@@ -97,6 +99,8 @@ if app.config['SOCKET_MODE'] == 'False':
 
 @app.route('/get_messages', methods=['GET', 'POST'])
 def get_messages():
+    if not IsInSession():
+        return 'Login error'
     chat_id = int(request.args['chat'])
     return dumps(chat.get_messages(chat_id, session['login']))
 
@@ -113,16 +117,22 @@ def send_code():
 
 @app.route('/get_code', methods=['GET', 'POST'])
 def get_code():
+    if not IsInSession():
+        return 'Login error'
     chat_id = int(request.args['chat'])
     index = int(request.args['index'])
     return dumps(chat.get_code(chat_id, index))
 
 @app.route('/get_chat_info', methods=['GET', 'POST'])
 def get_chat_info():
+    if not IsInSession():
+        return 'Login error'
     chat_id = int(request.args['chat'])
     return dumps(chat.get_chat_info(chat_id))
 
 @app.route('/get_commits', methods=['GET', 'POST'])
 def get_chat_commits():
+    if not IsInSession():
+        return 'Login error'
     chat_id = int(request.args['chat'])
     return dumps(chat.generate_tree(chat_id))

@@ -1,0 +1,43 @@
+body{
+    width: 100%;
+    height: 100%;
+    background-color: #2f3e4e;
+    color: #dddddd;
+}
+
+.main-content{
+    border: 2px solid #424f5e;
+    background: #1b2c3e;
+    padding: 2%;
+}
+
+.nav-button{
+    padding-left: 20px;
+}
+
+.main-container{
+    padding-top: 75px;
+}
+
+#chat-create-btn{
+    margin-bottom:10px;
+}
+
+#chat-panel{
+    min-height: 500;
+    max-height: 500;
+    overflow-y: scroll;
+}
+
+#code-editor{
+    resize: vertical;
+}
+
+.chat-control-btn{
+    margin-top:10px;
+}
+
+.message{
+    word-wrap: break-word;
+    color: #000000;
+}

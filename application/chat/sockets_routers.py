@@ -1,4 +1,6 @@
 from application import app
+from application import chat
+from flask import session
 
 if app.config['SOCKET_MODE'] == 'True':
     from application import socketio

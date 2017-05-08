@@ -105,10 +105,8 @@
                     </button>
                     {% endif %}
                     <div>
-                        {% with messages = get_flashed_messages()%}
-                        {% for message in messages %}
-                        <div>{{ message }}</div>
-                        {% endfor %}
+                        {% with message = get_flashed_messages()[0] %}
+                        <p class="text-center">{{ message }}</p>
                         {% endwith %}
                     </div>
                     <form>

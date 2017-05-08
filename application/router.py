@@ -14,10 +14,7 @@ def logout():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     chat_title = request.args.get('search_title_text', '')
-    if chat_title == '':
-        chats = []
-    else:
-        chats=chat.find_chat(str(chat_title))
+    chats=chat.find_chat(str(chat_title))
     form = LoginForm()
     if form.validate_on_submit():
         login_user(form.login.data)

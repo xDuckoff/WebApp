@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, session, flash
+from flask import render_template, redirect, request, session, flash, url_for
 from application import app
 from json import dumps
 from application import chat
@@ -38,6 +38,8 @@ if app.config['SOCKET_MODE'] == 'True':
 
 @app.route('/add_chat')
 def add_chat():
+    if not IsInSession():
+        return dumps({"success": False})
     chat_id = request.args['chat_id']
     if chat_id not in session['joined_chats']:
         session['joined_chats'].append(chat_id)
@@ -52,8 +54,9 @@ def tree():
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
-    if not(IsInSession()):
-        return redirect('/login?chat=' + str(chat_id))
+    if not IsInSession():
+        flash(u'Вы не авторизированны!')
+        return redirect('/')
     if not chat.get_chat_info(chat_id):
         flash(u'Такого чата не существует!')
         return redirect('/')
@@ -62,8 +65,8 @@ def chat_page(chat_id):
 
 @app.route('/create_chat', methods=['GET', 'POST'])
 def create_chat():
-    if not(IsInSession()):
-        return redirect('/login')
+    if not IsInSession():
+        return 'Login error'
     form = CreateChatForm()
     name = form.name.data
     if form.file.data.filename == '':
@@ -81,8 +84,8 @@ def create_chat():
 if app.config['SOCKET_MODE'] == 'False':
     @app.route('/send_message', methods=['GET', 'POST'])
     def send_message():
-        if not(IsInSession()):
-            return redirect('/login')
+        if not IsInSession():
+            return 'Login error'
         chat_id = int(request.args['chat'])
         message = request.args['message']
         if len(message) > 1000:
@@ -94,15 +97,13 @@ if app.config['SOCKET_MODE'] == 'False':
 
 @app.route('/get_messages', methods=['GET', 'POST'])
 def get_messages():
-    if not(IsInSession()):
-        return redirect('/login')
     chat_id = int(request.args['chat'])
     return dumps(chat.get_messages(chat_id, session['login']))
 
 @app.route('/send_code', methods=['GET', 'POST'])
 def send_code():
-    if not(IsInSession()):
-        return redirect('/login')
+    if not IsInSession():
+        return 'Login error'
     chat_id = int(request.args['chat'])
     code = request.args['code']
     parent = request.args['parent']
@@ -112,8 +113,6 @@ def send_code():
 
 @app.route('/get_code', methods=['GET', 'POST'])
 def get_code():
-    if not(IsInSession()):
-        return redirect('/login')
     chat_id = int(request.args['chat'])
     index = int(request.args['index'])
     return dumps(chat.get_code(chat_id, index))

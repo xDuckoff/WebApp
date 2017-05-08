@@ -121,13 +121,22 @@
                             <tr>
                             <th>Название</th>
                             <th>Автор</th>
-                            <th>Язык</th>
+                            <th></th>
                         </tr>
                         {% for chat in chats %}
                             <tr>
                             <td>{{chat.name}}</td>
                             <td>UNKNOWN</td>
-                            <td>UNKNOWN</td>
+                            <td>
+                                {% if in_session %}
+                                <a href="/chat/{{ chat.id }}">
+                                    <button class="btn btn-primary btn-xs">Перейти</button>
+                                {% else %}
+                                <a>
+                                    <button class="btn btn-primary btn-xs" disabled="disabled">Перейти</button>
+                                {% endif %}
+                                </a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </table>

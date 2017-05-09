@@ -3,6 +3,7 @@ import os
 import flask_migrate
 from application import chat
 from application import app
+from application.chat.sockets import init_sockets
 
 TEST_DB = 'test'
 PATH_TO_DATABASE = os.path.join(os.path.abspath(os.path.curdir), TEST_DB + ".slite")
@@ -21,6 +22,7 @@ class TestBaseChatFunctions(unittest.TestCase):
         global CHAT_ID
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + PATH_TO_DATABASE
         app.config['SOCKET_MODE'] = 'True'
+        init_sockets()
         with app.app_context():
             flask_migrate.upgrade()
         CHAT_ID = chat.create_chat(CHAT_NAME, CHAT_CODE, USERNAME)

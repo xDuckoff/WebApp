@@ -33,5 +33,7 @@ def index():
         chats=chat.find_chat(str(chat_title))
     return render_template('index.html', chats=chats, in_session=IsInSession())
 
-import application.chat.sockets_routers
+from application.chat.sockets import check_mode
+check_mode()
+
 import application.chat.router

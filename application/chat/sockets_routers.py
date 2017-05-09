@@ -1,10 +1,10 @@
+from application import app
+from application import chat
+from flask import redirect, request, session
+from application.forms import IsInSession
 def create_routers(socketio):
-    from application import app
-    from application import chat
-    from flask import session
     if app.config['SOCKET_MODE'] == 'True':
-        from flask_socketio import emit, join_room, leave_room
-
+        from flask_socketio import join_room, emit, leave_room
         @socketio.on('message')
         def handle_message(json):
             chat_id = int(json['room'])
@@ -23,9 +23,6 @@ def create_routers(socketio):
             leave_room(room)
 
     if app.config['SOCKET_MODE'] == 'False':
-        from application import chat
-        from application.forms import IsInSession
-        from flask import redirect, request, session
         @app.route('/send_message', methods=['GET', 'POST'])
         def send_message():
             if not(IsInSession()):

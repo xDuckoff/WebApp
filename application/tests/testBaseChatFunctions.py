@@ -5,14 +5,14 @@ from application import chat
 from application import app
 from application.chat.sockets import init_sockets
 
-TEST_DB = 'test'
-PATH_TO_DATABASE = os.path.join(os.path.abspath(os.path.curdir), TEST_DB + ".slite")
+PATH_TO_DATABASE = "/tmp/db-test.sqlite"
 
 USERNAME = 'Bot'
 CHAT_NAME = 'Test Chat'
 CHAT_CODE = 'Test Code'
 TEST_MESSAGE = 'Hello, I am Bot!'
 TEST_CODE = 'from test import test'
+CODE_TYPE = "Test++"
 CHAT_ID = 0
 
 
@@ -25,7 +25,7 @@ class TestBaseChatFunctions(unittest.TestCase):
         init_sockets()
         with app.app_context():
             flask_migrate.upgrade()
-        CHAT_ID = chat.create_chat(CHAT_NAME, CHAT_CODE, USERNAME)
+        CHAT_ID = chat.create_chat(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
         self.assertEquals(chat.get_chat_info(CHAT_ID), {'name': CHAT_NAME})
         self.assertEquals(chat.get_code(CHAT_ID, 0), {'author': USERNAME, 'code': CHAT_CODE})
 

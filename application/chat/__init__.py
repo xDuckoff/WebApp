@@ -5,10 +5,11 @@ from application import app
 import sockets
 import cgi
 
-def create_chat(name, code, username):
+def create_chat(name, code, code_type, username):
     name = cgi.escape(name)
     code = cgi.escape(code)
-    chat_to_create = Chat(name)
+    code_type = cgi.escape(code_type)
+    chat_to_create = Chat(name, code_type)
     db.session.add(chat_to_create)
     db.session.commit()
     chat_id = chat_to_create.id
@@ -56,7 +57,13 @@ def get_code(id, index):
     return {"author": result.author, "code": result.content}
 
 def find_chat(name):
-    return Chat.query.filter(Chat.name.like('%'+name+'%')).all()
+    if name == '':
+        return Chat.query.all()[-10:]
+    try:
+        chat_id = int(name)
+        return Chat.query.filter_by(id=chat_id)
+    except ValueError:
+        return Chat.query.filter(Chat.name.like('%'+name+'%')).all()
 
 def sys_message(data, room):
     send_message(int(room), data, 'sys', 'System')

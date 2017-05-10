@@ -4,3 +4,4 @@ cache/
 venv/
 *.sqlite
 .env
+*.orig

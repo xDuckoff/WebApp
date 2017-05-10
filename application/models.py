@@ -32,6 +32,8 @@ class Code(db.Model):
 class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(256))
+    code_type = db.Column(db.String(256))
 
-    def __init__(self, name):
+    def __init__(self, name, code_type):
         self.name = name
+        self.code_type = code_type

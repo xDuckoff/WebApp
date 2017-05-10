@@ -104,7 +104,7 @@
                 {% for chat in chats %}
                     <tr>
                     <td>{{chat.name}}</td>
-                    <td>UNKNOWN</td>
+                    <td>{{chat.code_type}}</td>
                     <td>
                         {% if in_session %}
                         <a href="/chat/{{ chat.id }}">

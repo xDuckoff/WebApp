@@ -9,10 +9,11 @@ if app.config['SOCKET_MODE'] == 'True':
     from flask_socketio import emit
 
 
-def create_chat(name, code, username):
+def create_chat(name, code, code_type, username):
     name = cgi.escape(name)
     code = cgi.escape(code)
-    chat_to_create = Chat(name)
+    code_type = cgi.escape(code_type)
+    chat_to_create = Chat(name, code_type)
     db.session.add(chat_to_create)
     db.session.commit()
     chat_id = chat_to_create.id

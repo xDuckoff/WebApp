@@ -79,7 +79,8 @@ def create_chat():
             code = file.read()
         else:
             return redirect('/')
-    chat_id = chat.create_chat(name, code, session['login'])
+    code_type = form.code_type.data
+    chat_id = chat.create_chat(name, code, code_type, session['login'])
     return redirect('/chat/' + str(chat_id))
 
 

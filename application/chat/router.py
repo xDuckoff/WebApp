@@ -39,12 +39,12 @@ if app.config['SOCKET_MODE'] == 'True':
 @app.route('/add_chat')
 def add_chat():
     if not IsInSession():
-        return 'Login error', 403
+        return dumps({"success": False, "error": "Login error"}), 403
     chat_id = request.args['chat_id']
     if chat_id not in session['joined_chats']:
         session['joined_chats'].append(chat_id)
         session.modified = True
-    return "OK"
+    return dumps({"success": True, "error": ""})
 
 @app.route('/tree', methods=['GET', 'POST'])
 def tree():
@@ -88,14 +88,14 @@ if app.config['SOCKET_MODE'] == 'False':
     @app.route('/send_message', methods=['GET', 'POST'])
     def send_message():
         if not IsInSession():
-            return 'Login error', 403
+            return dumps({"success": False, "error": "Login error"}), 403
         chat_id = int(request.args['chat'])
         message = request.args['message']
         if len(message) > 1000:
             return 'LENGTH LIMIT'
         if len(message) > 0:
             chat.send_message(chat_id, message, "usr", session['login'])
-        return 'OK'
+        return dumps({"success": True, "error": ""})
 
 
 @app.route('/get_messages', methods=['GET', 'POST'])
@@ -108,12 +108,12 @@ def get_messages():
 @app.route('/send_code', methods=['GET', 'POST'])
 def send_code():
     if not IsInSession():
-        return 'Login error', 403
+        return dumps({"success": False, "error": "Login error"}), 403
     chat_id = int(request.args['chat'])
     code = request.args['code']
     parent = request.args['parent']
     code_id = chat.send_code(chat_id, code, session['login'], parent)
-    return 'OK'
+    return dumps({"success": True, "error": ""})
 
 
 @app.route('/get_code', methods=['GET', 'POST'])

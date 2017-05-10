@@ -18,7 +18,7 @@
                         <span class="sr-only">(current)</span>
                     </a>
                     <a class="nav-button">
-                        <button class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#myModalLogin" {% block login_btn_status %}{% endblock %} >
+                        <button class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#myModalLogin" {% if disabled_login_btn %}disabled="disabled"{% endif %}>
                             Вход
                         </button>
                     </a>

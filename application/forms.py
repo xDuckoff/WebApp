@@ -4,6 +4,7 @@ from flask_wtf import FlaskForm
 from flask.sessions import SessionInterface
 from flask import session
 from application import app
+import cgi
 
 session_opts = {
     'session.url': '127.0.0.1:11211',
@@ -25,8 +26,8 @@ class BeakerSessionInterface(SessionInterface):
 
 
 def login_user(login):
-    session['login'] = login
-    session['last'] = -1
+    session['login'] = cgi.escape(login)
+    session['joined_chats'] = []
 
 
 def IsInSession():

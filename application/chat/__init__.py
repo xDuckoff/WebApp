@@ -3,8 +3,11 @@ from application.models import Message, Code, Chat
 from application import db
 from application import app
 import sockets
+import cgi
 
 def create_chat(name, code, username):
+    name = cgi.escape(name)
+    code = cgi.escape(code)
     chat_to_create = Chat(name)
     db.session.add(chat_to_create)
     db.session.commit()
@@ -14,6 +17,8 @@ def create_chat(name, code, username):
 
 def get_chat_info(id):
     result = Chat.query.get(id)
+    if not result:
+        return {}
     return {'name':result.name}
 
 def send_message(id, text, type, username):
@@ -37,6 +42,7 @@ def get_messages(id, username):
     return ret
 
 def send_code(id, text, username, parent):
+    text = cgi.escape(text)
     CodeToSend = Code(text, username, id, parent)
     db.session.add(CodeToSend)
     db.session.commit()

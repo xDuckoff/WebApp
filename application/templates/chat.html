@@ -45,6 +45,14 @@
                     get_tree("tree");
                 });
 
+                $.ajax({
+                    type: "GET",
+                    url: "/add_chat",
+                    data: {
+                        chat_id: chat_index
+                    }
+                });
+
                 $("#send-btn").click(function() {
                     socket.emit('message', {'message':$("#message-input").val(), 'room':chat_index, 'type':'usr'});
                     $("#message-input").val('');
@@ -131,11 +139,25 @@
             }
             function add_message(message) {
                 var t = false;
+
                 if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
                     t = true;
                 append_to_textarea(message);
                 if (t)
                     $('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);
+                if (("Notification" in window) && (Notification.permission === "granted")) {
+					var notification = new Notification(message.author, {body:message.message});
+					Notification.sound; 
+				}
+				else if (Notification.permission !== 'denied') {
+					Notification.requestPermission(function (permission) {
+				    	if (permission === "granted") {
+				    		var notification = new Notification(message.author, {body:message.message});
+				    		Notification.sound;
+				    	}	
+					});
+                    
+				}
             }
 
             function get_messages() {
@@ -209,6 +231,7 @@
                     matchBrackets: true,
                     value: "print('Hello World!')"
                 });
+                get_code(0);
                 {% if not socket_mode %}
                 $("#send-btn").click(function() {
                     $.ajax({

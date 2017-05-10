@@ -4,7 +4,7 @@ import flask_migrate
 from application import chat
 from application import app
 
-PATH_TO_DATABASE = app.config['SQLALCHEMY_TEST_DATABASE_URI']
+PATH_TO_DATABASE = "/tmp/db.sqlite"
 
 USERNAME = 'Bot'
 CHAT_NAME = 'Test Chat'

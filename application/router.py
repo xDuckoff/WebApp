@@ -30,11 +30,11 @@ def translate():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     chat_title = request.args.get('search_title_text', '')
-    chats=chat.find_chat(str(chat_title))
+    chats=chat.find_chat(chat_title)
     form = LoginForm()
     if form.validate_on_submit():
         login_user(form.login.data)
-    return render_template('index.html', chats=chats, in_session=IsInSession(), form=form)
+    return render_template('index.html', chats=chats, in_session=IsInSession(), form=form, search_title_text=chat_title)
 
 
 import application.chat.router

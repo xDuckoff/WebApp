@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>{% block title%}{% endblock %}</title>
+        <meta charset = "UTF-8">
+        {% block includes %}{% endblock %}
+        {% block scripts %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <li class="active">
+                    <a href="/">
+                        <button type="button" class="btn btn-primary navbar-btn">Главная</button>
+                        <span class="sr-only">(current)</span>
+                    </a>
+                    <a class="nav-button">
+                        <button class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#myModalLogin" {% block login_btn_status %}{% endblock %} >
+                            Вход
+                        </button>
+                    </a>
+                </li>
+            </div>
+        </nav>
+        {% block content %}{% endblock %}
+    </body>
+</html>

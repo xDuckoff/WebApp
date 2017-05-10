@@ -5,7 +5,7 @@ from application import chat
 from application import app
 
 TEST_DB = 'test'
-PATH_TO_DATABASE = os.path.join(os.path.abspath(os.path.curdir), TEST_DB + ".slite")
+PATH_TO_DATABASE = os.path.join(os.path.abspath(os.path.curdir), TEST_DB + ".sqlite")
 
 USERNAME = 'Bot'
 CHAT_NAME = 'Test Chat'

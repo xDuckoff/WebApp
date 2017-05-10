@@ -4,7 +4,7 @@ import flask_migrate
 from application import chat
 from application import app
 
-PATH_TO_DATABASE = "/tmp/db.sqlite"
+PATH_TO_DATABASE = "/tmp/db-test.sqlite"
 
 USERNAME = 'Bot'
 CHAT_NAME = 'Test Chat'

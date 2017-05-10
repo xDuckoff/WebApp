@@ -26,7 +26,6 @@
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
         <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" charset="utf-8">
-        var chat_index = {{ chat_id }};
             jQuery(function ($) {
                 var socket = io.connect('http://' + document.domain + ':' + location.port);
                 socket.on('connect', function() {
@@ -214,7 +213,10 @@
                 voice.init();
                 last_index = 0;
                 {% if not socket_mode %}
-                var timerId = setInterval('get_messages(); get_tree("tree");', 5000);
+                var timerId = setInterval(function (){
+                    get_messages();
+                    get_tree("tree");
+                }, 5000);
                 {% endif %}
                 chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
                 $("#message-input").keypress(function(e) {

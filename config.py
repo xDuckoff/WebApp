@@ -1,5 +1,10 @@
 import os
 
+"""
+Данный файл содержит базовые настройки проекта.
+"""
+
+
 CSRF_ENABLED = True
 SECRET_KEY = '1+$VEPUx@pTtn@s$$$$$woRt'
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024

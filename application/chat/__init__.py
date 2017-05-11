@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from flask import session
 from application.models import Message, Code, Chat
 from application import db

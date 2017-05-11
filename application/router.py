@@ -5,20 +5,38 @@ from application import app, chat
 from forms import LoginForm, login_user, IsInSession
 import requests
 
+"""
+Данный файл содержит основные страницы проекта.
+"""
 
 @app.route('/logout')
 def logout():
+    """
+    Функция выхода из сессиии в проекте
+    
+    :return: Переход на главную страницу
+    """
     session.pop('login', None)
     return redirect('/')    
 
 
 @app.route('/translate-test')
 def translate_page():
+    """
+    Функция перевода страницы
+    
+    :return: Переведённую страницу
+    """
     return render_template('translate.html')
 
 
 @app.route('/translate')
 def translate():
+    """
+    Функция перевода страницы
+    
+    :return: Запрос на сервера Яндекса, для перевода страницы
+    """
     url = 'https://translate.yandex.net/api/v1.5/tr.json/translate'
     return requests.get(url, {
         "key": app.config['API_KEY'],
@@ -29,6 +47,12 @@ def translate():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    """
+    Данная функция генерирует главную страницу для пользователя
+    
+    :return: Главная страница с чатами пользователя, является ли человек в сессии, формой входа(Если человек не 
+    зарегистрирован, заголовок чата
+    """
     chat_title = request.args.get('search_title_text', '')
     chats=chat.find_chat(chat_title)
     form = LoginForm()

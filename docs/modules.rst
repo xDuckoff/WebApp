@@ -1,10 +1,7 @@
-Project51-2017
-==============
+application
+===========
 
 .. toctree::
    :maxdepth: 4
 
    application
-   config
-   run
-   test

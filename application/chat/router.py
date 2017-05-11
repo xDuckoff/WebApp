@@ -10,6 +10,11 @@ import cgi
 
 @app.route('/add_chat')
 def add_chat():
+    """
+    Данная функция добавляет в сессию пользователя номер чата
+    
+    :return: Добавлен ли пользователь в чат
+    """
     if not IsInSession():
         return dumps({"success": False, "error": "Login error"}), 403
     chat_id = request.args['chat_id']
@@ -20,6 +25,11 @@ def add_chat():
 
 @app.route('/tree', methods=['GET', 'POST'])
 def tree():
+    """
+    Данная функция создаёт дерево коммитов чата
+    
+    :return: Страницу дерева коммитов
+    """
     if not IsInSession():
         return 'Login error', 403
     chat_id = int(request.args['chat'])
@@ -28,6 +38,13 @@ def tree():
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
+    """
+    Данная функция возвращает пользователю страницу чата по номеру
+    
+    :param chat_id: Номер чата
+    
+    :return: Страница чата
+    """
     if not IsInSession():
         flash(u'Вы не авторизированны!')
         return redirect('/')
@@ -38,6 +55,11 @@ def chat_page(chat_id):
 
 @app.route('/create_chat', methods=['GET', 'POST'])
 def create_chat():
+    """
+    Данная функция создаёт чат по параметрам
+    
+    :return: Новая страница чата
+    """
     if not IsInSession():
         return 'Login error', 403
     form = CreateChatForm()
@@ -54,8 +76,37 @@ def create_chat():
     chat_id = chat.create_chat(name, code, code_type, session['login'])
     return redirect('/chat/' + str(chat_id))
 
+<<<<<<< HEAD
+=======
+
+if app.config['SOCKET_MODE'] == 'False':
+    @app.route('/send_message', methods=['GET', 'POST'])
+    def send_message():
+        """
+        **Работает без сокетов**
+        Данная функция отправляет сообщение пользователю
+        
+        :return: Отправилось ли сообщение
+        """
+        if not IsInSession():
+            return dumps({"success": False, "error": "Login error"}), 403
+        chat_id = int(request.args['chat'])
+        message = request.args['message']
+        if len(message) > 1000:
+            return 'LENGTH LIMIT'
+        if len(message) > 0:
+            chat.send_message(chat_id, message, "usr", session['login'])
+        return dumps({"success": True, "error": ""})
+
+
+>>>>>>> master
 @app.route('/get_messages', methods=['GET', 'POST'])
 def get_messages():
+    """
+    Функция принятия сообщений
+    
+    :return: Принято ли сообщение
+    """
     if not IsInSession():
         return 'Login error', 403
     chat_id = int(request.args['chat'])
@@ -63,6 +114,11 @@ def get_messages():
 
 @app.route('/send_code', methods=['GET', 'POST'])
 def send_code():
+    """
+    Данная функция отправляет код на сервер от клиента
+    
+    :return: Отправлен ли код
+    """
     if not IsInSession():
         return dumps({"success": False, "error": "Login error"}), 403
     chat_id = int(request.args['chat'])
@@ -74,6 +130,11 @@ def send_code():
 
 @app.route('/get_code', methods=['GET', 'POST'])
 def get_code():
+    """
+    Данная функция отправляет код с сервера к клиенту
+    
+    :return: Код
+    """
     if not IsInSession():
         return 'Login error', 403
     chat_id = int(request.args['chat'])
@@ -82,6 +143,11 @@ def get_code():
 
 @app.route('/get_chat_info', methods=['GET', 'POST'])
 def get_chat_info():
+    """
+    Данная функция передаёт информациб о чате от сервера к клиенту
+    
+    :return: Информация о чате
+    """
     if not IsInSession():
         return 'Login error', 403
     chat_id = int(request.args['chat'])
@@ -89,6 +155,11 @@ def get_chat_info():
 
 @app.route('/get_commits', methods=['GET', 'POST'])
 def get_chat_commits():
+    """
+    Данная функция передаёт пользователю дерево коммитов исходного кода
+    
+    :return: Дерево коммитов
+    """
     if not IsInSession():
         return 'Login error', 403
     chat_id = int(request.args['chat'])

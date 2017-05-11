@@ -21,7 +21,6 @@ class TestBaseChatFunctions(unittest.TestCase):
     def setUp(self):
         global CHAT_ID
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + PATH_TO_DATABASE
-        app.config['SOCKET_MODE'] = 'True'
         init_sockets()
         with app.app_context():
             flask_migrate.upgrade()
@@ -30,12 +29,25 @@ class TestBaseChatFunctions(unittest.TestCase):
         self.assertEquals(chat.get_code(CHAT_ID, 0), {'author': USERNAME, 'code': CHAT_CODE})
 
     def tearDown(self):
+        print(app.config['SOCKET_MODE'])
         os.remove(PATH_TO_DATABASE)
 
-    def test_message_sending(self):
+    def test_message_sending_with_sockets(self):
+        app.config['SOCKET_MODE'] = 'True'
         chat.send_message(CHAT_ID, TEST_MESSAGE, 'usr', USERNAME)
         self.assertEquals(chat.get_messages(CHAT_ID, USERNAME)[-1], {'message': TEST_MESSAGE, 'type': 'mine', 'author': USERNAME})
 
-    def test_code_sending(self):
+    def test_code_sending_with_sockets(self):
+        app.config['SOCKET_MODE'] = 'True'
+        chat.send_code(CHAT_ID, TEST_CODE, USERNAME, 0)
+        self.assertEquals(chat.get_code(CHAT_ID, 1), {"author": USERNAME, "code": TEST_CODE})
+
+    def test_message_sending_without_sockets(self):
+        app.config['SOCKET_MODE'] = 'False'
+        chat.send_message(CHAT_ID, TEST_MESSAGE, 'usr', USERNAME)
+        self.assertEquals(chat.get_messages(CHAT_ID, USERNAME)[-1], {'message': TEST_MESSAGE, 'type': 'mine', 'author': USERNAME})
+
+    def test_code_sending_without_sockets(self):
+        app.config['SOCKET_MODE'] = 'False'
         chat.send_code(CHAT_ID, TEST_CODE, USERNAME, 0)
         self.assertEquals(chat.get_code(CHAT_ID, 1), {"author": USERNAME, "code": TEST_CODE})

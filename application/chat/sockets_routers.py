@@ -54,7 +54,7 @@ def create_routers(socketio):
             leave_room(room)
 
     if app.config['SOCKET_MODE'] == 'False':
-        @app.route('/send_message', methods=['GET', 'POST'])
+        @app.route('/send_message', methods=['GET', 'POST'], endpoint='send_message')
         def send_message():
             """
             **Работает без сокетов**

@@ -76,30 +76,6 @@ def create_chat():
     chat_id = chat.create_chat(name, code, code_type, session['login'])
     return redirect('/chat/' + str(chat_id))
 
-<<<<<<< HEAD
-=======
-
-if app.config['SOCKET_MODE'] == 'False':
-    @app.route('/send_message', methods=['GET', 'POST'])
-    def send_message():
-        """
-        **Работает без сокетов**
-        Данная функция отправляет сообщение пользователю
-        
-        :return: Отправилось ли сообщение
-        """
-        if not IsInSession():
-            return dumps({"success": False, "error": "Login error"}), 403
-        chat_id = int(request.args['chat'])
-        message = request.args['message']
-        if len(message) > 1000:
-            return 'LENGTH LIMIT'
-        if len(message) > 0:
-            chat.send_message(chat_id, message, "usr", session['login'])
-        return dumps({"success": True, "error": ""})
-
-
->>>>>>> master
 @app.route('/get_messages', methods=['GET', 'POST'])
 def get_messages():
     """

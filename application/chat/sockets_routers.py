@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from application import app
 from application import chat
 from flask import redirect, request, session
@@ -55,12 +56,18 @@ def create_routers(socketio):
     if app.config['SOCKET_MODE'] == 'False':
         @app.route('/send_message', methods=['GET', 'POST'])
         def send_message():
-            if not(IsInSession()):
-                return redirect('/login')
+            """
+            **Работает без сокетов**
+            Данная функция отправляет сообщение пользователю
+            
+            :return: Отправилось ли сообщение
+            """
+            if not IsInSession():
+                return dumps({"success": False, "error": "Login error"}), 403
             chat_id = int(request.args['chat'])
             message = request.args['message']
             if len(message) > 1000:
                 return 'LENGTH LIMIT'
             if len(message) > 0:
                 chat.send_message(chat_id, message, "usr", session['login'])
-            return 'OK'
+            return dumps({"success": True, "error": ""})

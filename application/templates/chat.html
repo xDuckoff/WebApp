@@ -175,14 +175,19 @@
             }
         });
     }
-    function send_code() {
-        $.ajax({url:"/send_code", 
+    function send_code(code_to_send) {
+        $.ajax({
+            url:"/send_code",
+            type:"GET", 
             data:{ 
                 chat: chat_index, 
                 code: editor.getValue()
             },
-            type: "GET",
-            success: function(){alert('Code was succesfull loaded');},
+            dataType:'json',
+            success: function(data){
+                console.log(data);
+                alert('Code was succesfull loaded');
+            },
             error: function() {alert('Error while loading code')}
         });
     }
@@ -224,12 +229,6 @@
         $("#login-btn").click(function() {
         if (chat_id == '') window.location = "/login";
         else window.location = "/login?chat=" + chat_id;
-        });
-        $('#go-btn').click(function() {
-            $('#send').on('hide.bs.modal', function() {
-                $('#to_send') = "";
-                console.log($('#to_send'));
-            });
         });
     });
 
@@ -341,8 +340,8 @@
                         <input type="text" class="form-control" placeholder="Commit" id = "to_send">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-default" id="send-btn" onclick="send_code()">Отправить</button> 
-                    <button type="submit" class="btn btn-default" id="send-btn" onclick="$('#send').modal('hide');">Отмена</button> 
+                    <button type="submit" class="btn btn-default" id="send-btn" onclick="send_code($('#to_send').val())">Отправить</button> 
+                    <button type="submit" class="btn btn-default" id="send-btn" data-dismiss="modal" onclick="$('#to_send').val('');">Отмена</button> 
                 </div>
             </div>
         </div>

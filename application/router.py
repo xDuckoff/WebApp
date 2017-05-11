@@ -13,6 +13,7 @@ import requests
 def logout():
     """
     Функция выхода из сессиии в проекте
+    
     :return: Переход на главную страницу
     """
     session.pop('login', None)
@@ -23,6 +24,7 @@ def logout():
 def translate_page():
     """
     Функция перевода страницы
+    
     :return: Переведённую страницу
     """
     return render_template('translate.html')
@@ -32,6 +34,7 @@ def translate_page():
 def translate():
     """
     Функция перевода страницы
+    
     :return: Запрос на сервера Яндекса, для перевода страницы
     """
     url = 'https://translate.yandex.net/api/v1.5/tr.json/translate'
@@ -46,6 +49,7 @@ def translate():
 def index():
     """
     Данная функция генерирует главную страницу для пользователя
+    
     :return: Главная страница с чатами пользователя, является ли человек в сессии, формой входа(Если человек не 
     зарегистрирован, заголовок чата
     """

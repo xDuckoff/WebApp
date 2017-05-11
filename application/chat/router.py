@@ -23,7 +23,9 @@ if app.config['SOCKET_MODE'] == 'True':
         """
         **Работает только с сокетами**
         Данная функция принимает сообщения от пользователя
+        
         :param json: json запрос
+        
         :return: Сообщние
         """
         chat_id = int(json['room'])
@@ -40,7 +42,9 @@ if app.config['SOCKET_MODE'] == 'True':
         """
         **Работает только с сокетами**
         Данная функция сообщает о присоединение пользователя к чату
+        
         :param room: номер чата
+        
         :return: Системное сообщение о входе пользователя
         """
         join_room(room)
@@ -53,6 +57,7 @@ if app.config['SOCKET_MODE'] == 'True':
         """
         **Работает только с сокетами**
         Данная функция удаляет человека из чата
+        
         :param room: Номер чата
         """
         leave_room(room)
@@ -62,6 +67,7 @@ if app.config['SOCKET_MODE'] == 'True':
 def add_chat():
     """
     Данная функция добавляет в сессию пользователя номер чата
+    
     :return: Добавлен ли пользователь в чат
     """
     if not IsInSession():
@@ -76,6 +82,7 @@ def add_chat():
 def tree():
     """
     Данная функция создаёт дерево коммитов чата
+    
     :return: Страницу дерева коммитов
     """
     if not IsInSession():
@@ -88,7 +95,9 @@ def tree():
 def chat_page(chat_id):
     """
     Данная функция возвращает пользователю страницу чата по номеру
+    
     :param chat_id: Номер чата
+    
     :return: Страница чата
     """
     if not IsInSession():
@@ -104,6 +113,7 @@ def chat_page(chat_id):
 def create_chat():
     """
     Данная функция создаёт чат по параметрам
+    
     :return: Новая страница чата
     """
     if not IsInSession():
@@ -129,6 +139,7 @@ if app.config['SOCKET_MODE'] == 'False':
         """
         **Работает без сокетов**
         Данная функция отправляет сообщение пользователю
+        
         :return: Отправилось ли сообщение
         """
         if not IsInSession():
@@ -146,6 +157,7 @@ if app.config['SOCKET_MODE'] == 'False':
 def get_messages():
     """
     Функция принятия сообщений
+    
     :return: Принято ли сообщение
     """
     if not IsInSession():
@@ -157,6 +169,7 @@ def get_messages():
 def send_code():
     """
     Данная функция отправляет код на сервер от клиента
+    
     :return: Отправлен ли код
     """
     if not IsInSession():
@@ -172,6 +185,7 @@ def send_code():
 def get_code():
     """
     Данная функция отправляет код с сервера к клиенту
+    
     :return: Код
     """
     if not IsInSession():
@@ -184,6 +198,7 @@ def get_code():
 def get_chat_info():
     """
     Данная функция передаёт информациб о чате от сервера к клиенту
+    
     :return: Информация о чате
     """
     if not IsInSession():
@@ -195,6 +210,7 @@ def get_chat_info():
 def get_chat_commits():
     """
     Данная функция передаёт пользователю дерево коммитов исходного кода
+    
     :return: Дерево коммитов
     """
     if not IsInSession():

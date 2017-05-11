@@ -32,8 +32,11 @@ class BeakerSessionInterface(SessionInterface):
     def open_session(self, app, request):
         """
         Данная функция создаёт сессию для пользователя
+        
         :param app: Приложения
+        
         :param request: Запрос
+        
         :return: Сессию
         """
         session = request.environ['beaker.session']
@@ -42,8 +45,11 @@ class BeakerSessionInterface(SessionInterface):
     def save_session(self, app, session, response):
         """
         Данная функция сохраняет сессию поьзователя
+        
         :param app: Приложение
+        
         :param session: Сессия
+        
         :param response: Отклик сессии
         """
         session.save()
@@ -52,6 +58,7 @@ class BeakerSessionInterface(SessionInterface):
 def login_user(login):
     """
     Данная функция залогинивает пользователя и создаёт сессию для него
+    
     :param login: Имя пользователя
     """
     session['login'] = cgi.escape(login)
@@ -61,6 +68,7 @@ def login_user(login):
 def IsInSession():
     """
     Данная функция проверяет, существует находится ли пользователь в сессиии
+    
     :return: Находится ли пользователь в сессии
     """
     if 'login' in session:
@@ -71,6 +79,7 @@ def allowed_file(filename):
     """
     Данная функция проверяет, можно ли прикрепить файл с данным расширением
     :param filename: Имя файла
+    
     :return: Находится ли тип файла в разрешённых
     """
     return '.' in filename and \

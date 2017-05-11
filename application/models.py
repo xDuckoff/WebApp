@@ -20,9 +20,13 @@ class Message(db.Model):
     def __init__(self, content, author, chat, type):
         """
         Данная функция создаёт сообщение в базе данных
+        
         :param content: Содержание сообщения
+        
         :param author: Автор сообщения
+        
         :param chat: Номер чата, для данного сообщения
+        
         :param type: Тип сообщения
         """
         self.content = content
@@ -45,9 +49,13 @@ class Code(db.Model):
     def __init__(self, content, author, chat, parent):
         """
         Функция прикрепления кода к чату
+        
         :param content: Содержание кода
+        
         :param author: Имя Автора коммита кода
+        
         :param chat: ID чата, в котором лежит код
+        
         :param parent: Место в дереве коммитов
         """
         self.content = content
@@ -68,7 +76,9 @@ class Chat(db.Model):
     def __init__(self, name, code_type):
         """
         Функция создаёт чат в базе данных
+        
         :param name: Название чата
+        
         :param code_type: Язык программирования
         """
         self.name = name

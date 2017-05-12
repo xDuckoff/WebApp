@@ -60,5 +60,7 @@ def index():
         login_user(form.login.data)
     return render_template('index.html', chats=chats, in_session=IsInSession(), form=form, search_title_text=chat_title)
 
+from application.chat.sockets import init_sockets
+init_sockets()
 
 import application.chat.router

@@ -4,16 +4,8 @@ from flask import session
 from application.models import Message, Code, Chat
 from application import db
 from application import app
+import sockets
 import cgi
-
-"""
-Данный файл содержит основные функции чата
-"""
-
-if app.config['SOCKET_MODE'] == 'True':
-    from application import socketio
-    from flask_socketio import emit
-
 
 def create_chat(name, code, code_type, username):
     """
@@ -112,7 +104,7 @@ def send_code(id, text, username, parent):
     db.session.commit()
     code_id = CodeToSend.id
     sys_message("New Commit " + str(code_id), str(id))
-    socketio.emit('commit', room=str(id), broadcast=True)
+    sockets.send_code_sockets(id)
     return code_id
 
 def get_code(id, index):
@@ -155,8 +147,7 @@ def sys_message(data, room):
     :return: Системное сообщение
     """
     send_message(int(room), data, 'sys', 'System')
-    if app.config['SOCKET_MODE'] == 'True':
-        socketio.emit('message', {'message':data, 'author':'System', 'type':'sys'}, room=room, broadcast=True)
+    sockets.sys_message_sockets(data, room)
 
 def get_commits_in_chat(chat):
     """

@@ -5,6 +5,7 @@ from flask import redirect, request, session
 from application.forms import IsInSession
 import markdown
 from json import dumps 
+import cgi
 
 wereSocketsCreated = 0
 def create_routers(socketio):

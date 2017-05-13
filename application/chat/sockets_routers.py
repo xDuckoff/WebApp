@@ -77,7 +77,7 @@ def create_routers(socketio):
                 if len(message) > 1000:
                     return 'LENGTH LIMIT'
                 if len(message) > 0:
-                    message = cgi.escape(json['message'])
+                    message = cgi.escape(message)
                     message = markdown.markdown(message)
                     chat.send_message(chat_id, message, "usr", session['login'])
                 return dumps({"success": True, "error": ""})

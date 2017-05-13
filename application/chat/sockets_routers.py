@@ -4,6 +4,7 @@ from application import chat
 from flask import redirect, request, session
 from application.forms import IsInSession
 import markdown
+from json import dumps 
 import cgi
 
 wereSocketsCreated = 0
@@ -76,5 +77,7 @@ def create_routers(socketio):
                 if len(message) > 1000:
                     return 'LENGTH LIMIT'
                 if len(message) > 0:
+                    message = cgi.escape(message)
+                    message = markdown.markdown(message)
                     chat.send_message(chat_id, message, "usr", session['login'])
                 return dumps({"success": True, "error": ""})

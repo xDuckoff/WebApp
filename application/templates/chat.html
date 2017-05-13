@@ -20,8 +20,7 @@
 
 {% if socket_mode %}
 <!--socketIO-->
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
-<script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
 {% endif %}
 
 {% endblock %}
@@ -30,6 +29,7 @@
 
 {% if socket_mode %}
 <script type="text/javascript" charset="utf-8">
+    var parent_index = -1;
     jQuery(function ($) {
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {
@@ -68,7 +68,11 @@
     var last_index;
     
     function append_to_textarea(message) {
-        var text =  '<div class="well well-sm message">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
+        if (message.author == "System"){
+            var text =  '<div class="well well-sm text-center" id="system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
+        }else{
+            var text =  '<div class="well well-sm" id="user_message">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
+        }
         $("#chat-panel").append(text);
         if ($("#voice-check").prop("checked")){
             if (message.type != 'sys') {
@@ -178,6 +182,21 @@
             }
         });
     }
+    function send_code() {
+        $.ajax({
+            url:"/send_code",
+            type:"GET", 
+            data:{ 
+                chat: chat_index, 
+                code: editor.getValue(),
+                parent: parent_index
+            },
+            dataType:'json',
+            error: function() {
+                alert('Извините, произошла ошибка при загрузке кода!');
+            }
+        });
+    }
 
     jQuery(function ($) {
         voice.init();
@@ -246,6 +265,7 @@
             },
             dataType: "json",
             success: function(data){
+                parent_index = commit_index;
                 editor.getDoc().setValue(data.code);
             }
         });
@@ -262,7 +282,9 @@
 </audio>
 <div class="container-fluid">
     <div class="row">
-        <p class="text-center">NAME OF THIS SUPER CHAT</p>
+        <p class="text-center"> 
+        	{{ chat_info["name"] }}
+        </p>
     </div>
     <div class="row">
         <div class="col-md-6">
@@ -270,16 +292,16 @@
                 <div class="panel-body" id="chat-panel">
                 </div>
             </div>
-            <label for="message-input" class="sr-only">Message</label>
+            <label for="message-input" class="sr-only">Сообщение</label>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="message-input" placeholder="Write here" maxlength="1000">
+                        <input type="text" class="form-control" id="message-input" placeholder="Пиши здесь" maxlength="1000">
                         <div class="input-group-btn"> 
-                                <button type="button" class="btn btn-default btn-block" id="send-btn">Send</button>
+                                <button type="button" class="btn btn-default btn-block" id="send-btn">Отправить</button>
                         </div>
                         <span class="input-group-addon">
-                            <input type="checkbox" id="voice-check"> Voice
+                            <input type="checkbox" id="voice-check"> Голос
                         </span>
                     </div>
                 </div>
@@ -292,7 +314,7 @@
         </div>
         <div class="col-md-6" id="column">
             <textarea class="form-control" id="code-editor" rows="3"></textarea>
-            <button type="submit" class="btn btn-default btn-block chat-control-btn" id="go-btn">Commit</button>
+            <button type="submit" class="btn btn-default btn-block chat-control-btn" id="go-btn" data-toggle="modal" data-target="#send">Сохранить изменения</button>
             <div class="row">
                 <div class="col-sm-12" id="tree"></div>
             </div>
@@ -305,7 +327,7 @@
                 </div>
             </div>
         </div>
-    </div>     
+    </div>
     <div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" >
             <div class="main-content">
@@ -321,6 +343,23 @@
                         <button type="submit" class="btn btn-default" id="com-btn">Сравнить</button> 
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="send" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="main-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <p class="modal-title" id="myLabel">Отправка кода</p>
+                </div>
+                <div class="modal-body">
+                        <input type="text" class="form-control" placeholder="Название коммита" id = "to_send">
+                </div>
+                <div class="modal-footer">
+                    <button type="s" class="btn btn-default" id="send-btn" data-dismiss="modal" onclick="send_code()">Отправить</button> 
+                    <button type="s" class="btn btn-default" id="send-btn" data-dismiss="modal" onclick="$('#to_send').val('');">Отмена</button> 
+                </div>
             </div>
         </div>
     </div>

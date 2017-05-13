@@ -2,7 +2,7 @@ body{
     width: 100%;
     height: 100%;
     background-color: #2f3e4e;
-    color: #dddddd;
+    
 }
 
 .main-content{
@@ -23,11 +23,32 @@ body{
     margin-bottom:10px;
 }
 
+#system_message{
+    width: 50%;
+    word-wrap: break-word;
+    margin-left: auto;
+    margin-right: auto; 
+}
+
+#user_message{
+    width: 70%;
+    word-wrap: break-word;
+    margin-right: auto; 
+}
+
 #chat-panel{
     min-height: 500;
     max-height: 500;
-    overflow-y: scroll;
+    overflow-y: scroll; 
 }
+
+#new_index_body,
+#new_index_body table th,
+#new_index_body table td{
+    color: #dddddd;
+}
+
+
 
 #code-editor{
     resize: vertical;

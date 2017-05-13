@@ -44,7 +44,7 @@ class Testmodels(unittest.TestCase):
         self.assertTrue(hasattr(code, "chat"))
         self.assertTrue(hasattr(code, "parent"))
 
-    def test_type_model_message(self):
+    def test_type_model_chat(self):
 
         self.assertIsInstance(Chat.id.type, db.Integer)
         self.assertIsInstance(Chat.name.type, db.String)

@@ -1,7 +1,6 @@
 import unittest
 import os
 import flask_migrate
-from application import chat
 from application import app
 from application.models import Message, Code, Chat
 from application import db

@@ -68,7 +68,7 @@
         if (message.author == "System"){
             var text =  '<div class="well well-sm text-center" style="word-wrap: break-word;">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
-            var text =  '<div class="well well-sm text-muted" style="word-wrap: break-word;">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
+            var text =  '<div class="well well-sm" style="word-wrap: break-word; color:#000000;">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
         }
         $("#chat-panel").append(text);
         if ($("#voice-check").prop("checked")){

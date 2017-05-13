@@ -43,6 +43,7 @@ body{
 }
 
 #new_index_body,
+.grey_text,
 #new_index_body table th,
 #new_index_body table td{
     color: #dddddd;

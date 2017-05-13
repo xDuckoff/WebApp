@@ -7,7 +7,9 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/Treant.css') }}" type="text/css"/>
 <script src="{{ url_for('static', filename='js/vendor/raphael.js') }}"></script>
 <script src="{{ url_for('static', filename='js/Treant.js') }}"></script>
-
+<script type="text/javascript" charset="utf-8">
+    var chat_index = {{ chat_id }};
+</script>
 <!-- CODEMIRROR -->
 <script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/lib/codemirror.css') }}">
@@ -26,7 +28,6 @@
 
 {% if socket_mode %}
 <script type="text/javascript" charset="utf-8">
-    var chat_index = {{ chat_id }};
     var parent_index = -1;
     jQuery(function ($) {
         var socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -194,12 +195,15 @@
             }
         });
     }
-    var editor;
+
     jQuery(function ($) {
         voice.init();
         last_index = 0;
         {% if not socket_mode %}
-        var timerId = setInterval(get_messages, 5000);
+        var timerId = setInterval(function (){
+                    get_messages();
+                    get_tree("tree");
+                }, 5000);
         {% endif %}
         chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
         $("#message-input").keypress(function(e) {
@@ -296,6 +300,11 @@
                             <input type="checkbox" id="voice-check"> Voice
                         </span>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <strong>**жирный**</strong> <em>_курсив_</em> <code>`встроенный код`</code> <code>```форматированный```</code>
                 </div>
             </div>
         </div>

@@ -12,17 +12,23 @@
     <body>
         <nav class="navbar navbar-inverse navbar-static-top">
             <div class="container">
-                <li class="active">
-                    <a href="/">
-                        <button type="button" class="btn btn-primary navbar-btn">Главная</button>
-                        <span class="sr-only">(current)</span>
-                    </a>
-                    <a class="nav-button">
-                        <button class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#myModalLogin" {% if disabled_login_btn %}disabled="disabled"{% endif %}>
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/">
+                            Главная
+                        </a>
+                    </li>
+                    {% if disabled_login_btn %}
+                    <li class="disabled"><a>Вход</a></li>
+                    {% endif %}
+                    {% if not disabled_login_btn %}
+                    <li>
+                        <a href="/" data-toggle="modal" data-target="#myModalLogin">
                             Вход
-                        </button>
-                    </a>
-                </li>
+                        </a>
+                    </li>
+                    {% endif %}
+                 </ul>
             </div>
         </nav>
         {% block content %}{% endblock %}

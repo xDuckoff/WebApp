@@ -2,6 +2,7 @@ body{
     width: 100%;
     height: 100%;
     background-color: #2f3e4e;
+    color: #dddddd;
     
 }
 
@@ -24,6 +25,7 @@ body{
 }
 
 #system_message{
+    color: #000000;
     width: 50%;
     word-wrap: break-word;
     margin-left: auto;
@@ -31,6 +33,7 @@ body{
 }
 
 #user_message{
+    color: #000000;
     width: 70%;
     word-wrap: break-word;
     margin-right: auto; 
@@ -41,15 +44,6 @@ body{
     max-height: 500;
     overflow-y: scroll; 
 }
-
-#new_index_body,
-.grey_text,
-#new_index_body table th,
-#new_index_body table td{
-    color: #dddddd;
-}
-
-
 
 #code-editor{
     resize: vertical;

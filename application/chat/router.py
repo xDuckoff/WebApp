@@ -51,7 +51,8 @@ def chat_page(chat_id):
     if not chat.get_chat_info(chat_id):
         flash(u'Такого чата не существует!')
         return redirect('/')
-    return render_template('chat.html',chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'), disabled_login_btn=True)
+    chat_info = chat.get_chat_info(chat_id)
+    return render_template('chat.html',chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'), disabled_login_btn=True, chat_info=chat_info)
 
 @app.route('/create_chat', methods=['GET', 'POST'])
 def create_chat():

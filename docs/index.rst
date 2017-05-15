@@ -10,8 +10,6 @@ Welcome to Chatocode's documentation!
    :maxdepth: 2
 
 
-   *.rst
-
 Indices and tables
 ==================
 

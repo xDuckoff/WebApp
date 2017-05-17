@@ -103,7 +103,7 @@ def send_code(id, text, username, parent):
     db.session.add(CodeToSend)
     db.session.commit()
     code_id = CodeToSend.id
-    sys_message("New Commit " + str(code_id), str(id))
+    sys_message(u"Новое изменение " + str(code_id), str(id))
     sockets.send_code_sockets(id)
     return code_id
 

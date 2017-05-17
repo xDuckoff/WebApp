@@ -98,7 +98,6 @@ def send_code(id, text, username, parent):
     
     :return: Сообщение о коммите и номере кода
     """
-    text = cgi.escape(text)
     CodeToSend = Code(text, username, id, parent)
     db.session.add(CodeToSend)
     db.session.commit()

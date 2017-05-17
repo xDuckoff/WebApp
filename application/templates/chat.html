@@ -325,20 +325,16 @@
             </div>
         </div>
     </div>
-    <style type="text/css">
-        .modal.modal-wide .modal-dialog{
-            width:90%;
-        }
-    </style>
+
     <div class="modal modal-wide fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="main-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h1 class="modal-title" id="myLabel" align=center>Сравнить с исходным кодом</h1>
+                    <h4 class="modal-title" id="myLabel" align=center>Сравнить с исходным кодом</h4>
                 </div>
                 <div class="modal-body">
-                    <div rows="3" id="code-comp"></div>
+                    <div rows="3" id="comp"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-default" id="close-btn">Закрыть</button> 
@@ -358,16 +354,15 @@
                     },
                     dataType: "json",
                     success: function(data){
-                        var target = document.getElementById("code-comp");
-                        target.innerHTML = "";  
-                        dv = CodeMirror.MergeView(target, {
+                        var target = $("#comp");
+                        target.empty();
+                        dv = CodeMirror.MergeView(target[0], {
                             value: data.code,
                             orig: editor.getValue(),
                             lineNumbers: true,
-                            mode: "text/html",
                             highlightDifferences: true,
-                            collapseIdentical: false,
-                            readOnly: true
+                            readOnly: true,
+                            revertButtons: false
                         });
                     }
                 });

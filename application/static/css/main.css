@@ -57,3 +57,7 @@ body{
     word-wrap: break-word;
     color: #000000;
 }
+
+.modal.modal-wide .modal-dialog{
+    width:90%;
+}

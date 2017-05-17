@@ -1,14 +1,11 @@
 import unittest
 import os
-import sys
 import flask_migrate
 from application import chat
 from application import app
 
-if sys.platform.find('linux') != -1:
-    PATH_TO_DATABASE = "/tmp/db-test.sqlite"
-else:
-    PATH_TO_DATABASE = "/c/Temp"
+
+PATH_TO_DATABASE = "/tmp/db-test.sqlite"
 
 USERNAME = 'Bot'
 CHAT_NAME = 'Test Chat'

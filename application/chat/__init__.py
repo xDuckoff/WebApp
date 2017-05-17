@@ -129,12 +129,12 @@ def find_chat(name):
     :return: Все чаты, в название которых содержится имя чата
     """
     if name == '':
-        return Chat.query.all()[-10:]
+        return Chat.query.all()[:-10:-1]
     try:
         chat_id = int(name)
         return Chat.query.filter_by(id=chat_id)
     except ValueError:
-        return Chat.query.filter(Chat.name.like('%'+name+'%')).all()
+        return Chat.query.filter(Chat.name.like('%'+name+'%')).all()[::-1]
 
 def sys_message(data, room):
     """

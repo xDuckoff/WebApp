@@ -31,7 +31,6 @@
     jQuery(function ($) {
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {
-            get_messages();
             socket.emit('join', chat_index);
         });
         socket.on('disconnect', function() {
@@ -63,7 +62,7 @@
 {% endif %}
 
 <script type="text/javascript">
-    var last_index;
+    var last_index = 0;
     
     function append_to_textarea(message) {
         if (message.author == "System"){
@@ -198,7 +197,6 @@
 
     jQuery(function ($) {
         voice.init();
-        last_index = 0;
         {% if not socket_mode %}
         var timerId = setInterval(function (){
                     get_messages();

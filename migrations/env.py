@@ -3,6 +3,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
 import logging
+from application import app
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -54,6 +55,8 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
+    if app.config.get('TEST_MODE'):
+        logging.getLogger('alembic').setLevel(logging.WARNING)
 
     # this callback is used to prevent an auto-migration from being generated
     # when there are no changes to the schema

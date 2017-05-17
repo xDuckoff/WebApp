@@ -37,12 +37,12 @@ def get_chat_info(id):
     
     :param id: Номер чата
     
-    :return: Имя чата
+    :return: Имя чата и тип синтаксиса
     """
     result = Chat.query.get(id)
     if not result:
         return {}
-    return {'name':result.name}
+    return {'name':result.name, 'code_type':result.code_type}
 
 def send_message(id, text, type, username):
     """

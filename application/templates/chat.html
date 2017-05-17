@@ -9,14 +9,17 @@
 <script src="{{ url_for('static', filename='js/Treant.js') }}"></script>
 <script type="text/javascript" charset="utf-8">
     var chat_index = {{ chat_id }};
+    var chat_code_type ="{{ chat_info['code_type'] }}";
 </script>
 <!-- CODEMIRROR -->
 <script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/lib/codemirror.css') }}">
+<script src="{{ url_for('static', filename='js/codemirror/mode/xml/xml.js') }}"></script>
 <script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
 <script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
 <script src="{{ url_for('static', filename='js/codemirror/mode/htmlmixed/htmlmixed.js') }}"></script>
 <script src="{{ url_for('static', filename='js/codemirror/mode/css/css.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/clike/clike.js') }}"></script>
 
 {% if socket_mode %}
 <!--socketIO-->
@@ -30,6 +33,7 @@
 {% if socket_mode %}
 <script type="text/javascript" charset="utf-8">
     var parent_index = -1;
+    var chat_information;
     jQuery(function ($) {
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {
@@ -201,6 +205,19 @@
     jQuery(function ($) {
         voice.init();
         last_index = 0;
+        if (chat_code_type == "C++"){
+            chat_code_type = "text/x-c++src"
+        };
+        if (chat_code_type == "Html"){
+                chat_code_type = "htmlmixed"
+        };
+        if (chat_code_type == "Java"){
+                chat_code_type = "javascript"
+        };
+        if (chat_code_type == "Python"){
+            chat_code_type = "python"
+        };
+        console.log(chat_code_type);
         {% if not socket_mode %}
         var timerId = setInterval(function (){
                     get_messages();
@@ -214,9 +231,9 @@
             }
         });
         editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
-            mode: {name: "python",
-                   version: 2,
-                   singleLineStringErrors: false},
+            mode: {name: chat_code_type,
+                    version: 2,
+                    singleLineStringErrors: false},
             lineNumbers: true,
             indentUnit: 4,
             matchBrackets: true,

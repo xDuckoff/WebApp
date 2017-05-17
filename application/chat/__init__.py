@@ -102,7 +102,8 @@ def send_code(id, text, username, parent):
     db.session.add(CodeToSend)
     db.session.commit()
     code_id = CodeToSend.id
-    sys_message(u"Новое изменение " + str(code_id), str(id))
+    code_id_in_chat = len(Code.query.filter_by(chat=id).all()) - 1
+    sys_message(u"Новое изменение " + str(code_id_in_chat), str(id))
     sockets.send_code_sockets(id)
     return code_id
 

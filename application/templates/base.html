@@ -18,10 +18,10 @@
                             Главная
                         </a>
                     </li>
-                    {% if disabled_login_btn %}
+                    {% if in_session %}
                     <li class="disabled"><a>Вход</a></li>
                     {% endif %}
-                    {% if not disabled_login_btn %}
+                    {% if not in_session %}
                     <li>
                         <a href="#" data-toggle="modal" data-target="#myModalLogin">
                             Вход

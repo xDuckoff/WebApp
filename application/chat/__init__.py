@@ -79,7 +79,7 @@ def get_messages(id, username):
             else:
                 type = "others"
         else:
-            type = "system"
+            type = "sys"
 
         ret.append({"author": i.author, "message": i.content, "type": type})
     return ret
@@ -146,7 +146,7 @@ def sys_message(data, room):
     
     :return: Системное сообщение
     """
-    send_message(int(room), data, 'sys', 'System')
+    send_message(int(room), data, 'sys', u'Системное сообщение')
     sockets.sys_message_sockets(data, room)
 
 def get_commits_in_chat(chat):

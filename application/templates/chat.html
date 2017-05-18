@@ -65,7 +65,7 @@
     var last_index = 0;
     
     function append_to_textarea(message) {
-        if (message.author == "System"){
+        if (message.type == "sys"){
             var text =  '<div class="well well-sm text-center" id="system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
             var text =  '<div class="well well-sm" id="user_message">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";

@@ -58,6 +58,13 @@ body{
     color: #000000;
 }
 
-.modal.modal-wide .modal-dialog{
+.modal-wide .modal-dialog{
     width:90%;
+}
+.modal{
+    padding: 0px;
+}
+.close{
+    color: #fff;
+    opacity: 1;
 }

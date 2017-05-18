@@ -209,16 +209,16 @@
         last_index = 0;
         if (chat_code_type == "C++"){
             chat_code_type = "text/x-c++src"
-        };
+        }
         if (chat_code_type == "Html"){
                 chat_code_type = "htmlmixed"
-        };
+        }
         if (chat_code_type == "Java"){
                 chat_code_type = "javascript"
-        };
+        }
         if (chat_code_type == "Python"){
             chat_code_type = "python"
-        };
+        }
         {% if not socket_mode %}
         var timerId = setInterval(function (){
                     get_messages();
@@ -232,9 +232,11 @@
             }
         });
         editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
-            mode: {name: chat_code_type,
-                    version: 2,
-                    singleLineStringErrors: false},
+            mode: {
+                name: chat_code_type,
+                version: 2,
+                singleLineStringErrors: false
+            },
             lineNumbers: true,
             indentUnit: 4,
             matchBrackets: true,
@@ -375,9 +377,10 @@
                         target.empty();
                         dv = CodeMirror.MergeView(target[0], {
                             value: data.code,
-                            mode: {name: chat_code_type,
-                                   version: 2,
-                                   singleLineStringErrors: false
+                            mode: {
+                                name: chat_code_type,
+                                version: 2,
+                                singleLineStringErrors: false
                             },
                             orig: editor.getValue(),
                             lineNumbers: true,

@@ -9,7 +9,6 @@ body{
 .main-content{
     border: 2px solid #424f5e;
     background: #1b2c3e;
-    padding: 2%;
 }
 
 .nav-button{
@@ -56,4 +55,15 @@ body{
 .message{
     word-wrap: break-word;
     color: #000000;
+}
+
+.modal-wide .modal-dialog{
+    width:90%;
+}
+.modal{
+    padding: 0px;
+}
+.close{
+    color: #fff;
+    opacity: 1;
 }

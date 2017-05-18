@@ -20,6 +20,7 @@ class TestBaseChatFunctions(unittest.TestCase):
     def setUp(self):
         global CHAT_ID
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + PATH_TO_DATABASE
+        app.config['SOCKET_MODE'] = 'False'
         app.config['TEST_MODE'] = True
         with app.app_context():
             flask_migrate.upgrade()

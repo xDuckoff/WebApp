@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from application import app
 
 socketio = 0
@@ -18,4 +20,4 @@ def send_code_sockets(id):
 
 def sys_message_sockets(data, room):
     if app.config['SOCKET_MODE'] == 'True':
-        socketio.emit('message', {'message':data, 'author':'System', 'type':'sys'}, room=room, broadcast=True)
+        socketio.emit('message', {'message':data, 'author':u'Системное сообщение', 'type':'sys'}, room=room, broadcast=True)

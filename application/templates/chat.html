@@ -14,6 +14,7 @@
 <!-- CODEMIRROR -->
 <script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
 <script src="{{ url_for('static', filename='js/diff_match_patch.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/addon/merge/merge.js') }}"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/lib/codemirror.css') }}">
 <script src="{{ url_for('static', filename='js/codemirror/mode/xml/xml.js') }}"></script>
 <script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
@@ -22,7 +23,6 @@
 <script src="{{ url_for('static', filename='js/codemirror/mode/css/css.js') }}"></script>
 <script src="{{ url_for('static', filename='js/codemirror/mode/clike/clike.js') }}"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/addon/merge/merge.css') }}">
-<script src="{{ url_for('static', filename='js/codemirror/addon/merge/merge.js') }}"></script>
 
 {% if socket_mode %}
 <!--socketIO-->
@@ -39,7 +39,6 @@
     jQuery(function ($) {
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {
-            get_messages();
             socket.emit('join', chat_index);
         });
         socket.on('disconnect', function() {
@@ -71,10 +70,10 @@
 {% endif %}
 
 <script type="text/javascript">
-    var last_index;
+    var last_index = 0;
     
     function append_to_textarea(message) {
-        if (message.author == "System"){
+        if (message.type == "sys"){
             var text =  '<div class="well well-sm text-center" id="system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
             var text =  '<div class="well well-sm" id="user_message">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
@@ -203,10 +202,8 @@
             }
         });
     }
-
     jQuery(function ($) {
         voice.init();
-        last_index = 0;
         if (chat_code_type == "C++"){
             chat_code_type = "text/x-c++src"
         }
@@ -242,6 +239,7 @@
             matchBrackets: true,
             value: "print('Hello World!')"
         });
+        get_messages();
         get_code(0);
         {% if not socket_mode %}
         $("#send-btn").click(function() {
@@ -377,11 +375,6 @@
                         target.empty();
                         dv = CodeMirror.MergeView(target[0], {
                             value: data.code,
-                            mode: {
-                                name: chat_code_type,
-                                version: 2,
-                                singleLineStringErrors: false
-                            },
                             orig: editor.getValue(),
                             lineNumbers: true,
                             highlightDifferences: true,

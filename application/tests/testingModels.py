@@ -5,8 +5,7 @@ from application import app
 from application.models import Message, Code, Chat
 from application import db
 
-TEST_DB = 'test'
-PATH_TO_DATABASE = os.path.join(os.path.abspath(os.path.curdir), TEST_DB + ".slite")
+PATH_TO_DATABASE = "/tmp/db-test.sqlite"
 
 
 class Testmodels(unittest.TestCase):
@@ -14,17 +13,15 @@ class Testmodels(unittest.TestCase):
     def setUp(self):
         global CHAT_ID
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + PATH_TO_DATABASE
+        app.config['TEST_MODE'] = True
         with app.app_context():
             flask_migrate.upgrade()
-
-
-
 
     def tearDown(self):
         os.remove(PATH_TO_DATABASE)
 
     def test_available_chat(self):
-        chat = Chat("some")
+        chat = Chat("some", "P++")
         self.assertTrue(hasattr(chat, "id"))
         self.assertTrue(hasattr(chat, "name"))
 

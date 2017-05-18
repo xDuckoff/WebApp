@@ -79,7 +79,7 @@ def get_messages(id, username):
             else:
                 type = "others"
         else:
-            type = "system"
+            type = "sys"
 
         ret.append({"author": i.author, "message": i.content, "type": type})
     return ret
@@ -98,12 +98,12 @@ def send_code(id, text, username, parent):
     
     :return: Сообщение о коммите и номере кода
     """
-    text = cgi.escape(text)
     CodeToSend = Code(text, username, id, parent)
     db.session.add(CodeToSend)
     db.session.commit()
     code_id = CodeToSend.id
-    sys_message("New Commit " + str(code_id), str(id))
+    code_id_in_chat = len(Code.query.filter_by(chat=id).all()) - 1
+    sys_message(u"Новое изменение " + str(code_id_in_chat), str(id))
     sockets.send_code_sockets(id)
     return code_id
 
@@ -129,12 +129,12 @@ def find_chat(name):
     :return: Все чаты, в название которых содержится имя чата
     """
     if name == '':
-        return Chat.query.all()[-10:]
+        return Chat.query.all()[:-10:-1]
     try:
         chat_id = int(name)
         return Chat.query.filter_by(id=chat_id)
     except ValueError:
-        return Chat.query.filter(Chat.name.like('%'+name+'%')).all()
+        return Chat.query.filter(Chat.name.like('%'+name+'%')).all()[::-1]
 
 def sys_message(data, room):
     """
@@ -146,7 +146,7 @@ def sys_message(data, room):
     
     :return: Системное сообщение
     """
-    send_message(int(room), data, 'sys', 'System')
+    send_message(int(room), data, 'sys', u'Системное сообщение')
     sockets.sys_message_sockets(data, room)
 
 def get_commits_in_chat(chat):

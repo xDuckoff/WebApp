@@ -219,7 +219,6 @@
         if (chat_code_type == "Python"){
             chat_code_type = "python"
         };
-        console.log(chat_code_type);
         {% if not socket_mode %}
         var timerId = setInterval(function (){
                     get_messages();
@@ -376,6 +375,10 @@
                         target.empty();
                         dv = CodeMirror.MergeView(target[0], {
                             value: data.code,
+                            mode: {name: chat_code_type,
+                                   version: 2,
+                                   singleLineStringErrors: false
+                            },
                             orig: editor.getValue(),
                             lineNumbers: true,
                             highlightDifferences: true,

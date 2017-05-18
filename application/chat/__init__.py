@@ -37,7 +37,7 @@ def get_chat_info(id):
     
     :param id: Номер чата
     
-    :return: Имя чата и тип синтаксиса
+    :return: Имя чата
     """
     result = Chat.query.get(id)
     if not result:

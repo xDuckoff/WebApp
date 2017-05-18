@@ -34,7 +34,6 @@
     jQuery(function ($) {
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {
-            get_messages();
             socket.emit('join', chat_index);
         });
         socket.on('disconnect', function() {
@@ -66,10 +65,10 @@
 {% endif %}
 
 <script type="text/javascript">
-    var last_index;
+    var last_index = 0;
     
     function append_to_textarea(message) {
-        if (message.author == "System"){
+        if (message.type == "sys"){
             var text =  '<div class="well well-sm text-center" id="system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
             var text =  '<div class="well well-sm" id="user_message">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
@@ -200,7 +199,6 @@
     }
     jQuery(function ($) {
         voice.init();
-        last_index = 0;
         {% if not socket_mode %}
         var timerId = setInterval(function (){
                     get_messages();
@@ -222,6 +220,7 @@
             matchBrackets: true,
             value: "print('Hello World!')"
         });
+        get_messages();
         get_code(0);
         {% if not socket_mode %}
         $("#send-btn").click(function() {

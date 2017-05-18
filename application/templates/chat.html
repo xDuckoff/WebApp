@@ -33,7 +33,6 @@
 {% if socket_mode %}
 <script type="text/javascript" charset="utf-8">
     var parent_index = -1;
-    var chat_information;
     jQuery(function ($) {
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {

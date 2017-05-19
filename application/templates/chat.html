@@ -8,6 +8,7 @@
 <script src="{{ url_for('static', filename='js/vendor/raphael.js') }}"></script>
 <script src="{{ url_for('static', filename='js/Treant.js') }}"></script>
 <script type="text/javascript" charset="utf-8">
+    var INTERVAL = 1000;
     var chat_index = {{ chat_id }};
 </script>
 <!-- CODEMIRROR -->
@@ -205,7 +206,7 @@
         var timerId = setInterval(function (){
                     get_messages();
                     get_tree("tree");
-                }, 5000);
+                }, INTERVAL);
         {% endif %}
         chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
         $("#message-input").keypress(function(e) {

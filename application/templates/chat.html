@@ -34,6 +34,7 @@
     jQuery(function ($) {
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {
+            get_messages();
             socket.emit('join', chat_index);
         });
         socket.on('disconnect', function() {
@@ -200,6 +201,7 @@
     jQuery(function ($) {
         voice.init();
         {% if not socket_mode %}
+        get_messages();
         var timerId = setInterval(function (){
                     get_messages();
                     get_tree("tree");
@@ -220,7 +222,6 @@
             matchBrackets: true,
             value: "print('Hello World!')"
         });
-        get_messages();
         get_code(0);
         {% if not socket_mode %}
         $("#send-btn").click(function() {

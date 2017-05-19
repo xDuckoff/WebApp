@@ -94,38 +94,34 @@
                             <input type="submit" class="btn btn-primary" value="Найти"  formmethod="get">
                         </span>
                     </div>
-                </form>
-                    <table class="table">
-                        {% if chats|length == 0 %}
-                        <tr>
-                            <th>Чаты отсутствуют</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        {% else %}
+                </form>    
+                {% if chats|length == 0 %}  
+                    <p class="text-center">Чаты отсутствуют</p>      
+                {% else %}
+                    <table class="table">  
                         <tr>
                             <th>Название</th>
                             <th>Язык программирования</th>
                             <th></th>
                         </tr>
-                        {% endif %}
-                    {% for chat in chats %}
-                        <tr>
-                        <td>{{chat.name}}</td>
-                        <td>{{chat.code_type}}</td>
-                        <td>
-                            {% if in_session %}
-                            <a href="/chat/{{ chat.id }}">
-                                <button class="btn btn-primary btn-xs">Перейти</button>
-                            {% else %}
-                            <a>
-                                <button class="btn btn-primary btn-xs" disabled="disabled">Перейти</button>
-                            {% endif %}
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
+                        {% for chat in chats %}
+                            <tr>
+                            <td>{{chat.name}}</td>
+                            <td>{{chat.code_type}}</td>
+                            <td>
+                                {% if in_session %}
+                                <a href="/chat/{{ chat.id }}">
+                                    <button class="btn btn-primary btn-xs">Перейти</button>
+                                {% else %}
+                                <a>
+                                    <button class="btn btn-primary btn-xs" disabled="disabled">Перейти</button>
+                                {% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                     </table>
+                {% endif %} 
             </div>
         </div>
     </div>

@@ -19,12 +19,12 @@
                         </a>
                     </li>
                     {% if in_session %}
-                    <li class="disabled"><a>Вход</a></li>
+                    <li>{% login %}</li>
                     {% endif %}
                     {% if not in_session %}
                     <li>
                         <a href="#" data-toggle="modal" data-target="#myModalLogin">
-                            {% login %}
+                            Вход
                         </a>
                     </li>
                     {% endif %}

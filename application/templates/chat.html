@@ -76,9 +76,9 @@
     
     function append_to_textarea(message) {
         if (message.type == "sys"){
-            var text =  '<div class="well well-sm text-center" id="system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
+            var text =  '<div class="well well-sm text-center system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
-            var text =  '<div class="well well-sm" id="user_message">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
+            var text =  '<div class="well well-sm user_message">' +"<b>" + message.author + '</b><br>'+ message.message + '<img src="{{ url_for("static", filename="img/flag-rus.gif") }}" class = "translate_img" data-lang="ru" data-index="index"><img src="{{ url_for("static", filename="img/flag-eng.gif") }}" class = "translate_img" data-lang="eng" data-index="index"></div>';
         }
         $("#chat-panel").append(text);
         if ($("#voice-check").prop("checked")){
@@ -141,7 +141,6 @@
 
         }
     };
-
 
     function get_scrollHeight(element) {
         var pr = element.scrollTop();
@@ -243,6 +242,23 @@
             value: "print('Hello World!')"
         });
         get_code(0);
+        $("#chat-panel").on("click", ".translate_img", function(){
+            console.log("sdf");
+            $.ajax({
+                url: '/translate',
+                data:{
+                    "chat": chat_index,
+                    "index": $(this).data('index')
+                },
+                dataType: "json",
+                success: function(data){
+                    console.log(data);
+                },
+                error: function(){
+                    alert('Извините, произошла ошибка!');
+                }
+            });
+        });
         {% if not socket_mode %}
         $("#send-btn").click(function() {
             $.ajax({

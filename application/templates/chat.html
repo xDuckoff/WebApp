@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SUPER CRAZY NAME{% endblock %}
+{% block title %}{{ chat_info["name"] }}{% endblock %}
 
 {% block includes %}
 <!--Treant-->
@@ -301,7 +301,7 @@
 </audio>
 <div class="container-fluid">
     <div class="row">
-        <h3 class="text-center">
+        <h3 class="text-center" style="margin-top: -20px;">
              {{ chat_info["name"] }}
         </h3>
     </div>
@@ -309,6 +309,7 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-body" id="chat-panel">
+
                 </div>
             </div>
             <label for="message-input" class="sr-only">Сообщение</label>
@@ -317,10 +318,10 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="message-input" placeholder="Пиши здесь" maxlength="1000">
                         <div class="input-group-btn"> 
-                                <button type="button" class="btn btn-default btn-block" id="send-btn">Отправить</button>
+                                <button type="button" class="btn btn-primary btn-block" style="border-radius: 0px" id="send-btn">Отправить</button>
                         </div>
                         <span class="input-group-addon">
-                            <input type="checkbox" id="voice-check"> Голос
+                            <input type="checkbox"  id="voice-check"> <image src="{{ url_for('static', filename='img/sound.png') }}"></image>
                         </span>
                     </div>
                 </div>

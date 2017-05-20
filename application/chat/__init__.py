@@ -166,9 +166,15 @@ def generate_commits_tree(chat):
     
     :return: Сгенерированное дерево коммитов
     """
-    commits = get_commits_in_chat(chat)
-    commits_data = []
-    for index in range(0, commits.count()):
-        commit = commits[index]
-        commits_data.append({"id":index, "author":str(commit.author), "parent":int(commit.parent)})
-    return commits_data
+    return """{
+        "text": { "name": "Parent node" },
+        "children": [
+            {
+                "text": { "name": "First child" }
+            },
+            {
+                "text": { "name": "Second child" }
+            }
+        ]
+    }"""
+

@@ -6,6 +6,7 @@ from application import db
 from application import app
 import sockets
 import cgi
+from json import dumps
 
 def create_chat(name, code, code_type, username):
     """
@@ -22,7 +23,6 @@ def create_chat(name, code, code_type, username):
     :return: Номер чата
     """
     name = cgi.escape(name)
-    code = cgi.escape(code)
     code_type = cgi.escape(code_type)
     chat_to_create = Chat(name, code_type)
     db.session.add(chat_to_create)
@@ -37,12 +37,12 @@ def get_chat_info(id):
     
     :param id: Номер чата
     
-    :return: Имя чата
+    :return: Имя чата и язык программирования чата
     """
     result = Chat.query.get(id)
     if not result:
         return {}
-    return {'name':result.name}
+    return {'name':result.name, 'code_type':result.code_type}
 
 def send_message(id, text, type, username):
     """
@@ -79,7 +79,7 @@ def get_messages(id, username):
             else:
                 type = "others"
         else:
-            type = "system"
+            type = "sys"
 
         ret.append({"author": i.author, "message": i.content, "type": type})
     return ret
@@ -98,12 +98,12 @@ def send_code(id, text, username, parent):
     
     :return: Сообщение о коммите и номере кода
     """
-    text = cgi.escape(text)
     CodeToSend = Code(text, username, id, parent)
     db.session.add(CodeToSend)
     db.session.commit()
     code_id = CodeToSend.id
-    sys_message("New Commit " + str(code_id), str(id))
+    code_id_in_chat = len(Code.query.filter_by(chat=id).all()) - 1
+    sys_message(u"Новое изменение " + str(code_id_in_chat), str(id))
     sockets.send_code_sockets(id)
     return code_id
 
@@ -129,12 +129,12 @@ def find_chat(name):
     :return: Все чаты, в название которых содержится имя чата
     """
     if name == '':
-        return Chat.query.all()[-10:]
+        return Chat.query.all()[:-10:-1]
     try:
         chat_id = int(name)
         return Chat.query.filter_by(id=chat_id)
     except ValueError:
-        return Chat.query.filter(Chat.name.like('%'+name+'%')).all()
+        return Chat.query.filter(Chat.name.like('%'+name+'%')).all()[::-1]
 
 def sys_message(data, room):
     """
@@ -146,7 +146,7 @@ def sys_message(data, room):
     
     :return: Системное сообщение
     """
-    send_message(int(room), data, 'sys', 'System')
+    send_message(int(room), data, 'sys', u'Системное сообщение')
     sockets.sys_message_sockets(data, room)
 
 def get_commits_in_chat(chat):
@@ -168,8 +168,13 @@ def generate_commits_tree(chat):
     :return: Сгенерированное дерево коммитов
     """
     commits = get_commits_in_chat(chat)
-    commits_data = []
-    for index in range(0, commits.count()):
+    commits_data = [{"children": []} for i in range(0, commits.count())]
+    
+    commits_data[0] = {"text": "{name: '0'}", "children":[],
+                       "innerHTML":"<div onclick = \"get_code(0)\" class=\"chosen\" id=\"commit-button0\">0</div>"}
+    for index in range(commits.count() - 1, 0, -1):
         commit = commits[index]
-        commits_data.append({"id":index, "author":str(commit.author), "parent":int(commit.parent)})
-    return commits_data
+        commits_data[index]["text"] = {"name": str(index)}
+        commits_data[index]["innerHTML"] = "<div onclick = \"{0}\" id=\"commit-button{1}\">{1}</div".format('get_code('+str(index)+')', str(index))
+        commits_data[commit.parent]["children"].append(commits_data[index])
+    return dumps(commits_data[0])

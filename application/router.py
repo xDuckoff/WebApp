@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, session, url_for, request
+from flask import render_template, redirect, session, url_for, request, send_from_directory
 from application import app, chat
 from forms import LoginForm, login_user, IsInSession
-import requests
+import requests, os
 
 """
 Данный файл содержит основные страницы проекта.
@@ -63,6 +63,22 @@ def index():
     else:
         login = ""
     return render_template('index.html', chats=chats, in_session=IsInSession(), form=form, search_title_text=chat_title, login=login)
+
+
+@app.route('/documentation/<path:filename>')
+def docs_page(filename):
+    """
+    Данная функция открывает пользователю страницу с документацией
+    
+    :param filename: Имя файла
+    
+    :return: Выбранный файл с документацией
+    """
+    rootdir = os.getcwd()
+    path = rootdir + '/docs/_build/html/'
+    return send_from_directory(path, filename)
+
+
 
 from application.chat.sockets import init_sockets
 init_sockets()

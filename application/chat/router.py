@@ -33,8 +33,7 @@ def tree():
     if not IsInSession():
         return 'Login error', 403
     chat_id = int(request.args['chat'])
-    coms = chat.generate_commits_tree(chat_id)
-    return render_template('commitsTree.html',commits = coms)
+    return chat.generate_commits_tree(chat_id)
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
@@ -141,3 +140,18 @@ def get_chat_commits():
         return 'Login error', 403
     chat_id = int(request.args['chat'])
     return dumps(chat.generate_tree(chat_id))
+
+
+@app.route('/api/create_chat', methods=['GET', 'POST'])
+def API_create_chat():
+    """
+    Данная функция создаёт чат по параметрам, используется для api
+
+    :return: Адрес новой страницы чата
+    """
+    form = CreateChatForm()
+    name = form.name.data
+    code = form.code.data
+    code_type = form.code_type.data
+    chat_id = chat.create_chat(name, code, code_type, "Sublime bot")
+    return '/chat/' + str(chat_id)

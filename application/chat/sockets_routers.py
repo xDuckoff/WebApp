@@ -48,7 +48,7 @@ def create_routers(socketio):
                 """
                 join_room(room)
                 if room not in session['joined_chats']:
-                    chat.sys_message(str(session['login']) + " joined", room)
+                    chat.sys_message(str(session['login']) + u" присоединился", room)
 
 
             @socketio.on('leave')

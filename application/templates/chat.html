@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SUPER CRAZY NAME{% endblock %}
+{% block title %}{{ chat_info["name"] }}{% endblock %}
 
 {% block includes %}
 <!--Treant-->
@@ -8,13 +8,23 @@
 <script src="{{ url_for('static', filename='js/vendor/raphael.js') }}"></script>
 <script src="{{ url_for('static', filename='js/Treant.js') }}"></script>
 <script type="text/javascript" charset="utf-8">
+    var INTERVAL = 1000;
     var chat_index = {{ chat_id }};
+    var chat_code_type ="{{ chat_info['code_type'] }}";
+    var chosen_commit = 0;
 </script>
 <!-- CODEMIRROR -->
 <script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
+<script src="{{ url_for('static', filename='js/diff_match_patch.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/addon/merge/merge.js') }}"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/lib/codemirror.css') }}">
+<script src="{{ url_for('static', filename='js/codemirror/mode/xml/xml.js') }}"></script>
 <script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
 <script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/htmlmixed/htmlmixed.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/css/css.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/clike/clike.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/addon/merge/merge.css') }}">
 
 {% if socket_mode %}
 <!--socketIO-->
@@ -63,10 +73,10 @@
 {% endif %}
 
 <script type="text/javascript">
-    var last_index;
+    var last_index = 0;
     
     function append_to_textarea(message) {
-        if (message.author == "System"){
+        if (message.type == "sys"){
             var text =  '<div class="well well-sm text-center" id="system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
             var text =  '<div class="well well-sm" id="user_message">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
@@ -195,15 +205,26 @@
             }
         });
     }
-
     jQuery(function ($) {
         voice.init();
-        last_index = 0;
+        if (chat_code_type == "C++"){
+            chat_code_type = "text/x-c++src"
+        }
+        if (chat_code_type == "Html"){
+                chat_code_type = "htmlmixed"
+        }
+        if (chat_code_type == "Java"){
+                chat_code_type = "javascript"
+        }
+        if (chat_code_type == "Python"){
+            chat_code_type = "python"
+        }
         {% if not socket_mode %}
+        get_messages();
         var timerId = setInterval(function (){
                     get_messages();
                     get_tree("tree");
-                }, 5000);
+                }, INTERVAL);
         {% endif %}
         chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
         $("#message-input").keypress(function(e) {
@@ -212,14 +233,17 @@
             }
         });
         editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
-            mode: {name: "python",
-                   version: 2,
-                   singleLineStringErrors: false},
+            mode: {
+                name: chat_code_type,
+                version: 2,
+                singleLineStringErrors: false
+            },
             lineNumbers: true,
             indentUnit: 4,
             matchBrackets: true,
             value: "print('Hello World!')"
         });
+        get_tree('tree');
         get_code(0);
         {% if not socket_mode %}
         $("#send-btn").click(function() {
@@ -247,13 +271,29 @@
                 chat: chat_index
             },
             dataType: "html",
-            success: function( data ) {
-                $('#'+objecy_id).html(data);
+            success: function( node_structure ) {
+                config = {
+                    container: "#" + objecy_id,
+                    levelSeparation: 70,
+                    siblingSeparation: 70,
+                    rootOrientation: "WEST"
+                };
+
+                simple_chart_config = {
+                    chart: config,
+                    nodeStructure: $.parseJSON(node_structure)
+                };
+                var tree = new Treant(simple_chart_config);
             }
         });
     }
+
     function get_code(commit_index){
-        code = ""
+        console.log($("#commit-button" + commit_index))
+        $("#commit-button" + chosen_commit).removeClass("chosen");
+        $("#commit-button" + commit_index).addClass("chosen");
+
+        chosen_commit = commit_index;
         $.ajax({
             url:"/get_code",
             type:"GET",
@@ -268,7 +308,7 @@
             }
         });
     }
-    get_tree("tree");
+
 </script>
 
 {% endblock %}
@@ -280,14 +320,15 @@
 </audio>
 <div class="container-fluid">
     <div class="row">
-        <p class="text-center"> 
-        	{{ chat_info["name"] }}
-        </p>
+        <h3 class="text-center" style="margin-top: -20px;">
+             {{ chat_info["name"] }}
+        </h3>
     </div>
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-body" id="chat-panel">
+
                 </div>
             </div>
             <label for="message-input" class="sr-only">Сообщение</label>
@@ -296,10 +337,10 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="message-input" placeholder="Пиши здесь" maxlength="1000">
                         <div class="input-group-btn"> 
-                                <button type="button" class="btn btn-default btn-block" id="send-btn">Отправить</button>
+                                <button type="button" class="btn btn-primary btn-block" style="border-radius: 0px" id="send-btn">Отправить</button>
                         </div>
                         <span class="input-group-addon">
-                            <input type="checkbox" id="voice-check"> Голос
+                            <input type="checkbox"  id="voice-check"> <image src="{{ url_for('static', filename='img/sound.png') }}"></image>
                         </span>
                     </div>
                 </div>
@@ -314,36 +355,71 @@
             <textarea class="form-control" id="code-editor" rows="3"></textarea>
             <button type="submit" class="btn btn-default btn-block chat-control-btn" id="go-btn" data-toggle="modal" data-target="#send">Сохранить изменения</button>
             <div class="row">
-                <div class="col-sm-12" id="tree"></div>
+                <div class="col-sm-12" id="column">
+                    <div type="submit" class="btn btn-default btn-block chat-control-btn" id="compare-btn">Сравнить с исходным кодом</div>
+                </div>
             </div>
             <div class="row">
-                <div class="col-sm-6" id="column">
-                    <button type="submit" class="btn btn-default btn-block chat-control-btn" id="go-btn">Перейти</button>
-                </div>
-                <div class="col-sm-6" id="column">
-                    <button type="submit" class="btn btn-default btn-block chat-control-btn" data-toggle="modal" data-target="#compare" id="compare-btn" onclick="get_tree('tree');">Сравнить с</button>
-                </div>
+                <div class="col-sm-12" id="tree"></div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" >
+
+    <div class="modal modal-wide fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="main-content">
-                <form role = "form" action = "/create_chat">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <p class="modal-title" id="myLabel">Сравнить с</p>
-                    </div>
-                    <div class="modal-body">
-                            <input type="text" class="form-control" placeholder="Commit">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-default" id="com-btn">Сравнить</button> 
-                    </div>
-                </form>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myLabel" align=center>Сравнить с исходным кодом</h4>
+                </div>
+                <div class="modal-body">
+                    <div rows="3" id="comp"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default" id="close-btn">Закрыть</button> 
+                </div>
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('#compare').on('shown.bs.modal', function () {
+                $.ajax({
+                    url:"/get_code",
+                    type:"GET",
+                    data:{
+                        chat: chat_index,
+                        index: 0
+                    },
+                    dataType: "json",
+                    success: function(data){
+                        var target = $("#comp");
+                        target.empty();
+                        dv = CodeMirror.MergeView(target[0], {
+                            value: data.code,
+                            mode: {
+                                name: chat_code_type,
+                                version: 2,
+                                singleLineStringErrors: false
+                            },
+                            orig: editor.getValue(),
+                            lineNumbers: true,
+                            highlightDifferences: true,
+                            readOnly: true,
+                            revertButtons: false
+                        });
+                    }
+                });
+            });
+            $('#compare-btn').click(function () {
+                $('#compare').modal("show");
+            });
+            $('#close-btn').click(function () {
+                $('#compare').modal("hide");
+            });
+            
+        });
+    </script>
     <div class="modal fade" id="send" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" >
             <div class="main-content">

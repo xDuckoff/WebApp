@@ -71,9 +71,7 @@ def IsInSession():
     
     :return: Находится ли пользователь в сессии
     """
-    if 'login' in session:
-        return True
-    return False
+    return 'login' in session
 
 def allowed_file(filename):
     """

@@ -1,0 +1,12 @@
+[
+{
+    "id" : "Vasilek",
+    "caption" : "Vasilek",
+    "children":
+	[
+	{
+		"caption" : "Create chat",
+		"command" : "create_chat"
+	}]
+}
+]

@@ -13,7 +13,6 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 class TestMainPage(unittest.TestCase):
-    LOGIN_PAGE = "/login"
     LOGOUT = "/logout"
     INDEX = "/"
     CHAT = "/chat/1"
@@ -28,10 +27,6 @@ class TestMainPage(unittest.TestCase):
 
     def tearDown(self):
         os.remove(os.path.join(BASE_DIR, TEST_DB))
-
-    def test_should_login_page_be_exist(self):
-        response = self.app.get(self.LOGIN_PAGE)
-        self.assertEqual(response.status_code, 404)
 
     def test_should_logout_page_be_exist(self):
         response = self.app.get(self.LOGOUT)

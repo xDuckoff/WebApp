@@ -78,7 +78,7 @@
                     Создать чат
                 </button>
                 {% else %}
-                <button class="btn btn-lg btn-primary disabled center-block" id="chat-create-btn">
+                <button class="btn btn-lg btn-primary disabled center-block" id="chat-create-btn" data-placement="right" data-toggle="tooltip" title="Необходимо войти">
                     Создать чат
                 </button>
                 {% endif %}
@@ -111,7 +111,7 @@
                                 <button class="btn btn-primary btn-xs">Перейти</button>
                             {% else %}
                             <a>
-                                <button class="btn btn-primary btn-xs" disabled="disabled" id="tip" data-title="Необходимо войти">Перейти</button>
+                                <button class="btn btn-primary btn-xs" disabled="disabled" data-placement="right" data-toggle="tooltip" title="Необходимо войти">Перейти</button>
                             {% endif %}
                             </a>
                         </td>
@@ -121,6 +121,11 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function(){
+            //$("[data-toggle='tooltip']").tooltip();
+        });
+    </script>
 
 
 {% endblock %}

@@ -67,3 +67,8 @@ body{
     color: #fff;
     opacity: 1;
 }
+
+.chosen {
+    color: red;
+    font-weight: 600;
+}

@@ -10,15 +10,20 @@
 <script type="text/javascript" charset="utf-8">
     var INTERVAL = 1000;
     var chat_index = {{ chat_id }};
+    var chat_code_type ="{{ chat_info['code_type'] }}";
 </script>
 <!-- CODEMIRROR -->
 <script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
 <script src="{{ url_for('static', filename='js/diff_match_patch.js') }}"></script>
 <script src="{{ url_for('static', filename='js/codemirror/addon/merge/merge.js') }}"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/lib/codemirror.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/addon/merge/merge.css') }}">
+<script src="{{ url_for('static', filename='js/codemirror/mode/xml/xml.js') }}"></script>
 <script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
 <script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/htmlmixed/htmlmixed.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/css/css.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/clike/clike.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/addon/merge/merge.css') }}">
 
 {% if socket_mode %}
 <!--socketIO-->
@@ -201,6 +206,18 @@
     }
     jQuery(function ($) {
         voice.init();
+        if (chat_code_type == "C++"){
+            chat_code_type = "text/x-c++src"
+        }
+        if (chat_code_type == "Html"){
+                chat_code_type = "htmlmixed"
+        }
+        if (chat_code_type == "Java"){
+                chat_code_type = "javascript"
+        }
+        if (chat_code_type == "Python"){
+            chat_code_type = "python"
+        }
         {% if not socket_mode %}
         get_messages();
         var timerId = setInterval(function (){
@@ -215,9 +232,11 @@
             }
         });
         editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
-            mode: {name: "python",
-                   version: 2,
-                   singleLineStringErrors: false},
+            mode: {
+                name: chat_code_type,
+                version: 2,
+                singleLineStringErrors: false
+            },
             lineNumbers: true,
             indentUnit: 4,
             matchBrackets: true,
@@ -358,6 +377,11 @@
                         target.empty();
                         dv = CodeMirror.MergeView(target[0], {
                             value: data.code,
+                            mode: {
+                                name: chat_code_type,
+                                version: 2,
+                                singleLineStringErrors: false
+                            },
                             orig: editor.getValue(),
                             lineNumbers: true,
                             highlightDifferences: true,

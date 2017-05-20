@@ -27,7 +27,7 @@ class TestBaseChatFunctions_with_sockets(unittest.TestCase):
         with app.app_context():
             flask_migrate.upgrade()
         CHAT_ID = chat.create_chat(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
-        self.assertEquals(chat.get_chat_info(CHAT_ID), {'name': CHAT_NAME})
+        self.assertEquals(chat.get_chat_info(CHAT_ID), {'name': CHAT_NAME, 'code_type': CODE_TYPE})
         self.assertEquals(chat.get_code(CHAT_ID, 0), {'author': USERNAME, 'code': CHAT_CODE})
 
     def tearDown(self):

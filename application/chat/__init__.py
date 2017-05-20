@@ -83,7 +83,7 @@ def get_messages(id, username):
         ret.append({"author": i.author, "message": i.content, "type": type})
     return ret
 
-def send_code(id, text, username, parent, cname):
+def send_code(id, text, username, parent, cname = u'Начальная версия'):
     """
     Отправление кода на сервер
     

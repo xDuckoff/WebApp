@@ -6,6 +6,7 @@ from application import db
 from application import app
 import sockets
 import cgi
+from json import dumps
 
 def create_chat(name, code, code_type, username):
     """
@@ -167,8 +168,13 @@ def generate_commits_tree(chat):
     :return: Сгенерированное дерево коммитов
     """
     commits = get_commits_in_chat(chat)
-    commits_data = []
-    for index in range(0, commits.count()):
+    commits_data = [{"children": []} for i in range(0, commits.count())]
+    
+    commits_data[0] = {"text": "{name: '0'}", "children":[],
+                       "innerHTML":"<div onclick = \"get_code(0)\" class=\"chosen\" id=\"commit-button0\">0</div>"}
+    for index in range(commits.count() - 1, 0, -1):
         commit = commits[index]
-        commits_data.append({"id":index, "author":str(commit.author), "parent":int(commit.parent)})
-    return commits_data
+        commits_data[index]["text"] = {"name": str(index)}
+        commits_data[index]["innerHTML"] = "<div onclick = \"{0}\" id=\"commit-button{1}\">{1}</div".format('get_code('+str(index)+')', str(index))
+        commits_data[commit.parent]["children"].append(commits_data[index])
+    return dumps(commits_data[0])

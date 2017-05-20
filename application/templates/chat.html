@@ -11,6 +11,7 @@
     var INTERVAL = 1000;
     var chat_index = {{ chat_id }};
     var chat_code_type ="{{ chat_info['code_type'] }}";
+    var chosen_commit = 0;
 </script>
 <!-- CODEMIRROR -->
 <script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
@@ -242,6 +243,7 @@
             matchBrackets: true,
             value: "print('Hello World!')"
         });
+        get_tree('tree');
         get_code(0);
         {% if not socket_mode %}
         $("#send-btn").click(function() {
@@ -269,12 +271,29 @@
                 chat: chat_index
             },
             dataType: "html",
-            success: function( data ) {
-                $('#'+objecy_id).html(data);
+            success: function( node_structure ) {
+                config = {
+                    container: "#" + objecy_id,
+                    levelSeparation: 70,
+                    siblingSeparation: 70,
+                    rootOrientation: "WEST"
+                };
+
+                simple_chart_config = {
+                    chart: config,
+                    nodeStructure: $.parseJSON(node_structure)
+                };
+                var tree = new Treant(simple_chart_config);
             }
         });
     }
+
     function get_code(commit_index){
+        console.log($("#commit-button" + commit_index))
+        $("#commit-button" + chosen_commit).removeClass("chosen");
+        $("#commit-button" + commit_index).addClass("chosen");
+
+        chosen_commit = commit_index;
         $.ajax({
             url:"/get_code",
             type:"GET",
@@ -289,7 +308,7 @@
             }
         });
     }
-    get_tree("tree");
+
 </script>
 
 {% endblock %}

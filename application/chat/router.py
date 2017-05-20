@@ -33,8 +33,7 @@ def tree():
     if not IsInSession():
         return 'Login error', 403
     chat_id = int(request.args['chat'])
-    coms = chat.generate_commits_tree(chat_id)
-    return render_template('commitsTree.html',commits = coms)
+    return chat.generate_commits_tree(chat_id)
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):

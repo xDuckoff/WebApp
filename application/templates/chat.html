@@ -269,8 +269,22 @@
                 chat: chat_index
             },
             dataType: "html",
-            success: function( data ) {
-                $('#'+objecy_id).html(data);
+            success: function( node_structure ) {
+                console.log(node_structure);
+                config = {
+                    container: "#" + objecy_id,
+                    levelSeparation: 70,
+                    siblingSeparation: 70,
+                    rootOrientation: "WEST"
+                };
+
+                simple_chart_config = {
+                    chart: config,
+                    nodeStructure: $.parseJSON(node_structure)
+                };
+                var tree = new Treant(simple_chart_config);
+
+                //$('#'+objecy_id).html(data);
             }
         });
     }

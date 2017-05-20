@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}NAME_NAME_NAME{% endblock %}
+{% block title %}Василёк{% endblock %}
 
 {% block content %}
     <div class="modal fade" id="myModalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
@@ -62,14 +62,14 @@
     <div class = "container main-container">
         <div class = "row">
             <div class="col-md-10 col-md-offset-1">
-                <h3 class="text-center">Добро пожаловать на лучший в мире чат</h3>
-                <h3 class="text-center">для помощи разработчикам!!!</h3>
+                <h2 class="text-center" style="margin-left: 10%; margin-right: 10%; margin-bottom: 10px; margin-top: -30px;"><b>Василёк - это бесплатный, удобный и наглядный портал для совместной разработки кода.</b></h2>
+                <p class = "text-center" style="margin-left: 20%; margin-right: 20%; margin-top: 10px; font-size: 20;margin-bottom: 10px;">С помощью данного портала, вы перестанете страдать от сбившегося форматирования и сложных решений для неработающих программ. Василёк помогает Вам работать с кодом вместе с другими разработчиками, а также общаться и получать помощь.</p>
             </div>
         </div>
         <div class = "row">
             <div class="col-md-8 col-md-offset-2 main-content">
                 {% if in_session %}
-                <button class="btn btn-lg btn-primary center-block" id="chat-create-btn" data-toggle="modal" data-target="#myModal">
+                <button class="btn btn-lg btn-primary center-block" id="chat-create-btn" data-toggle="modal" data-target="#myModal" style="margin-top: 10px;">
                     Создать чат
                 </button>
                 {% else %}

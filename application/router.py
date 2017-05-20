@@ -61,7 +61,7 @@ def index():
     return render_template('index.html', chats=chats, in_session=IsInSession(), form=form, search_title_text=chat_title)
 
 
-@app.route('/d/<path:filename>')
+@app.route('/documentation/<path:filename>')
 def docs_page(filename):
     """
     Данная функция открывает пользователю страницу с документацией

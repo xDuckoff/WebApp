@@ -101,7 +101,8 @@ def send_code():
     chat_id = int(request.args['chat'])
     code = request.args['code']
     parent = request.args['parent']
-    code_id = chat.send_code(chat_id, code, session['login'], parent)
+    cname = request.args['cname']
+    code_id = chat.send_code(chat_id, code, session['login'], parent, cname)
     return dumps({"success": True, "error": ""})
 
 
@@ -154,5 +155,6 @@ def API_create_chat():
     name = form.name.data
     code = form.code.data
     code_type = form.code_type.data
+    cname = form.cname.data
     chat_id = chat.create_chat(name, code, code_type, "Sublime bot")
     return '/chat/' + str(chat_id)

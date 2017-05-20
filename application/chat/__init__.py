@@ -83,7 +83,7 @@ def get_messages(id, username):
         ret.append({"author": i.author, "message": i.content, "type": type})
     return ret
 
-def send_code(id, text, username, parent):
+def send_code(id, text, username, parent, cname):
     """
     Отправление кода на сервер
     
@@ -97,12 +97,12 @@ def send_code(id, text, username, parent):
     
     :return: Сообщение о коммите и номере кода
     """
-    CodeToSend = Code(text, username, id, parent)
+    CodeToSend = Code(text, username, id, parent, cname)
     db.session.add(CodeToSend)
     db.session.commit()
     code_id = CodeToSend.id
     code_id_in_chat = len(Code.query.filter_by(chat=id).all()) - 1
-    sys_message(u"Новое изменение " + str(code_id_in_chat), str(id))
+    sys_message(u"Изменение кода " + str(code_id_in_chat) + u" : '" + unicode(cname) + u"'", str(id))
     sockets.send_code_sockets(id)
     return code_id
 

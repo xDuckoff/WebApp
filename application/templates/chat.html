@@ -8,6 +8,7 @@
 <script src="{{ url_for('static', filename='js/vendor/raphael.js') }}"></script>
 <script src="{{ url_for('static', filename='js/Treant.js') }}"></script>
 <script type="text/javascript" charset="utf-8">
+    var INTERVAL = 1000;
     var chat_index = {{ chat_id }};
     var chat_code_type ="{{ chat_info['code_type'] }}";
 </script>
@@ -39,6 +40,7 @@
     jQuery(function ($) {
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {
+            get_messages();
             socket.emit('join', chat_index);
         });
         socket.on('disconnect', function() {
@@ -217,10 +219,11 @@
             chat_code_type = "python"
         }
         {% if not socket_mode %}
+        get_messages();
         var timerId = setInterval(function (){
                     get_messages();
                     get_tree("tree");
-                }, 5000);
+                }, INTERVAL);
         {% endif %}
         chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
         $("#message-input").keypress(function(e) {
@@ -239,7 +242,6 @@
             matchBrackets: true,
             value: "print('Hello World!')"
         });
-        get_messages();
         get_code(0);
         {% if not socket_mode %}
         $("#send-btn").click(function() {
@@ -299,9 +301,9 @@
 </audio>
 <div class="container-fluid">
     <div class="row">
-        <p class="text-center"> 
-            {{ chat_info["name"] }}
-        </p>
+        <h3 class="text-center">
+             {{ chat_info["name"] }}
+        </h3>
     </div>
     <div class="row">
         <div class="col-md-6">

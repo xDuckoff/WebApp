@@ -22,7 +22,6 @@ def create_chat(name, code, code_type, username):
     :return: Номер чата
     """
     name = cgi.escape(name)
-    code = cgi.escape(code)
     code_type = cgi.escape(code_type)
     chat_to_create = Chat(name, code_type)
     db.session.add(chat_to_create)

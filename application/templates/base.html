@@ -21,9 +21,6 @@
                         </a>
                     </li>
                 </ul>
-                {% if in_session %}
-                    <p class="navbar-text navbar-right"> Вы вошли как <strong>{{login}}</strong></p>
-                {% endif %}
                 <ul class="nav navbar-nav navbar-right">
                     {% if in_session %}
                     <li>
@@ -40,6 +37,9 @@
                     </li>
                     {% endif %}
                  </ul>
+				 {% if in_session %}
+                    <p class="navbar-text navbar-right"> Вы вошли как <strong>{{login}}</strong></p>
+                {% endif %}
             </div>
         </nav>
         {% block content %}{% endblock %}

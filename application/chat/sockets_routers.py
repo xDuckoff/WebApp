@@ -28,7 +28,7 @@ def create_routers(socketio):
                 :return: Сообщние
                 """
                 chat_id = int(json['room'])
-                if len(json['message']) > 1000:
+                if len(json['message']) > 1000 or len(json['message']) == 0:
                     return
                 chat_id = int(json['room'])
                 message = cgi.escape(json['message'])
@@ -74,7 +74,7 @@ def create_routers(socketio):
                     return dumps({"success": False, "error": "Login error"}), 403
                 chat_id = int(request.args['chat'])
                 message = request.args['message']
-                if len(message) > 1000:
+                if len(message) > 1000 or len(message) == 0:
                     return 'LENGTH LIMIT'
                 if len(message) > 0:
                     message = cgi.escape(message)

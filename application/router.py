@@ -4,8 +4,6 @@ from flask import render_template, redirect, session, url_for, request, send_fro
 from application import app, chat
 from forms import LoginForm, login_user, IsInSession
 import requests, os
-from models import Message
-from json import dumps
 
 """
 Данный файл содержит основные страницы проекта.

@@ -180,9 +180,18 @@ def generate_commits_tree(chat):
         commits_data[commit.parent]["children"].append(commits_data[index])
     return dumps(commits_data[0])
 
-def translate_text(text, lang):    
+def translate_text(text, lang):
+    """
+    Функция переводит текст
+
+    :param text: Исходный тескт
+
+    :param lang: Язык для перевода
+
+    :return: Переведённый текст
+    """
     return requests.get(app.config['YA_TL_URL'], {
-        "key": app.config['API_KEY'], 
-        "text": text, 
+        "key": app.config['API_KEY'],
+        "text": text,
         "lang": lang
         }).json()['text'][0]

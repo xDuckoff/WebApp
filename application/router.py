@@ -62,7 +62,7 @@ def index():
         login = session['login']
     else:
         login = ""
-    return render_template('index.html', chats=chats, in_session=IsInSession(), form=form, search_title_text=chat_title, login=login)
+    return render_template('index.html', chats=chats, in_session=IsInSession(), form=form, search_title_text=chat_title, login=login, check=1)
 
 
 @app.route('/documentation/<path:filename>')

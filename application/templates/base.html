@@ -20,10 +20,16 @@
                             Главная
                         </a>
                     </li>
-                    {% if disabled_login_btn %}
-                    <li class="disabled"><a>Вход</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if in_session %}
+                    <li>
+                        <a href="/logout">
+                            Выход
+                        </a>
+                    </li>
                     {% endif %}
-                    {% if not disabled_login_btn %}
+                    {% if not in_session %}
                     <li>
                         <a href="#" data-toggle="modal" data-target="#myModalLogin">
                             Вход
@@ -31,6 +37,9 @@
                     </li>
                     {% endif %}
                  </ul>
+				 {% if in_session %}
+                    <p class="navbar-text navbar-right"> Вы вошли как <strong>{{login}}</strong></p>
+                {% endif %}
             </div>
         </nav>
         {% block content %}{% endblock %}

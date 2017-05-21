@@ -58,7 +58,11 @@ def index():
     form = LoginForm()
     if form.validate_on_submit():
         login_user(form.login.data)
-    return render_template('index.html', chats=chats, in_session=IsInSession(), form=form, search_title_text=chat_title)
+    if 'login' in session:
+        login = session['login']
+    else:
+        login = ""
+    return render_template('index.html', chats=chats, in_session=IsInSession(), form=form, search_title_text=chat_title, login=login)
 
 
 @app.route('/documentation/<path:filename>')

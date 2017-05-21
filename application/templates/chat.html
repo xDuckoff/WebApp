@@ -197,7 +197,8 @@
             data:{ 
                 chat: chat_index, 
                 code: editor.getValue(),
-                parent: parent_index
+                parent: parent_index,
+                cname: $('#to_send').val()
             },
             dataType:'json',
             error: function() {
@@ -428,7 +429,7 @@
                     <p class="modal-title" id="myLabel">Отправка кода</p>
                 </div>
                 <div class="modal-body">
-                        <input type="text" class="form-control" placeholder="Название коммита" id = "to_send">
+                        <input type="text" class="form-control" placeholder="Название коммита" id="to_send">
                 </div>
                 <div class="modal-footer">
                     <button type="s" class="btn btn-default" id="send-btn" data-dismiss="modal" onclick="send_code()">Отправить</button> 

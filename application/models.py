@@ -45,8 +45,9 @@ class Code(db.Model):
     author = db.Column(db.String(256))
     chat = db.Column(db.Integer)
     parent = db.Column(db.Integer)
+    cname = db.Column(db.String(256))
 
-    def __init__(self, content, author, chat, parent):
+    def __init__(self, content, author, chat, parent, cname = u'Начальная версия'):
         """
         Функция прикрепления кода к чату
         
@@ -62,6 +63,7 @@ class Code(db.Model):
         self.author = author
         self.chat = chat
         self.parent = parent
+        self.cname = cname
 
 
 class Chat(db.Model):

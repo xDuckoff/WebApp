@@ -114,7 +114,7 @@
                                     <button class="btn btn-primary btn-xs">Перейти</button>
                                 {% else %}
                                 <a>
-                                    <button class="btn btn-primary btn-xs" disabled="disabled">Перейти</button>
+                                    <button class="btn btn-primary btn-xs disabled" data-placement="right" data-toggle="tooltip" title="Необходимо войти">Перейти</button>
                                 {% endif %}
                                 </a>
                             </td>
@@ -127,7 +127,7 @@
     </div>
     <script>
         $(document).ready(function(){
-            //$("[data-toggle='tooltip']").tooltip();
+            $("[data-toggle='tooltip']").tooltip();
         });
     </script>
 

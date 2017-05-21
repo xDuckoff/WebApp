@@ -7,6 +7,7 @@ from application import app
 import sockets
 import cgi
 from json import dumps
+import requests
 
 def create_chat(name, code, code_type, username):
     """
@@ -178,3 +179,10 @@ def generate_commits_tree(chat):
         commits_data[index]["innerHTML"] = "<div onclick = \"{0}\" id=\"commit-button{1}\">{1}</div".format('get_code('+str(index)+')', str(index))
         commits_data[commit.parent]["children"].append(commits_data[index])
     return dumps(commits_data[0])
+
+def translate_text(text, lang):    
+    return requests.get(app.config['YA_TL_URL'], {
+        "key": app.config['API_KEY'], 
+        "text": text, 
+        "lang": lang
+        }).json()['text'][0]

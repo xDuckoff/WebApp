@@ -57,7 +57,9 @@ def send_message(id, text, type, username):
     
     :param username: Имя пользователя
     """
-    db.session.add(Message(text, username, id, type))
+    text_ru = translate_text(text, 'ru')
+    text_en = translate_text(text, 'en')
+    db.session.add(Message(text, text_ru, text_en, username, id, type))
     db.session.commit()
 
 def get_messages(id, username):

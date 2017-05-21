@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, session, url_for, request, send_from_directory
+from flask import render_template, redirect, session, url_for, request, send_from_directory, abort
 from application import app, chat
 from forms import LoginForm, login_user, IsInSession
 import requests, os
+from models import Message
+from json import dumps
 
 """
 Данный файл содержит основные страницы проекта.
@@ -20,16 +22,6 @@ def logout():
     return redirect('/')    
 
 
-@app.route('/translate-test')
-def translate_page():
-    """
-    Функция перевода страницы
-    
-    :return: Переведённую страницу
-    """
-    return render_template('translate.html')
-
-
 @app.route('/translate')
 def translate():
     """
@@ -37,12 +29,16 @@ def translate():
     
     :return: Запрос на сервера Яндекса, для перевода страницы
     """
-    url = 'https://translate.yandex.net/api/v1.5/tr.json/translate'
-    return requests.get(url, {
-        "key": app.config['API_KEY'],
-        "text": request.args["text"],
-        "lang": "ru"
-        }).content
+    try:
+        chat_id = int(request.args['chat'])
+        message_id = int(request.args['index'])
+    except ValueError:
+        abort(400)
+    try:
+        return chat.get_translated_message(chat_id, message_id)
+    except IndexError:
+        return 'No index', 400
+
 
 
 @app.route('/', methods=['GET', 'POST'])

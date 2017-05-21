@@ -197,3 +197,10 @@ def translate_text(text, lang):
         "text": text,
         "lang": lang
         }).json()['text'][0]
+
+def get_translated_message(chat_id, message_id):
+    message = Message.query.filter_by(chat=chat_id)[message_id]
+    return dumps({
+        "ru": message.content_ru,
+        "en": message.content_en
+        })

@@ -16,7 +16,7 @@ def logout():
     
     :return: Переход на главную страницу
     """
-    session.pop('login', None)
+    session.clear()
     return redirect('/')    
 
 

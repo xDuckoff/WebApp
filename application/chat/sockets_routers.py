@@ -47,8 +47,6 @@ def create_routers(socketio):
                 :return: Системное сообщение о входе пользователя
                 """
                 join_room(room)
-                if room not in session['joined_chats']:
-                    chat.sys_message(session['login'] + u" присоединился", room)
 
 
             @socketio.on('leave')

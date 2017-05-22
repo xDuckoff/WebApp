@@ -17,11 +17,16 @@ def add_chat():
     """
     if not IsInSession():
         return dumps({"success": False, "error": "Login error"}), 403
-    chat_id = request.args['chat_id']
+    try:
+        chat_id = int(request.args['chat'])
+    except ValueError:
+        return dumps({"success": False, "error": "Bad Chat ID"}), 403
     if chat_id not in session['joined_chats']:
+        chat.sys_message(session['login'] + u" присоединился", chat_id)
         session['joined_chats'].append(chat_id)
         session.modified = True
     return dumps({"success": True, "error": ""})
+
 
 @app.route('/tree', methods=['GET', 'POST'])
 def tree():

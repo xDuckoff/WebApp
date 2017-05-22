@@ -39,6 +39,7 @@
 <script type="text/javascript" charset="utf-8">
     var parent_index = -1;
     jQuery(function ($) {
+        joinToChat();
         get_messages();
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {
@@ -54,14 +55,6 @@
 
         socket.on('commit', function() {
             get_tree("tree");
-        });
-
-        $.ajax({
-            type: "GET",
-            url: "/add_chat",
-            data: {
-                chat_id: chat_index
-            }
         });
         $("#send-btn").click(function() {
             socket.emit('message', {'message':$("#message-input").val(), 'room':chat_index, 'type':'usr'});
@@ -96,7 +89,6 @@
         currentIndex: -1,
         isBusy:false,
         play: function(){
-            console.log('Play');
             voice.isBusy = true;
             this.currentIndex += 1;
             var url = 'https://tts.voicetech.yandex.net/generate?'+
@@ -113,29 +105,24 @@
             this.audio = document.getElementById('audio');
 
             this.audio.onloadeddata = function(){
-                console.log('onloadeddata');
                 voice.audio.play();
             };
 
             this.audio.onended = function(){
-                console.log('onended');
                 voice.checkEnd();
             };
 
         },
         checkEnd: function(){
-            console.log('checkEnd');
             this.isBusy = false;
             voice.checkPlay();
         },
         checkPlay: function (){
-            console.log('checkPlay');
             if (!this.isBusy &&  this.stack.length != (this.currentIndex + 1) ){
                 voice.play();
             }
         },
         addText: function(text){
-            console.log('addText');
             this.stack.push(text);
             this.checkPlay();
 
@@ -220,6 +207,7 @@
             chat_code_type = "python"
         }
         {% if not socket_mode %}
+        joinToChat();
         get_messages();
         var timerId = setInterval(function (){
                     get_messages();
@@ -289,7 +277,6 @@
     }
 
     function get_code(commit_index){
-        console.log($("#commit-button" + commit_index))
         $("#commit-button" + chosen_commit).removeClass("chosen");
         $("#commit-button" + commit_index).addClass("chosen");
 
@@ -309,6 +296,15 @@
         });
     }
 
+    function joinToChat(){
+        $.ajax({
+            type: "GET",
+            url: "/add_chat",
+            data: {
+                chat: chat_index
+            }
+        });
+    }
 </script>
 
 {% endblock %}

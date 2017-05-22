@@ -7,36 +7,35 @@ from application.forms import login_user
 from flask.sessions import SessionInterface
 from flask import session
 
-SOME_REQUEST_PATH = "/"
-TEST_DB = 'test.sqlite'
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+PATH_TO_DATABASE = "/tmp/db-test.sqlite"
+
+LOGOUT = "/logout"
+INDEX = "/"
+CHAT = "/chat/1"
 
 
 class TestMainPage(unittest.TestCase):
-    LOGOUT = "/logout"
-    INDEX = "/"
-    CHAT = "/chat/1"
 
     def setUp(self):
         app.config['TESTING'] = True
         app.config['CSRF_ENABLED'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIR, TEST_DB)
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + PATH_TO_DATABASE
         self.app = app.test_client()
         with app.app_context():
             flask_migrate.upgrade() 
 
     def tearDown(self):
-        os.remove(os.path.join(BASE_DIR, TEST_DB))
+        os.remove(os.path.join(PATH_TO_DATABASE))
 
     def test_should_logout_page_be_exist(self):
-        response = self.app.get(self.LOGOUT)
+        response = self.app.get(LOGOUT)
         self.assertEqual(response.status_code, 302)
 
     def test_should_index_page_be_exist(self):
-        response = self.app.get(self.INDEX)
+        response = self.app.get(INDEX)
         self.assertEqual(response.status_code, 200)
 
     def test_should_chat_page_not_be_exist_without_login(self):
         chat.create_chat("NAME", "CODE", "B++", "NICKNAME")
-        response = self.app.get(self.CHAT)
+        response = self.app.get(CHAT)
         self.assertEqual(response.status_code, 302)

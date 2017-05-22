@@ -7,6 +7,7 @@ from application import app
 import sockets
 import cgi
 from json import dumps
+import requests
 
 def create_chat(name, code, code_type, username):
     """
@@ -56,7 +57,9 @@ def send_message(id, text, type, username):
     
     :param username: Имя пользователя
     """
-    db.session.add(Message(text, username, id, type))
+    text_ru = translate_text(text, 'ru')
+    text_en = translate_text(text, 'en')
+    db.session.add(Message(text, text_ru, text_en, username, id, type))
     db.session.commit()
 
 def get_messages(id, username):
@@ -132,7 +135,7 @@ def find_chat(name):
         return Chat.query.all()[:-10:-1]
     try:
         chat_id = int(name)
-        return Chat.query.filter_by(id=chat_id)
+        return Chat.query.filter_by(id=chat_id).all()
     except ValueError:
         return Chat.query.filter(Chat.name.like('%'+name+'%')).all()[::-1]
 
@@ -178,3 +181,27 @@ def generate_commits_tree(chat):
         commits_data[index]["innerHTML"] = "<div onclick = \"{0}\" id=\"commit-button{1}\">{1}</div".format('get_code('+str(index)+')', str(index))
         commits_data[commit.parent]["children"].append(commits_data[index])
     return dumps(commits_data[0])
+
+def translate_text(text, lang):
+    """
+    Функция переводит текст
+
+    :param text: Исходный тескт
+
+    :param lang: Язык для перевода
+
+    :return: Переведённый текст
+    """
+    return requests.get(app.config['YA_TL_URL'], {
+        "key": app.config['API_KEY'],
+        "text": text,
+        "lang": lang
+        }).json()['text'][0]
+
+def get_translated_message(chat_id, message_id):
+    message = Message.query.filter_by(chat=chat_id)[message_id]
+    return dumps({
+        "no": message.content,
+        "ru": message.content_ru,
+        "en": message.content_en
+        })

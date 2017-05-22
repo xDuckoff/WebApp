@@ -135,7 +135,7 @@ def find_chat(name):
         return Chat.query.all()[:-10:-1]
     try:
         chat_id = int(name)
-        return Chat.query.filter_by(id=chat_id)
+        return Chat.query.filter_by(id=chat_id).all()
     except ValueError:
         return Chat.query.filter(Chat.name.like('%'+name+'%')).all()[::-1]
 

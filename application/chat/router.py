@@ -20,7 +20,7 @@ def add_chat():
     try:
         chat_id = int(request.args['chat'])
     except ValueError:
-        return dumps({"success": False, "error": "Bad Chat ID"}), 403
+        return dumps({"success": False, "error": "Bad Chat ID"}), 400
     if chat_id not in session['joined_chats']:
         chat.sys_message(session['login'] + u" присоединился", chat_id)
         session['joined_chats'].append(chat_id)

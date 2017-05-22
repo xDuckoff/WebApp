@@ -6,6 +6,8 @@ from application import db
 from application import app
 import sockets
 import cgi
+from json import dumps
+import requests
 
 def create_chat(name, code, code_type, username):
     """
@@ -55,7 +57,9 @@ def send_message(id, text, type, username):
     
     :param username: Имя пользователя
     """
-    db.session.add(Message(text, username, id, type))
+    text_ru = translate_text(text, 'ru')
+    text_en = translate_text(text, 'en')
+    db.session.add(Message(text, text_ru, text_en, username, id, type))
     db.session.commit()
 
 def get_messages(id, username):
@@ -83,7 +87,7 @@ def get_messages(id, username):
         ret.append({"author": i.author, "message": i.content, "type": type})
     return ret
 
-def send_code(id, text, username, parent):
+def send_code(id, text, username, parent, cname = u'Начальная версия'):
     """
     Отправление кода на сервер
     
@@ -97,12 +101,12 @@ def send_code(id, text, username, parent):
     
     :return: Сообщение о коммите и номере кода
     """
-    CodeToSend = Code(text, username, id, parent)
+    CodeToSend = Code(text, username, id, parent, cname)
     db.session.add(CodeToSend)
     db.session.commit()
     code_id = CodeToSend.id
     code_id_in_chat = len(Code.query.filter_by(chat=id).all()) - 1
-    sys_message(u"Новое изменение " + str(code_id_in_chat), str(id))
+    sys_message(u"Изменение кода " + str(code_id_in_chat) + u" : '" + unicode(cname) + u"'", str(id))
     sockets.send_code_sockets(id)
     return code_id
 
@@ -131,7 +135,7 @@ def find_chat(name):
         return Chat.query.all()[:-10:-1]
     try:
         chat_id = int(name)
-        return Chat.query.filter_by(id=chat_id)
+        return Chat.query.filter_by(id=chat_id).all()
     except ValueError:
         return Chat.query.filter(Chat.name.like('%'+name+'%')).all()[::-1]
 
@@ -167,8 +171,37 @@ def generate_commits_tree(chat):
     :return: Сгенерированное дерево коммитов
     """
     commits = get_commits_in_chat(chat)
-    commits_data = []
-    for index in range(0, commits.count()):
+    commits_data = [{"children": []} for i in range(0, commits.count())]
+    
+    commits_data[0] = {"text": "{name: '0'}", "children":[],
+                       "innerHTML":"<div onclick = \"get_code(0)\" class=\"chosen\" id=\"commit-button0\">0</div>"}
+    for index in range(commits.count() - 1, 0, -1):
         commit = commits[index]
-        commits_data.append({"id":index, "author":str(commit.author), "parent":int(commit.parent)})
-    return commits_data
+        commits_data[index]["text"] = {"name": str(index)}
+        commits_data[index]["innerHTML"] = "<div onclick = \"{0}\" id=\"commit-button{1}\">{1}</div".format('get_code('+str(index)+')', str(index))
+        commits_data[commit.parent]["children"].append(commits_data[index])
+    return dumps(commits_data[0])
+
+def translate_text(text, lang):
+    """
+    Функция переводит текст
+
+    :param text: Исходный тескт
+
+    :param lang: Язык для перевода
+
+    :return: Переведённый текст
+    """
+    return requests.get(app.config['YA_TL_URL'], {
+        "key": app.config['API_KEY'],
+        "text": text,
+        "lang": lang
+        }).json()['text'][0]
+
+def get_translated_message(chat_id, message_id):
+    message = Message.query.filter_by(chat=chat_id)[message_id]
+    return dumps({
+        "no": message.content,
+        "ru": message.content_ru,
+        "en": message.content_en
+        })

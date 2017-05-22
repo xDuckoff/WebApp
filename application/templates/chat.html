@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SUPER CRAZY NAME{% endblock %}
+{% block title %}{{ chat_info["name"] }}{% endblock %}
 
 {% block includes %}
 <!--Treant-->
@@ -11,6 +11,7 @@
     var INTERVAL = 1000;
     var chat_index = {{ chat_id }};
     var chat_code_type ="{{ chat_info['code_type'] }}";
+    var chosen_commit = 0;
 </script>
 <!-- CODEMIRROR -->
 <script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
@@ -38,9 +39,10 @@
 <script type="text/javascript" charset="utf-8">
     var parent_index = -1;
     jQuery(function ($) {
+        joinToChat();
+        get_messages();
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {
-            get_messages();
             socket.emit('join', chat_index);
         });
         socket.on('disconnect', function() {
@@ -54,15 +56,6 @@
         socket.on('commit', function() {
             get_tree("tree");
         });
-
-        $.ajax({
-            type: "GET",
-            url: "/add_chat",
-            data: {
-                chat_id: chat_index
-            }
-        });
-
         $("#send-btn").click(function() {
             socket.emit('message', {'message':$("#message-input").val(), 'room':chat_index, 'type':'usr'});
             $("#message-input").val('');
@@ -96,7 +89,6 @@
         currentIndex: -1,
         isBusy:false,
         play: function(){
-            console.log('Play');
             voice.isBusy = true;
             this.currentIndex += 1;
             var url = 'https://tts.voicetech.yandex.net/generate?'+
@@ -113,29 +105,24 @@
             this.audio = document.getElementById('audio');
 
             this.audio.onloadeddata = function(){
-                console.log('onloadeddata');
                 voice.audio.play();
             };
 
             this.audio.onended = function(){
-                console.log('onended');
                 voice.checkEnd();
             };
 
         },
         checkEnd: function(){
-            console.log('checkEnd');
             this.isBusy = false;
             voice.checkPlay();
         },
         checkPlay: function (){
-            console.log('checkPlay');
             if (!this.isBusy &&  this.stack.length != (this.currentIndex + 1) ){
                 voice.play();
             }
         },
         addText: function(text){
-            console.log('addText');
             this.stack.push(text);
             this.checkPlay();
 
@@ -195,7 +182,8 @@
             data:{ 
                 chat: chat_index, 
                 code: editor.getValue(),
-                parent: parent_index
+                parent: parent_index,
+                cname: $('#to_send').val()
             },
             dataType:'json',
             error: function() {
@@ -218,6 +206,7 @@
             chat_code_type = "python"
         }
         {% if not socket_mode %}
+        joinToChat();
         get_messages();
         var timerId = setInterval(function (){
                     get_messages();
@@ -241,6 +230,7 @@
             matchBrackets: true,
             value: "print('Hello World!')"
         });
+        get_tree('tree');
         get_code(0);
         $("#chat-panel").on("click", ".translate_img", function(){
             var lang = $(this).data('lang');
@@ -291,12 +281,28 @@
                 chat: chat_index
             },
             dataType: "html",
-            success: function( data ) {
-                $('#'+objecy_id).html(data);
+            success: function( node_structure ) {
+                config = {
+                    container: "#" + objecy_id,
+                    levelSeparation: 70,
+                    siblingSeparation: 70,
+                    rootOrientation: "WEST"
+                };
+
+                simple_chart_config = {
+                    chart: config,
+                    nodeStructure: $.parseJSON(node_structure)
+                };
+                var tree = new Treant(simple_chart_config);
             }
         });
     }
+
     function get_code(commit_index){
+        $("#commit-button" + chosen_commit).removeClass("chosen");
+        $("#commit-button" + commit_index).addClass("chosen");
+
+        chosen_commit = commit_index;
         $.ajax({
             url:"/get_code",
             type:"GET",
@@ -311,7 +317,16 @@
             }
         });
     }
-    get_tree("tree");
+
+    function joinToChat(){
+        $.ajax({
+            type: "GET",
+            url: "/add_chat",
+            data: {
+                chat: chat_index
+            }
+        });
+    }
 </script>
 
 {% endblock %}
@@ -323,7 +338,7 @@
 </audio>
 <div class="container-fluid">
     <div class="row">
-        <h3 class="text-center">
+        <h3 class="text-center" style="margin-top: -20px;">
              {{ chat_info["name"] }}
         </h3>
     </div>
@@ -331,6 +346,7 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-body" id="chat-panel">
+
                 </div>
             </div>
             <label for="message-input" class="sr-only">Сообщение</label>
@@ -339,10 +355,10 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="message-input" placeholder="Пиши здесь" maxlength="1000">
                         <div class="input-group-btn"> 
-                                <button type="button" class="btn btn-default btn-block" id="send-btn">Отправить</button>
+                                <button type="button" class="btn btn-primary btn-block" style="border-radius: 0px" id="send-btn">Отправить</button>
                         </div>
                         <span class="input-group-addon">
-                            <input type="checkbox" id="voice-check"> Голос
+                            <input type="checkbox"  id="voice-check"> <image src="{{ url_for('static', filename='img/sound.png') }}" id="voice-img"></image>
                         </span>
                     </div>
                 </div>
@@ -357,12 +373,12 @@
             <textarea class="form-control" id="code-editor" rows="3"></textarea>
             <button type="submit" class="btn btn-default btn-block chat-control-btn" id="go-btn" data-toggle="modal" data-target="#send">Сохранить изменения</button>
             <div class="row">
-                <div class="col-sm-12" id="tree"></div>
-            </div>
-            <div class="row">
                 <div class="col-sm-12" id="column">
                     <div type="submit" class="btn btn-default btn-block chat-control-btn" id="compare-btn">Сравнить с исходным кодом</div>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12" id="tree"></div>
             </div>
         </div>
     </div>
@@ -430,7 +446,7 @@
                     <p class="modal-title" id="myLabel">Отправка кода</p>
                 </div>
                 <div class="modal-body">
-                        <input type="text" class="form-control" placeholder="Название коммита" id = "to_send">
+                        <input type="text" class="form-control" placeholder="Название коммита" id="to_send">
                 </div>
                 <div class="modal-footer">
                     <button type="s" class="btn btn-default" id="send-btn" data-dismiss="modal" onclick="send_code()">Отправить</button> 

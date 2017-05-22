@@ -17,11 +17,16 @@ def add_chat():
     """
     if not IsInSession():
         return dumps({"success": False, "error": "Login error"}), 403
-    chat_id = request.args['chat_id']
+    try:
+        chat_id = int(request.args['chat'])
+    except ValueError:
+        return dumps({"success": False, "error": "Bad Chat ID"}), 400
     if chat_id not in session['joined_chats']:
+        chat.sys_message(session['login'] + u" присоединился", chat_id)
         session['joined_chats'].append(chat_id)
         session.modified = True
     return dumps({"success": True, "error": ""})
+
 
 @app.route('/tree', methods=['GET', 'POST'])
 def tree():
@@ -33,8 +38,7 @@ def tree():
     if not IsInSession():
         return 'Login error', 403
     chat_id = int(request.args['chat'])
-    coms = chat.generate_commits_tree(chat_id)
-    return render_template('commitsTree.html',commits = coms)
+    return chat.generate_commits_tree(chat_id)
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
@@ -52,7 +56,13 @@ def chat_page(chat_id):
         flash(u'Такого чата не существует!')
         return redirect('/')
     chat_info = chat.get_chat_info(chat_id)
-    return render_template('chat.html',chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'), disabled_login_btn=True, chat_info=chat_info)
+    if 'login' in session:
+        login = session['login']
+        in_session = True
+    else:
+        login = ""
+        in_session = False
+    return render_template('chat.html',chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'), chat_info=chat_info, login=login, in_session=in_session)
 
 @app.route('/create_chat', methods=['GET', 'POST'])
 def create_chat():
@@ -101,7 +111,8 @@ def send_code():
     chat_id = int(request.args['chat'])
     code = request.args['code']
     parent = request.args['parent']
-    code_id = chat.send_code(chat_id, code, session['login'], parent)
+    cname = request.args['cname']
+    code_id = chat.send_code(chat_id, code, session['login'], parent, cname)
     return dumps({"success": True, "error": ""})
 
 
@@ -154,5 +165,6 @@ def API_create_chat():
     name = form.name.data
     code = form.code.data
     code_type = form.code_type.data
+    cname = form.cname.data
     chat_id = chat.create_chat(name, code, code_type, "Sublime bot")
     return '/chat/' + str(chat_id)

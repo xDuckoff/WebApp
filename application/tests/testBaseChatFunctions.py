@@ -12,6 +12,7 @@ CHAT_CODE = 'Test Code'
 TEST_MESSAGE = 'Hello, I am Bot!'
 TEST_CODE = 'from test import test'
 CODE_TYPE = "Test++"
+CNAME = u'Test commit'
 CHAT_ID = 0
 
 
@@ -36,5 +37,5 @@ class TestBaseChatFunctions(unittest.TestCase):
         self.assertEquals(chat.get_messages(CHAT_ID, USERNAME)[-1], {'message': TEST_MESSAGE, 'type': 'mine', 'author': USERNAME})
 
     def test_code_sending(self):
-        chat.send_code(CHAT_ID, TEST_CODE, USERNAME, 0)
+        chat.send_code(CHAT_ID, TEST_CODE, USERNAME, 0, "Tester commit")
         self.assertEquals(chat.get_code(CHAT_ID, 1), {"author": USERNAME, "code": TEST_CODE})

@@ -13,11 +13,13 @@ class Message(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
+    content_ru = db.Column(db.Text)
+    content_en = db.Column(db.Text)
     author = db.Column(db.String(256))
     chat = db.Column(db.Integer)
     type = db.Column(db.String(3)) # types: sys, usr
 
-    def __init__(self, content, author, chat, type):
+    def __init__(self, content, content_ru, content_en, author, chat, type):
         """
         Данная функция создаёт сообщение в базе данных
         
@@ -30,6 +32,8 @@ class Message(db.Model):
         :param type: Тип сообщения
         """
         self.content = content
+        self.content_ru = content_ru
+        self.content_en = content_en
         self.author = author
         self.chat = chat
         self.type = type
@@ -45,8 +49,9 @@ class Code(db.Model):
     author = db.Column(db.String(256))
     chat = db.Column(db.Integer)
     parent = db.Column(db.Integer)
+    cname = db.Column(db.String(256))
 
-    def __init__(self, content, author, chat, parent):
+    def __init__(self, content, author, chat, parent, cname = u'Начальная версия'):
         """
         Функция прикрепления кода к чату
         
@@ -62,6 +67,7 @@ class Code(db.Model):
         self.author = author
         self.chat = chat
         self.parent = parent
+        self.cname = cname
 
 
 class Chat(db.Model):

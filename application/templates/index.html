@@ -39,15 +39,20 @@
                             <div class="col-md-6 col-md-offset-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Название чата</label>
-                                        <input type="text" class="form-control" id="chatname" placeholder="" name = "name">
+                                        <input type="text" class="form-control" id="chatname" placeholder="" name = "name" required="required">
                                     </div>
                                     <select class="form-control" id="Compile" name="code_type">
+                                        <option>C</option>
+                                        <option>C#</option>
                                         <option>C++</option>
-                                        <option>Python</option>
+                                        <option>CSS</option>
+                                        <option>HTML</option>
                                         <option>Java</option>
+                                        <option>JavaScript</option>
+                                        <option>Python</option>
                                     </select>
                                     <div class="form-group">
-                                        <input type="file" name = "file">
+                                        <input type="file" name="file" accept=".c,.cs,.cpp,.css,.html,.java,.js,.py">
                                     </div>
                             </div>
                             <div class="col-md-10 col-md-offset-1">

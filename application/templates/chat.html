@@ -194,18 +194,17 @@
     }
     jQuery(function ($) {
         voice.init();
-        if (chat_code_type == "C++"){
-            chat_code_type = "text/x-c++src"
-        }
-        if (chat_code_type == "Html"){
-                chat_code_type = "htmlmixed"
-        }
-        if (chat_code_type == "Java"){
-                chat_code_type = "javascript"
-        }
-        if (chat_code_type == "Python"){
-            chat_code_type = "python"
-        }
+        code_types = {
+            "C": "text/x-csrc",
+            "C#": "text/x-csharp",
+            "C++": "text/x-c++src",
+            "CSS": "text/css",
+            "HTML": "text/html",
+            "Java": "text/x-java",
+            "JavaScript": "text/javascript",
+            "Python": "text/x-python"
+        };
+        chat_code_type = code_types[chat_code_type];
         {% if not socket_mode %}
         joinToChat();
         get_messages();

@@ -238,11 +238,11 @@
                 url: '/translate',
                 data:{
                     "chat": chat_index,
-                    "index": 0
+                    "index": 2
                 },
                 dataType: "json",
                 success: function(data){
-                    console.log(data);
+                    console.log(data[lang]);
                 },
                 error: function(data){
                     if (lang == "ru"){

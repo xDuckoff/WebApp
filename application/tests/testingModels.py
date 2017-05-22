@@ -26,7 +26,7 @@ class Testmodels(unittest.TestCase):
         self.assertTrue(hasattr(chat, "name"))
 
     def test_available_message(self):
-        message = Message("content", "author", 1, "sys")
+        message = Message("content", "content_ru", "content_en", "author", 1, "sys")
         self.assertTrue(hasattr(message, "id"))
         self.assertTrue(hasattr(message, "content"))
         self.assertTrue(hasattr(message, "author"))

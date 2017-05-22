@@ -174,11 +174,11 @@ def generate_commits_tree(chat):
     commits_data = [{"children": []} for i in range(0, commits.count())]
     
     commits_data[0] = {"text": "{name: '0'}", "children":[],
-                       "innerHTML":"<div onclick = \"get_code(0)\" class=\"chosen\" id=\"commit-button0\">0</div>"}
+                       "innerHTML":"<div class = \"circle unchosen\" onclick = \"choose_node(0)\" id=\"commit-button0\">0</div>"}
     for index in range(commits.count() - 1, 0, -1):
         commit = commits[index]
         commits_data[index]["text"] = {"name": str(index)}
-        commits_data[index]["innerHTML"] = "<div onclick = \"{0}\" id=\"commit-button{1}\">{1}</div".format('get_code('+str(index)+')', str(index))
+        commits_data[index]["innerHTML"] = "<div class = \"circle unchosen\" onclick = \"{0}\" id=\"commit-button{1}\">{1}</div".format('choose_node('+str(index)+')', str(index))
         commits_data[commit.parent]["children"].append(commits_data[index])
     return dumps(commits_data[0])
 

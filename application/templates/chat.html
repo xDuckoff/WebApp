@@ -392,12 +392,12 @@
                         target.empty();
                         dv = CodeMirror.MergeView(target[0], {
                             value: data.code,
+                            orig: editor.getValue(),
                             mode: {
                                 name: chat_code_type,
                                 version: 2,
                                 singleLineStringErrors: false
                             },
-                            orig: editor.getValue(),
                             lineNumbers: true,
                             highlightDifferences: true,
                             readOnly: true,

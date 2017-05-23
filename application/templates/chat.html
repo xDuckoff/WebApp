@@ -187,6 +187,9 @@
                 cname: $('#to_send').val()
             },
             dataType:'json',
+            success: function(data){
+                chosen_commit = data.commit;
+            },
             error: function() {
                 alert('Извините, произошла ошибка при загрузке кода!');
             }

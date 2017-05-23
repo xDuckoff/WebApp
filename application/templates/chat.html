@@ -280,7 +280,7 @@
                     nodeStructure: $.parseJSON(node_structure)
                 };
                 var tree = new Treant(simple_chart_config);
-                choose_node(chosen_commit);
+                draw_node(chosen_commit);
             }
         });
     }
@@ -301,10 +301,12 @@
             }
         });
     }
-
-    function choose_node(commit_index){
+    function draw_node(commit_index){
         $("#commit-button" + chosen_commit).removeClass("chosen").addClass("unchosen");
         $("#commit-button" + commit_index).addClass("chosen").removeClass("unchosen");
+    }
+    function choose_node(commit_index){
+        draw_node(commit_index);
         get_code(commit_index);
     }
 

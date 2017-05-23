@@ -10,4 +10,4 @@
 .Treant .collapsed .collapse-switch { background-color: #868DEE; }
 .Treant > .node img {	border: none; float: left; }
 .Treant > .node { color: black; width:20px; text-align: center;}
-.circle{border-radius: 50%;}
+.circle{border-radius: 50%; cursor: pointer;}

@@ -56,7 +56,15 @@ def index():
         login = session['login']
     else:
         login = ""
-    return render_template('index.html', chats=chats, in_session=IsInSession(), form=form, search_title_text=chat_title, login=login)
+    allowed_ex = map(lambda x: '.' + x, app.config["ALLOWED_EXTENSIONS"])
+    return render_template('index.html', 
+        chats=chats, 
+        in_session=IsInSession(), 
+        form=form, 
+        search_title_text=chat_title, 
+        login=login,
+        allowed_ex=",".join(allowed_ex)
+        )
 
 
 @app.route('/documentation/<path:filename>')

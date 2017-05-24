@@ -12,6 +12,11 @@
     var chat_index = {{ chat_id }};
     var chat_code_type ="{{ chat_info['code_type'] }}";
     var chosen_commit = 0;
+    $.ajaxSetup({
+        headers: {
+            'X-Csrf-Token': "{{ csrf_token() }}"
+        }
+    });
 </script>
 <!-- CODEMIRROR -->
 <script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>

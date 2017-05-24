@@ -7,6 +7,7 @@ from application import chat
 from application.forms import IsInSession, CreateChatForm, allowed_file, csrf_check
 import markdown
 import cgi
+from application.models import Code
 
 @app.route('/add_chat')
 def add_chat():
@@ -125,7 +126,8 @@ def send_code():
     parent = request.args['parent']
     cname = request.args['cname']
     code_id = chat.send_code(chat_id, code, session['login'], parent, cname)
-    return dumps({"success": True, "error": ""})
+    code_id_in_chat = len(Code.query.filter_by(chat=chat_id).all()) - 1
+    return dumps({"success": True, "error": "", "commit": code_id_in_chat})
 
 
 @app.route('/get_code', methods=['GET', 'POST'])

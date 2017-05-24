@@ -192,6 +192,9 @@
                 cname: $('#to_send').val()
             },
             dataType:'json',
+            success: function(data){
+                chosen_commit = data.commit;
+            },
             error: function() {
                 alert('Извините, произошла ошибка при загрузке кода!');
             }
@@ -268,7 +271,12 @@
                     container: "#" + objecy_id,
                     levelSeparation: 70,
                     siblingSeparation: 70,
-                    rootOrientation: "WEST"
+                    rootOrientation: "WEST",
+                    connectors: {
+                        style:{
+                            stroke: 'white'
+                        }
+                    }
                 };
 
                 simple_chart_config = {
@@ -276,14 +284,12 @@
                     nodeStructure: $.parseJSON(node_structure)
                 };
                 var tree = new Treant(simple_chart_config);
+                draw_node(chosen_commit);
             }
         });
     }
 
     function get_code(commit_index){
-        $("#commit-button" + chosen_commit).removeClass("chosen");
-        $("#commit-button" + commit_index).addClass("chosen");
-
         chosen_commit = commit_index;
         $.ajax({
             url:"/get_code",
@@ -298,6 +304,14 @@
                 editor.getDoc().setValue(data.code);
             }
         });
+    }
+    function draw_node(commit_index){
+        $("#commit-button" + chosen_commit).removeClass("chosen").addClass("unchosen");
+        $("#commit-button" + commit_index).addClass("chosen").removeClass("unchosen");
+    }
+    function choose_node(commit_index){
+        draw_node(commit_index);
+        get_code(commit_index);
     }
 
     function joinToChat(){

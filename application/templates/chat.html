@@ -410,8 +410,8 @@
                         var target = $("#comp");
                         target.empty();
                         dv = CodeMirror.MergeView(target[0], {
-                            value: data.code,
-                            orig: editor.getValue(),
+                            value: editor.getValue(),
+                            origLeft: data.code,
                             mode: {
                                 name: chat_code_type,
                                 version: 2,

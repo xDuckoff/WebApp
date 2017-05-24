@@ -2,7 +2,7 @@
 
 from flask import render_template, redirect, session, url_for, request, send_from_directory, abort
 from application import app, chat
-from forms import LoginForm, login_user, IsInSession
+from forms import LoginForm, login_user, IsInSession, CreateChatForm
 import requests, os
 
 """
@@ -48,10 +48,11 @@ def index():
     зарегистрирован, заголовок чата
     """
     chat_title = request.args.get('search_title_text', '')
-    chats=chat.find_chat(chat_title)
-    form = LoginForm()
-    if form.validate_on_submit():
-        login_user(form.login.data)
+    chats = chat.find_chat(chat_title)
+    chat_create_form = CreateChatForm()
+    login_form = LoginForm()
+    if login_form.validate_on_submit():
+        login_user(login_form.login.data)
     if 'login' in session:
         login = session['login']
     else:
@@ -60,7 +61,8 @@ def index():
     return render_template('index.html', 
         chats=chats, 
         in_session=IsInSession(), 
-        form=form, 
+        login_form=login_form,
+        chat_create_form=chat_create_form,
         search_title_text=chat_title, 
         login=login,
         allowed_ex=",".join(allowed_ex)

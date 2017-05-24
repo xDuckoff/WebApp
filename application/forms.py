@@ -7,6 +7,7 @@ from flask.sessions import SessionInterface
 from flask import session
 from application import app
 import cgi
+from flask_wtf.csrf import validate_csrf
 
 """
 Данный файл содержит все стороннние функции и классы проекта
@@ -91,3 +92,12 @@ class CreateChatForm(FlaskForm):
     code_type = StringField('codetype', validators=[DataRequired()])
     file = FileField('file')
     code = StringField('code')
+
+def csrf_check(headers):
+    if 'X-Csrf-Token' not in headers:
+        return False
+    try:
+        validate_csrf(headers['X-Csrf-Token'])
+    except ValidationError:
+        return False
+    return True

@@ -4,7 +4,7 @@ from flask import render_template, redirect, request, session, flash, url_for
 from application import app
 from json import dumps 
 from application import chat
-from application.forms import IsInSession, CreateChatForm, allowed_file
+from application.forms import IsInSession, CreateChatForm, allowed_file, csrf_check
 import markdown
 import cgi
 
@@ -17,6 +17,8 @@ def add_chat():
     """
     if not IsInSession():
         return dumps({"success": False, "error": "Login error"}), 403
+    if not csrf_check(request.headers):
+        return dumps({"success": False, "error": "Security error"}), 403
     try:
         chat_id = int(request.args['chat'])
     except ValueError:
@@ -37,6 +39,8 @@ def tree():
     """
     if not IsInSession():
         return 'Login error', 403
+    if not csrf_check(request.headers):
+        return 'Security error', 403
     chat_id = int(request.args['chat'])
     return chat.generate_commits_tree(chat_id)
 
@@ -73,6 +77,8 @@ def create_chat():
     """
     if not IsInSession():
         return 'Login error', 403
+    #if not csrf_check(request.headers):
+    #    return 'Security error chat', 403
     form = CreateChatForm()
     name = form.name.data
     if name == '':
@@ -100,6 +106,8 @@ def get_messages():
     """
     if not IsInSession():
         return 'Login error', 403
+    if not csrf_check(request.headers):
+        return 'Security error', 403
     chat_id = int(request.args['chat'])
     return dumps(chat.get_messages(chat_id, session['login']))
 
@@ -112,6 +120,8 @@ def send_code():
     """
     if not IsInSession():
         return dumps({"success": False, "error": "Login error"}), 403
+    if not csrf_check(request.headers):
+        return dumps({"success": False, "error": "Security error"}), 403
     chat_id = int(request.args['chat'])
     code = request.args['code']
     parent = request.args['parent']
@@ -129,6 +139,8 @@ def get_code():
     """
     if not IsInSession():
         return 'Login error', 403
+    if not csrf_check(request.headers):
+        return 'Security error', 403
     chat_id = int(request.args['chat'])
     index = int(request.args['index'])
     return dumps(chat.get_code(chat_id, index))
@@ -142,6 +154,8 @@ def get_chat_info():
     """
     if not IsInSession():
         return 'Login error', 403
+    if not csrf_check(request.headers):
+        return 'Security error', 403
     chat_id = int(request.args['chat'])
     return dumps(chat.get_chat_info(chat_id))
 
@@ -154,6 +168,8 @@ def get_chat_commits():
     """
     if not IsInSession():
         return 'Login error', 403
+    if not csrf_check(request.headers):
+        return 'Security error', 403
     chat_id = int(request.args['chat'])
     return dumps(chat.generate_tree(chat_id))
 

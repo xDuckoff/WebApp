@@ -77,8 +77,6 @@ def create_chat():
     """
     if not IsInSession():
         return 'Login error', 403
-    #if not csrf_check(request.headers):
-    #    return 'Security error chat', 403
     form = CreateChatForm()
     name = form.name.data
     if name == '':

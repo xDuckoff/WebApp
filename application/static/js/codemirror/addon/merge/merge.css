@@ -72,27 +72,32 @@
 .CodeMirror-merge-copybuttons-left .CodeMirror-merge-copy { left: 2px; }
 .CodeMirror-merge-copybuttons-right .CodeMirror-merge-copy { right: 2px; }
 
-.CodeMirror-merge-r-inserted, .CodeMirror-merge-l-inserted {
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAACCAYAAACddGYaAAAAGUlEQVQI12MwuCXy3+CWyH8GBgYGJgYkAABZbAQ9ELXurwAAAABJRU5ErkJggg==);
-  background-position: bottom left;
-  background-repeat: repeat-x;
-}
-
 .CodeMirror-merge-r-deleted, .CodeMirror-merge-l-deleted {
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAACCAYAAACddGYaAAAAGUlEQVQI12M4Kyb2/6yY2H8GBgYGJgYkAABURgPz6Ks7wQAAAABJRU5ErkJggg==);
-  background-position: bottom left;
-  background-repeat: repeat-x;
+    border: 1px solid red;
+    border-radius: 2px;
+    color: red;
+    text-decoration: line-through;
 }
 
-.CodeMirror-merge-r-chunk { background: #ffffe0; }
-.CodeMirror-merge-r-chunk-start { border-top: 1px solid #ee8; }
-.CodeMirror-merge-r-chunk-end { border-bottom: 1px solid #ee8; }
-.CodeMirror-merge-r-connect { fill: #ffffe0; stroke: #ee8; stroke-width: 1px; }
+.CodeMirror-merge-r-inserted, .CodeMirror-merge-l-inserted {
+    border: 1px solid green;
+    border-radius: 2px;
+    color: green;
+}
+
+.CodeMirror-merge-r-chunk { background: #eef; }
+.CodeMirror-merge-r-chunk-start { border-top: 1px solid #88e; }
+.CodeMirror-merge-r-chunk-end { border-bottom: 1px solid #88e; }
 
 .CodeMirror-merge-l-chunk { background: #eef; }
 .CodeMirror-merge-l-chunk-start { border-top: 1px solid #88e; }
 .CodeMirror-merge-l-chunk-end { border-bottom: 1px solid #88e; }
-.CodeMirror-merge-l-connect { fill: #eef; stroke: #88e; stroke-width: 1px; }
+.CodeMirror-merge-l-connect, .CodeMirror-merge-r-connect {
+    fill: #eef;
+    stroke: #88e;
+    stroke-width: 1px;
+}
+
 
 .CodeMirror-merge-l-chunk.CodeMirror-merge-r-chunk { background: #dfd; }
 .CodeMirror-merge-l-chunk-start.CodeMirror-merge-r-chunk-start { border-top: 1px solid #4e4; }

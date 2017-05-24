@@ -75,6 +75,8 @@ def create_chat():
         return 'Login error', 403
     form = CreateChatForm()
     name = form.name.data
+    if name == '':
+        return redirect('/')
     if form.file.data.filename == '':
         code = form.code.data
     else:
@@ -84,6 +86,8 @@ def create_chat():
         else:
             return redirect('/')
     code_type = form.code_type.data
+    if code_type not in ["C", "C#", "C++", "CSS", "HTML", "Java", "JavaScript", "Python"]:
+        return redirect('/')
     chat_id = chat.create_chat(name, code, code_type, session['login'])
     return redirect('/chat/' + str(chat_id))
 

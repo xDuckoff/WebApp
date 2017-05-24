@@ -67,11 +67,11 @@
 <script type="text/javascript">
     var last_index = 0;
     
-    function append_to_textarea(message) {
+    function append_to_textarea(message, message_id) {
         if (message.type == "sys"){
             var text =  '<div class="well well-sm text-center system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
-            var text =  '<div class="well well-sm user_message">' +"<b>" + message.author + '</b><br>'+ message.message + '<img src="{{ url_for("static", filename="img/flag-rus.gif") }}" class = "translate_img" data-lang="ru" data-index="index"><img src="{{ url_for("static", filename="img/flag-eng.gif") }}" class = "translate_img" data-lang="en" data-index="index"></div>';
+            var text =  '<div class="well well-sm user_message">' +"<b>" + message.author + '</b><br>'+ message.message + '<img src="{{ url_for("static", filename="img/flag-rus.gif") }}" class = "translate_img" data-lang="ru" data-index="message_id"><img src="{{ url_for("static", filename="img/flag-eng.gif") }}" class = "translate_img" data-lang="en" data-index=```message_id```></div>';
         }
         $("#chat-panel").append(text);
         if ($("#voice-check").prop("checked")){
@@ -136,12 +136,12 @@
         element.scrollTop(pr);
         return res;
     }
-    function add_message(message) {
+    function add_message(message, message_id) {
         var t = false;
 
         if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
             t = true;
-        append_to_textarea(message);
+        append_to_textarea(message, message_id);
         if (t)
             $('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);
         if (("Notification" in window) && (Notification.permission === "granted")) {
@@ -169,7 +169,7 @@
             success: function(data) {
                 var messages = data;
                 for (var i = last_index; i < messages.length; i++){
-                    add_message(messages[i]);
+                    add_message(messages[i], i);
                 }
                 last_index=messages.length;
             }
@@ -233,15 +233,17 @@
         get_code(0);
         $("#chat-panel").on("click", ".translate_img", function(){
             var lang = $(this).data('lang');
+            var id = $(this).data('index');
             $.ajax({
                 url: '/translate',
                 data:{
                     "chat": chat_index,
-                    "index": 2
+                    "index": id
                 },
                 dataType: "json",
                 success: function(data){
-                    console.log(data[lang]);
+                    console.log(data);
+                    console.log(message[id]);
                 },
                 error: function(data){
                     if (lang == "ru"){

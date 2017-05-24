@@ -12,6 +12,11 @@
     var chat_index = {{ chat_id }};
     var chat_code_type ="{{ chat_info['code_type'] }}";
     var chosen_commit = 0;
+    $.ajaxSetup({
+        headers: {
+            'X-Csrf-Token': "{{ csrf_token() }}"
+        }
+    });
 </script>
 <!-- CODEMIRROR -->
 <script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
@@ -197,18 +202,17 @@
     }
     jQuery(function ($) {
         voice.init();
-        if (chat_code_type == "C++"){
-            chat_code_type = "text/x-c++src"
-        }
-        if (chat_code_type == "Html"){
-                chat_code_type = "htmlmixed"
-        }
-        if (chat_code_type == "Java"){
-                chat_code_type = "javascript"
-        }
-        if (chat_code_type == "Python"){
-            chat_code_type = "python"
-        }
+        code_types = {
+            "C": "text/x-csrc",
+            "C#": "text/x-csharp",
+            "C++": "text/x-c++src",
+            "CSS": "text/css",
+            "HTML": "text/html",
+            "Java": "text/x-java",
+            "JavaScript": "text/javascript",
+            "Python": "text/x-python"
+        };
+        chat_code_type = code_types[chat_code_type];
         {% if not socket_mode %}
         joinToChat();
         get_messages();
@@ -406,13 +410,13 @@
                         var target = $("#comp");
                         target.empty();
                         dv = CodeMirror.MergeView(target[0], {
-                            value: data.code,
+                            value: editor.getValue(),
+                            origLeft: data.code,
                             mode: {
                                 name: chat_code_type,
                                 version: 2,
                                 singleLineStringErrors: false
                             },
-                            orig: editor.getValue(),
                             lineNumbers: true,
                             highlightDifferences: true,
                             readOnly: true,

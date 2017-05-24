@@ -19,7 +19,7 @@
         <div class="modal-dialog">
             <div class="main-content">
                 <form action="" method="POST">
-                    {{ form.hidden_tag() }}
+                    {{ login_form.hidden_tag() }}
                     <div class="form-group">
                         <div class="modal-header">
                             <label class="center-block">Вход</label>
@@ -42,6 +42,7 @@
         <div class="modal-dialog" >
             <div class="main-content">
                 <form method="POST" action = "/create_chat" enctype="multipart/form-data">
+                    {{ chat_create_form.hidden_tag() }}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">Создание чата</h4>
@@ -51,15 +52,20 @@
                             <div class="col-md-6 col-md-offset-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Название чата</label>
-                                        <input type="text" class="form-control" id="chatname" placeholder="" name = "name">
+                                        <input type="text" class="form-control" id="chatname" placeholder="" name = "name" required="required">
                                     </div>
                                     <select class="form-control" id="Compile" name="code_type" onchange="update_codemirror(this)">
+                                        <option value="text/x-csrc">C</option>
+                                        <option value="text/x-csharp">C#</option>
                                         <option value="text/x-c++src">C++</option>
-                                        <option value="python">Python</option>
-                                        <option value="javascript">Java</option>
+                                        <option value="text/css">CSS</option>
+                                        <option value="text/html">HTML</option>
+                                        <option value="text/x-java">Java</option>
+                                        <option value="javascript">JavaScript</option>
+                                        <option value="text/x-python">Python</option>
                                     </select>
                                     <div class="form-group">
-                                        <input type="file" name = "file">
+                                        <input type="file" name="file" accept="{{ allowed_ex }}">
                                     </div>
                             </div>
                             <div class="col-md-10 col-md-offset-1">

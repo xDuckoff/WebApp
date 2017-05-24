@@ -2,6 +2,18 @@
 
 {% block title %}Василёк{% endblock %}
 
+{% block includes %}
+<!-- CODEMIRROR -->
+<script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/lib/codemirror.css') }}">
+<script src="{{ url_for('static', filename='js/codemirror/mode/xml/xml.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/htmlmixed/htmlmixed.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/css/css.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/clike/clike.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="modal fade" id="myModalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
         <div class="modal-dialog">
@@ -41,17 +53,17 @@
                                         <label for="exampleInputEmail1">Название чата</label>
                                         <input type="text" class="form-control" id="chatname" placeholder="" name = "name">
                                     </div>
-                                    <select class="form-control" id="Compile" name="code_type">
-                                        <option>C++</option>
-                                        <option>Python</option>
-                                        <option>Java</option>
+                                    <select class="form-control" id="Compile" name="code_type" onchange="update_codemirror(this)">
+                                        <option value="text/x-c++src">C++</option>
+                                        <option value="python">Python</option>
+                                        <option value="javascript">Java</option>
                                     </select>
                                     <div class="form-group">
                                         <input type="file" name = "file">
                                     </div>
                             </div>
                             <div class="col-md-10 col-md-offset-1">
-                                <textarea class="form-control" rows="5" name="code"></textarea>
+                                <textarea name="code" id="codeField"></textarea>
                             </div>
                         </div>
                     </div>
@@ -72,7 +84,7 @@
         <div class = "row">
             <div class="col-md-8 col-md-offset-2 main-content">
                 {% if in_session %}
-                <button class="btn btn-lg btn-primary center-block" id="chat-create-btn" data-toggle="modal" data-target="#myModal">
+                <button class="btn btn-lg btn-primary center-block" id="chat-create-btn">
                     Создать чат
                 </button>
                 {% else %}
@@ -130,4 +142,38 @@
     </script>
 
 
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    var editor, openModalCount=0;
+    function init_codemirror(){
+        $('#codeField').empty();
+        editor = CodeMirror.fromTextArea($('#codeField').get(0), {
+            mode: {
+                name: "text/x-c++src",
+                version: 2,
+                singleLineStringErrors: false
+            },
+            lineNumbers: true,
+            indentUnit: 4,
+            matchBrackets: true,
+            value: "print('Hello World!')"
+        });
+    }
+    function update_codemirror(type){
+        editor.setOption("mode", $("#Compile").get(0).options[$("#Compile").get(0).selectedIndex].value);
+    }
+    jQuery(function ($) {
+        $('#myModal').on('shown.bs.modal', function () {
+            if(openModalCount == 0){
+                init_codemirror();
+                openModalCount = 1;
+            }
+        });
+        $('#chat-create-btn').click(function () {
+            $('#myModal').modal("show");
+        });           
+    });
+</script>
 {% endblock %}

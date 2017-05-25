@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import cgi
+import markdown
 from flask import render_template, redirect, request, session, flash, url_for
 from application import app
 from json import dumps 
 from application import chat
-from application.forms import IsInSession, CreateChatForm, allowed_file, csrf_check
-import markdown
-import cgi
+from application.forms import IsInSession, \
+    CreateChatForm, allowed_file, csrf_check
 from application.models import Code
 
 @app.route('/add_chat')

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import sockets
+import cgi
+import requests
+from json import dumps
 from flask import session
 from application.models import Message, Code, Chat
 from application import db
 from application import app
-import sockets
-import cgi
-from json import dumps
-import requests
 
 def create_chat(name, code, code_type, username):
     """
@@ -85,7 +85,7 @@ def get_messages(id, username):
         ret.append({"author": i.author, "message": i.content, "type": type})
     return ret
 
-def send_code(id, text, username, parent, cname = u'Начальная версия'):
+def send_code(id, text, username, parent, cname=u'Начальная версия'):
     """
     Отправление кода на сервер
     
@@ -104,7 +104,8 @@ def send_code(id, text, username, parent, cname = u'Начальная верс�
     db.session.commit()
     code_id = CodeToSend.id
     code_id_in_chat = len(Code.query.filter_by(chat=id).all()) - 1
-    sys_message(u"Изменение кода " + str(code_id_in_chat) + u" : '" + unicode(cname) + u"'", str(id))
+    sys_message(u"Изменение кода " + str(code_id_in_chat) + u" : '"
+                + unicode(cname) + u"'", str(id))
     sockets.send_code_sockets(id)
     return code_id
 

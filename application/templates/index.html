@@ -54,15 +54,15 @@
                                         <label for="exampleInputEmail1">Название чата</label>
                                         <input type="text" class="form-control" id="chatname" placeholder="" name = "name" required="required">
                                     </div>
-                                    <select class="form-control" id="Compile" name="code_type" onchange="update_codemirror(this)">
-                                        <option value="text/x-csrc">C</option>
-                                        <option value="text/x-csharp">C#</option>
-                                        <option value="text/x-c++src">C++</option>
-                                        <option value="text/css">CSS</option>
-                                        <option value="text/html">HTML</option>
-                                        <option value="text/x-java">Java</option>
-                                        <option value="javascript">JavaScript</option>
-                                        <option value="text/x-python">Python</option>
+                                    <select class="form-control" id="Compile" name="code_type" onchange="update_codemirror()">
+                                        <option>C</option>
+                                        <option>C#</option>
+                                        <option>C++</option>
+                                        <option>CSS</option>
+                                        <option>HTML</option>
+                                        <option>Java</option>
+                                        <option>JavaScript</option>
+                                        <option>Python</option>
                                     </select>
                                     <div class="form-group">
                                         <input type="file" name="file" accept="{{ allowed_ex }}">
@@ -167,8 +167,17 @@
             value: "print('Hello World!')"
         });
     }
-    function update_codemirror(type){
-        editor.setOption("mode", $("#Compile").get(0).options[$("#Compile").get(0).selectedIndex].value);
+    function update_codemirror(){
+        choosen_type =  $("#Compile").get(0).options[$("#Compile").get(0).selectedIndex].value;
+        if (choosen_type == "C") choosen_type="text/x-csrc";
+        if (choosen_type == "C#") choosen_type="text/x-csharp";
+        if (choosen_type == "C++") choosen_type="text/x-c++src";
+        if (choosen_type == "CSS") choosen_type="text/css";
+        if (choosen_type == "HTML") choosen_type="text/html";
+        if (choosen_type == "Java") choosen_type="text/x-java";
+        if (choosen_type == "JavaScript") choosen_type="javascript";
+        if (choosen_type == "Python") choosen_type="text/x-python";
+        editor.setOption("mode", choosen_type);
     }
     jQuery(function ($) {
         $('#myModal').on('shown.bs.modal', function () {

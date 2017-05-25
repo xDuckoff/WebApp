@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, session, url_for, request, send_from_directory, abort
-from application import app, chat
-from forms import LoginForm, login_user, IsInSession, CreateChatForm
-import requests, os
-
 """
 Данный файл содержит основные страницы проекта.
 """
+
+import os
+from flask import render_template, redirect, session,\
+    request, send_from_directory, abort
+from application import app, chat
+from forms import LoginForm, login_user, IsInSession, CreateChatForm
+
 
 @app.route('/logout')
 def logout():
@@ -44,7 +46,8 @@ def index():
     """
     Данная функция генерирует главную страницу для пользователя
     
-    :return: Главная страница с чатами пользователя, является ли человек в сессии, формой входа(Если человек не 
+    :return: Главная страница с чатами пользователя,
+    является ли человек в сессии, формой входа(Если человек не 
     зарегистрирован, заголовок чата
     """
     chat_title = request.args.get('search_title_text', '')
@@ -58,16 +61,14 @@ def index():
     else:
         login = ""
     allowed_ex = map(lambda x: '.' + x, app.config["ALLOWED_EXTENSIONS"])
-    return render_template('index.html', 
-        chats=chats, 
-        in_session=IsInSession(), 
-        login_form=login_form,
-        chat_create_form=chat_create_form,
-        search_title_text=chat_title, 
-        login=login,
-        allowed_ex=",".join(allowed_ex)
-        )
-
+    return render_template('index.html',
+                           chats=chats,
+                           in_session=IsInSession(),
+                           login_form=login_form,
+                           chat_create_form=chat_create_form,
+                           search_title_text=chat_title,
+                           login=login,
+                           allowed_ex=",".join(allowed_ex))
 
 @app.route('/documentation/<path:filename>')
 def docs_page(filename):

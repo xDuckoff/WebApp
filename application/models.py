@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from application import db
-
 """
 Данный файл содержит модели сообщений, кода и самого чата
 """
 
+from application import db
+
 class Message(db.Model):
     """
-    Класс сообщений содержит в себе имя автора сообщения, номер сообщения, содержание сообщения, номер чата для данного 
-    сообщения и тип сообщения и функцию создания сообщения
+    Класс сообщений содержит в себе имя автора сообщения, номер сообщения,
+    содержание сообщения, номер чата для данного сообщения и тип сообщения
+    и функцию создания сообщения
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
@@ -24,6 +25,10 @@ class Message(db.Model):
         Данная функция создаёт сообщение в базе данных
         
         :param content: Содержание сообщения
+        
+        :param content_ru: Содержание сообщения на английском
+        
+        :param content_en: Содержание сообщения на английском
         
         :param author: Автор сообщения
         
@@ -41,8 +46,8 @@ class Message(db.Model):
 
 class Code(db.Model):
     """
-    Класс кода содержит в себе имя сообщения, содержание кода, автора кода, чата кода, номер чата в дереве, и функцию 
-    создания кода в базе данных 
+    Класс кода содержит в себе имя сообщения, содержание кода, автора кода, 
+    чата кода, номер чата в дереве, и функцию создания кода в базе данных 
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
@@ -51,7 +56,8 @@ class Code(db.Model):
     parent = db.Column(db.Integer)
     cname = db.Column(db.String(256))
 
-    def __init__(self, content, author, chat, parent, cname = u'Начальная версия'):
+    def __init__(self, content, author, chat,
+                 parent, cname=u'Начальная версия'):
         """
         Функция прикрепления кода к чату
         
@@ -72,8 +78,8 @@ class Code(db.Model):
 
 class Chat(db.Model):
     """
-    Класс чата содержит в себе номер чата в базе данных, навзание чата, язык программирования для чата и функцию 
-    создания чата
+    Класс чата содержит в себе номер чата в базе данных, навзание чата,
+    язык программирования для чата и функцию создания чата
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(256))

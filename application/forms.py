@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from wtforms import StringField, FileField
-from wtforms.validators import DataRequired, ValidationError
-from flask_wtf import FlaskForm
-from flask.sessions import SessionInterface
-from flask import session
-from application import app
-import cgi
-from flask_wtf.csrf import validate_csrf
-
 """
 Данный файл содержит все стороннние функции и классы проекта
 """
+
+import cgi
+from wtforms import StringField, FileField
+from wtforms.validators import DataRequired, ValidationError
+from flask_wtf import FlaskForm
+from flask_wtf.csrf import validate_csrf
+from flask.sessions import SessionInterface
+from flask import session
+from application import app
+
 
 session_opts = {
     'session.url': '127.0.0.1:11211',
@@ -82,7 +83,7 @@ def allowed_file(filename):
     :return: Находится ли тип файла в разрешённых
     """
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+        filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 class CreateChatForm(FlaskForm):
     """
@@ -94,6 +95,11 @@ class CreateChatForm(FlaskForm):
     code = StringField('code')
 
 def csrf_check(headers):
+    """
+    Данная функция проверяет csrf токен
+    :param headers: заголовки
+    :return: да или нет
+    """
     if 'X-Csrf-Token' not in headers:
         return False
     try:

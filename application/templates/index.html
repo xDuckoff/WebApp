@@ -54,7 +54,7 @@
                                         <label for="exampleInputEmail1">Название чата</label>
                                         <input type="text" class="form-control" id="chatname" placeholder="" name = "name" required="required">
                                     </div>
-                                    <select class="form-control" id="Compile" name="code_type" onchange="update_codemirror()">
+                                    <select class="form-control" id="Compile" name="code_type">
                                         <option>C</option>
                                         <option>C#</option>
                                         <option>C++</option>
@@ -152,7 +152,7 @@
 
 {% block scripts %}
 <script type="text/javascript">
-    var editor, openModalCount=0;
+    var editor, openModalCount=false;
     function init_codemirror(){
         $('#codeField').empty();
         editor = CodeMirror.fromTextArea($('#codeField').get(0), {
@@ -168,7 +168,7 @@
         });
     }
     function update_codemirror(){
-        choosen_type =  $("#Compile").get(0).options[$("#Compile").get(0).selectedIndex].value;
+        choosen_type =  $("#Compile").val();
         if (choosen_type == "C") choosen_type="text/x-csrc";
         if (choosen_type == "C#") choosen_type="text/x-csharp";
         if (choosen_type == "C++") choosen_type="text/x-c++src";
@@ -181,14 +181,17 @@
     }
     jQuery(function ($) {
         $('#myModal').on('shown.bs.modal', function () {
-            if(openModalCount == 0){
+            if(openModalCount == false){
                 init_codemirror();
-                openModalCount = 1;
+                openModalCount = true;
             }
         });
         $('#chat-create-btn').click(function () {
             $('#myModal').modal("show");
         });           
+        $("#Compile").change(function () {
+            update_codemirror();
+        });
     });
 </script>
 {% endblock %}

@@ -2,6 +2,18 @@
 
 {% block title %}Василёк{% endblock %}
 
+{% block includes %}
+<!-- CODEMIRROR -->
+<script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/lib/codemirror.css') }}">
+<script src="{{ url_for('static', filename='js/codemirror/mode/xml/xml.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/htmlmixed/htmlmixed.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/css/css.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/clike/clike.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="modal fade" id="myModalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
         <div class="modal-dialog">
@@ -57,7 +69,7 @@
                                     </div>
                             </div>
                             <div class="col-md-10 col-md-offset-1">
-                                <textarea class="form-control" rows="5" name="code"></textarea>
+                                <textarea name="code" id="codeField"></textarea>
                             </div>
                         </div>
                     </div>
@@ -78,7 +90,7 @@
         <div class = "row">
             <div class="col-md-8 col-md-offset-2 main-content">
                 {% if in_session %}
-                <button class="btn btn-lg btn-primary center-block" id="chat-create-btn" data-toggle="modal" data-target="#myModal">
+                <button class="btn btn-lg btn-primary center-block" id="chat-create-btn">
                     Создать чат
                 </button>
                 {% else %}
@@ -136,4 +148,49 @@
     </script>
 
 
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    var editor, openModalCount=false;
+    function init_codemirror(){
+        $('#codeField').empty();
+        editor = CodeMirror.fromTextArea($('#codeField').get(0), {
+            mode: {
+                name: "text/x-c++src",
+                version: 2,
+                singleLineStringErrors: false
+            },
+            lineNumbers: true,
+            indentUnit: 4,
+            matchBrackets: true,
+        });
+    }
+    function update_codemirror(){
+        choosen_type =  $("#Compile").val();
+        if (choosen_type == "C") choosen_type="text/x-csrc";
+        if (choosen_type == "C#") choosen_type="text/x-csharp";
+        if (choosen_type == "C++") choosen_type="text/x-c++src";
+        if (choosen_type == "CSS") choosen_type="text/css";
+        if (choosen_type == "HTML") choosen_type="text/html";
+        if (choosen_type == "Java") choosen_type="text/x-java";
+        if (choosen_type == "JavaScript") choosen_type="javascript";
+        if (choosen_type == "Python") choosen_type="text/x-python";
+        editor.setOption("mode", choosen_type);
+    }
+    jQuery(function ($) {
+        $('#myModal').on('shown.bs.modal', function () {
+            if(!openModalCount){
+                init_codemirror();
+                openModalCount = true;
+            }
+        });
+        $('#chat-create-btn').click(function () {
+            $('#myModal').modal("show");
+        });           
+        $("#Compile").change(function () {
+            update_codemirror();
+        });
+    });
+</script>
 {% endblock %}

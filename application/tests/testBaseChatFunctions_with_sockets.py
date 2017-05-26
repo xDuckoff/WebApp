@@ -5,6 +5,10 @@ from application import chat
 from application import app
 from application.chat.sockets import init_sockets
 
+"""
+Файл содержит тесты функций чата с сокетами
+"""
+
 PATH_TO_DATABASE = "/tmp/db-test.sqlite"
 
 USERNAME = 'Bot'

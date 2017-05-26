@@ -7,6 +7,10 @@ from application.forms import login_user
 from flask.sessions import SessionInterface
 from flask import session
 
+"""
+Файл содержит тесты роутов
+"""
+
 PATH_TO_DATABASE = "/tmp/db-test.sqlite"
 
 LOGOUT = "/logout"

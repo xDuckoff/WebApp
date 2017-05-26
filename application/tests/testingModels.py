@@ -5,6 +5,10 @@ from application import app
 from application.models import Message, Code, Chat
 from application import db
 
+"""
+Файл содержит тесты моделей
+"""
+
 PATH_TO_DATABASE = "/tmp/db-test.sqlite"
 
 

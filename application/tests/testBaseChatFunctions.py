@@ -4,6 +4,10 @@ import flask_migrate
 from application import chat
 from application import app
 
+"""
+Файл содержит тесты функций чата без сокетов
+"""
+
 PATH_TO_DATABASE = "/tmp/db-test.sqlite"
 
 USERNAME = 'Bot'

@@ -199,6 +199,15 @@ def translate_text(text, lang):
         }).json()['text'][0]
 
 def get_translated_message(chat_id, message_id):
+    """
+    Функция для перевода сообщений
+
+    :param chat_id: ID чата
+
+    :param message_id: ID сообщения
+
+    :return: Переведённое сообщение
+    """
     message = Message.query.filter_by(chat=chat_id)[message_id]
     return dumps({
         "no": message.content,
@@ -207,11 +216,25 @@ def get_translated_message(chat_id, message_id):
         })
 
 def plain_text(text):
+    """
+    Функция удаляет html-теги из текста
+
+    :param text: Исходный текст
+
+    :return: Текст без html-тегов
+    """
     text = re.sub(r'\<[^>]*>', ' ', text)
     text = re.sub(r'\s+', ' ', text)
     return text.strip()
 
 def message_escape(text):
+    """
+    Функция экранирует текст
+
+    :param text: Исходный текст
+
+    :return: Экранированный текст
+    """
     text = text.replace('```', '`')
     parts = text.split('`')
     for i in range(0, len(parts), 2):

@@ -8,6 +8,7 @@ import sockets
 import cgi
 from json import dumps
 import requests
+import re
 
 def create_chat(name, code, code_type, username):
     """
@@ -82,7 +83,7 @@ def get_messages(id, username):
         else:
             type = "sys"
 
-        ret.append({"author": i.author, "message": i.content, "type": type})
+        ret.append({"author": i.author, "message": i.content, "plain_message": plain_text(i.content), "type": type})
     return ret
 
 def send_code(id, text, username, parent, cname = u'Начальная версия'):
@@ -203,3 +204,8 @@ def get_translated_message(chat_id, message_id):
         "ru": message.content_ru,
         "en": message.content_en
         })
+
+def plain_text(text):
+    text = re.sub(r'\<[^>]*>', ' ', text)
+    text = re.sub(r'\s+', ' ', text)
+    return text.strip()

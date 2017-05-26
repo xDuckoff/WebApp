@@ -34,7 +34,7 @@ def create_routers(socketio):
                 message = cgi.escape(json['message'])
                 message = markdown.markdown(message)
                 chat.send_message(chat_id, message, 'usr', session['login'])
-                socketio.emit('message', {'message':message, 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
+                socketio.emit('message', {'message':message, 'plain_message': chat.plain_text(message), 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
 
             @socketio.on('join')
             def on_join(room):

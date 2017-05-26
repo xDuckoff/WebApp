@@ -5,7 +5,6 @@ from flask import redirect, request, session
 from application.forms import IsInSession
 import markdown
 from json import dumps 
-import cgi
 
 wereSocketsCreated = 0
 def create_routers(socketio):
@@ -31,10 +30,10 @@ def create_routers(socketio):
                 if len(json['message']) > 1000 or len(json['message']) == 0:
                     return
                 chat_id = int(json['room'])
-                message = cgi.escape(json['message'])
+                message = chat.message_escape(json['message'])
                 message = markdown.markdown(message)
                 chat.send_message(chat_id, message, 'usr', session['login'])
-                socketio.emit('message', {'message':message, 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
+                socketio.emit('message', {'message':message, 'plain_message': chat.plain_text(message), 'author':session['login'], 'type':'usr'}, json=True, room=json['room'], broadcast=True)
 
             @socketio.on('join')
             def on_join(room):
@@ -75,7 +74,7 @@ def create_routers(socketio):
                 if len(message) > 1000 or len(message) == 0:
                     return 'LENGTH LIMIT'
                 if len(message) > 0:
-                    message = cgi.escape(message)
+                    message = chat.message_escape(message)
                     message = markdown.markdown(message)
                     chat.send_message(chat_id, message, "usr", session['login'])
                 return dumps({"success": True, "error": ""})

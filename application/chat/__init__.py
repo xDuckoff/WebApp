@@ -8,6 +8,8 @@ import sockets
 import cgi
 from json import dumps
 import requests
+import re
+import cgi
 
 def create_chat(name, code, code_type, username):
     """
@@ -82,7 +84,7 @@ def get_messages(id, username):
         else:
             type = "sys"
 
-        ret.append({"author": i.author, "message": i.content, "type": type})
+        ret.append({"author": i.author, "message": i.content, "plain_message": plain_text(i.content), "type": type})
     return ret
 
 def send_code(id, text, username, parent, cname = u'Начальная версия'):
@@ -197,9 +199,44 @@ def translate_text(text, lang):
         }).json()['text'][0]
 
 def get_translated_message(chat_id, message_id):
+    """
+    Функция для перевода сообщений
+
+    :param chat_id: ID чата
+
+    :param message_id: ID сообщения
+
+    :return: Переведённое сообщение
+    """
     message = Message.query.filter_by(chat=chat_id)[message_id]
     return dumps({
         "no": message.content,
         "ru": message.content_ru,
         "en": message.content_en
         })
+
+def plain_text(text):
+    """
+    Функция удаляет html-теги из текста
+
+    :param text: Исходный текст
+
+    :return: Текст без html-тегов
+    """
+    text = re.sub(r'\<[^>]*>', ' ', text)
+    text = re.sub(r'\s+', ' ', text)
+    return text.strip()
+
+def message_escape(text):
+    """
+    Функция экранирует текст
+
+    :param text: Исходный текст
+
+    :return: Экранированный текст
+    """
+    text = text.replace('```', '`')
+    parts = text.split('`')
+    for i in range(0, len(parts), 2):
+        parts[i] = cgi.escape(parts[i])
+    return '`'.join(parts)

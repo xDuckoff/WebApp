@@ -9,6 +9,7 @@ import cgi
 from json import dumps
 import requests
 import re
+import cgi
 
 def create_chat(name, code, code_type, username):
     """
@@ -209,3 +210,10 @@ def plain_text(text):
     text = re.sub(r'\<[^>]*>', ' ', text)
     text = re.sub(r'\s+', ' ', text)
     return text.strip()
+
+def message_escape(text):
+    text = text.replace('```', '`')
+    parts = text.split('`')
+    for i in range(0, len(parts), 2):
+        parts[i] = cgi.escape(parts[i])
+    return '`'.join(parts)

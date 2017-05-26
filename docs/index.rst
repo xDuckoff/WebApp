@@ -3,11 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Chatocode's documentation!
+Welcome to Chatocode's documentation!ывапывапывпывап
 =====================================
 
 .. toctree::
    :maxdepth: 2
+
+   install
+   deployment
+   daily_work
+   tests
+
 
 
 Indices and tables

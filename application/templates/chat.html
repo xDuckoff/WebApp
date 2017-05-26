@@ -180,7 +180,7 @@
             success: function(data) {
                 var messages = data;
                 if (noti) {
-                    notific(message);
+                    notific(data);
                 }
                 for (var i = last_index; i < messages.length; i++){
                     add_message(messages[i]);

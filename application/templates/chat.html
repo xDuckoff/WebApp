@@ -145,7 +145,7 @@
     }
 
     function notific(message){
-    	if (("Notification" in window) && (Notification.permission === "granted") && (message.author != usr)) {
+    	if (("Notification" in window) && (Notification.permission === "granted") && (message.author != "usr")) {
             var notification = new Notification(message.author, {body:message.message});
             Notification.sound; 
         }

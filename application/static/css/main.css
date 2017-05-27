@@ -22,9 +22,25 @@ body{
 #chat-create-btn{
     margin-bottom: 10px;
     margin-top: 10px;
+    font-size: 25;
+    color:#ffffff;
 }
 
-#system_message{
+#thmbnl-trnsprnt{
+    background:transparent;
+}
+
+#thmbnl-cptn{
+    font-size: 20;
+    color:#ffffff;
+}
+
+#thmbnl-txt{
+    font-size: 15;
+    color:#ffffff;
+}
+
+.system_message{
     color: #000000;
     width: 50%;
     word-wrap: break-word;
@@ -32,7 +48,7 @@ body{
     margin-right: auto; 
 }
 
-#user_message{
+.user_message{
     color: #000000;
     width: 70%;
     word-wrap: break-word;
@@ -80,4 +96,8 @@ body{
 #voice-img{
     widows: 15px;
     height: 15px;
+}
+
+p{
+    margin: 0px 0px 0px 0px;
 }

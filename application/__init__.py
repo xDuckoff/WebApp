@@ -8,10 +8,11 @@ from flask_wtf.csrf import CSRFProtect
 """
 Данный файл содержит основные положения запуска приложения
 """
+csrf = CSRFProtect()
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-CSRFProtect(app)
+csrf.init_app(app)
 
 import router

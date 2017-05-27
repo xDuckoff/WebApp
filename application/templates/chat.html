@@ -55,7 +55,7 @@
         });
 
         socket.on('message', function(data) {
-            add_message(data);
+            add_message(data, last_index);
         });
 
         socket.on('commit', function() {
@@ -72,11 +72,11 @@
 <script type="text/javascript">
     var last_index = 0;
     
-    function append_to_textarea(message) {
+    function append_to_textarea(message, message_id) {
         if (message.type == "sys"){
-            var text =  '<div class="well well-sm text-center" id="system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
+            var text =  '<div class="well well-sm text-center system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
-            var text =  '<div class="well well-sm" id="user_message">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
+            var text =  '<div class="well well-sm user_message"> <div style="float: right;" class=flag-rus> <img style="display: block;" src="{{ url_for("static", filename="img/flag-rus.gif") }}" class = "translate_img" data-lang="ru" data-index='+ message_id + '> </div> <div class="author_mess"> <b>' + message.author + '</b></div> <div style="float: right;" class="flag-eng"> <img style="display: block;" src="{{ url_for("static", filename="img/flag-eng.gif") }}" class = "translate_img" data-lang="en" data-index=' + message_id + '></div> <div class="text_mess">'+ message.message + '</div> </div>';
         }
         $("#chat-panel").append(text);
         if ($("#voice-check").prop("checked")){
@@ -134,7 +134,6 @@
         }
     };
 
-
     function get_scrollHeight(element) {
         var pr = element.scrollTop();
         element.scrollTop(element.get(0).scrollHeight);
@@ -142,12 +141,13 @@
         element.scrollTop(pr);
         return res;
     }
-    function add_message(message) {
+    function add_message(message, message_id) {
+        last_index += 1;
         var t = false;
 
         if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
             t = true;
-        append_to_textarea(message);
+        append_to_textarea(message, message_id);
         if (t)
             $('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);
         if (("Notification" in window) && (Notification.permission === "granted")) {
@@ -175,7 +175,7 @@
             success: function(data) {
                 var messages = data;
                 for (var i = last_index; i < messages.length; i++){
-                    add_message(messages[i]);
+                    add_message(messages[i], i);
                 }
                 last_index=messages.length;
             }
@@ -240,6 +240,28 @@
         });
         get_tree('tree');
         get_code(0);
+        $("#chat-panel").on("click", ".translate_img", function(){
+            var lang = $(this).data('lang');
+            var id = $(this).data('index');
+            var text_obj = $(this).parents('.user_message').find('.text_mess');
+            $.ajax({
+                url: '/translate',
+                data:{
+                    "chat": chat_index,
+                    "index": id
+                },
+                dataType: "json",
+                success: function(data){
+                    text_obj.html(data[lang]);
+                },
+                error: function(data){
+                    if (lang == "ru")
+                        alert('Извините, произошла ошибка при переводе!')
+                    if (lang == "en")
+                        alert('Sorry, there was an error translating!')
+                }
+            });
+        });
         {% if not socket_mode %}
         $("#send-btn").click(function() {
             $.ajax({

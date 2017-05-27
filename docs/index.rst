@@ -16,31 +16,35 @@ FIXME!
 
 1. Скачать репозиторий
 ----------------------
+::
 
-    $ git clone git@gitlab.informatics.ru:Syomochkin/Project51-2017.git
+    git clone git@gitlab.informatics.ru:Syomochkin/Project51-2017.git
 
-2. Создать виртуальное окружения
+2. Создать виртуальное окружение
 --------------------------------
+::
 
-    $ virtualenv --python=python2.7 venv
+    virtualenv --python=python2.7 venv
 	
-    $ source venv/bin/activate
+    source venv/bin/activate
 
 3. Установить необходимые модули
 --------------------------------
+::
 
-    $ pip install -r requirements.txt
+    pip install -r requirements.txt
 
 4. Настроить конфигурацию
 -------------------------
 
 - FLASK-сервер
+::
 
-    $ export FLASK_APP=run.py
+    export FLASK_APP=run.py
 	
-    $ export DATABASE_URL=sqlite:////tmp/db.sqlite
+    export DATABASE_URL=sqlite:////tmp/db.sqlite
 	
-    $ export SOCKET_MODE=True
+    export SOCKET_MODE=True
 
 - Локальный HEROKU-сервер
 
@@ -49,6 +53,7 @@ FIXME!
 - Удалённый HEROKU-сервер
 
     Settings > Config Variables > Reveal Config Vars
+::
 
     FLASK_APP = run.py
 
@@ -59,27 +64,32 @@ FIXME!
 ---------------
 
 - FLASK-сервер
+::
 
-    $ flask db upgrade
+    flask db upgrade
 
 - Локальный HEROKU-сервер
+::
 
-    $ heroku local upgrade
+    heroku local upgrade
 
 - Удалённый HEROKU-сервер
+::
 
-    $ heroku run upgrade
+    heroku run upgrade
 
 6. Запустить приложение
 -----------------------
 
 - FLASK-сервер
+::
 
-    $ flask run
+    flask run
 
 - Локальный HEROKU-сервер
+::
 
-    $ heroku local web
+    heroku local web
 
 - Удалённый HEROKU-сервер
 

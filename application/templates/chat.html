@@ -82,7 +82,7 @@
         $("#chat-panel").append(text);
         if ($("#voice-check").prop("checked")){
             if (message.type != 'sys') {
-                var text_to_play = message.author + ' сказал ' + message.message;
+                var text_to_play = message.author + ' сказал ' + message.plain_message;
                 voice.addText(text_to_play);
             } else {
                 var text_to_play = message.message;
@@ -145,13 +145,13 @@
 
     function notific(message){
         if (("Notification" in window) && (Notification.permission === "granted") && (message.type != "usr")) {
-            var notification = new Notification(message.author, {body:message.message});
+            var notification = new Notification(message.author, {body:message.plain_message});
             Notification.sound; 
         }
         else if (Notification.permission !== 'denied') {
             Notification.requestPermission(function (permission) {
                 if (permission === "granted") {
-                    var notification = new Notification(message.author, {body:message.message});
+                    var notification = new Notification(message.author, {body:message.plain_message});
                     Notification.sound;
                 }   
             });

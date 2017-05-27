@@ -178,11 +178,9 @@
             },
             dataType: "json",
             success: function(messages) {
-                if (noti) {
-                    notific(messages);
-                }
                 for (var i = last_index; i < messages.length; i++){
                     add_message(messages[i], i);
+                    if (noti) notific(messages[i]);
                 }
                 last_index=messages.length;
             }

@@ -55,7 +55,7 @@
         });
 
         socket.on('message', function(data) {
-            add_message(data);
+            add_message(data, last_index);
         });
 
         socket.on('commit', function() {
@@ -142,6 +142,7 @@
         return res;
     }
     function add_message(message, message_id) {
+        last_index += 1;
         var t = false;
 
         if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
@@ -251,7 +252,8 @@
                 },
                 dataType: "json",
                 success: function(data){
-                    text_obj.html(data[lang])
+                    console.log(data);
+                    text_obj.html(data[lang]);
                 },
                 error: function(data){
                     if (lang == "ru"){

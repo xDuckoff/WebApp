@@ -1,9 +1,15 @@
+# -*- coding: utf-8 -*-
+
 import unittest
 import os
 import flask_migrate
 from application import chat
 from application import app
 from application.chat.sockets import init_sockets
+
+"""
+Файл содержит тесты функций чата с сокетами
+"""
 
 PATH_TO_DATABASE = "/tmp/db-test.sqlite"
 
@@ -36,7 +42,13 @@ class TestBaseChatFunctions_with_sockets(unittest.TestCase):
 
     def test_message_sending(self):
         chat.send_message(CHAT_ID, TEST_MESSAGE, 'usr', USERNAME)
-        self.assertEquals(chat.get_messages(CHAT_ID, USERNAME)[-1], {'message': TEST_MESSAGE, 'type': 'mine', 'author': USERNAME})
+        self.assertEquals(chat.get_messages(CHAT_ID, USERNAME)[-1], 
+            {
+            'message': TEST_MESSAGE,
+            'plain_message': chat.plain_text(TEST_MESSAGE),
+            'type': 'mine',
+            'author': USERNAME
+            })
 
     def test_code_sending(self):
         chat.send_code(CHAT_ID, TEST_CODE, USERNAME, 0, CNAME)

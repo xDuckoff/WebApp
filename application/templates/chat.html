@@ -12,6 +12,11 @@
     var chat_index = {{ chat_id }};
     var chat_code_type ="{{ chat_info['code_type'] }}";
     var chosen_commit = 0;
+    $.ajaxSetup({
+        headers: {
+            'X-Csrf-Token': "{{ csrf_token() }}"
+        }
+    });
 </script>
 <!-- CODEMIRROR -->
 <script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
@@ -187,6 +192,9 @@
                 cname: $('#to_send').val()
             },
             dataType:'json',
+            success: function(data){
+                chosen_commit = data.commit;
+            },
             error: function() {
                 alert('Извините, произошла ошибка при загрузке кода!');
             }
@@ -263,7 +271,12 @@
                     container: "#" + objecy_id,
                     levelSeparation: 70,
                     siblingSeparation: 70,
-                    rootOrientation: "WEST"
+                    rootOrientation: "WEST",
+                    connectors: {
+                        style:{
+                            stroke: 'white'
+                        }
+                    }
                 };
 
                 simple_chart_config = {
@@ -271,14 +284,12 @@
                     nodeStructure: $.parseJSON(node_structure)
                 };
                 var tree = new Treant(simple_chart_config);
+                draw_node(chosen_commit);
             }
         });
     }
 
     function get_code(commit_index){
-        $("#commit-button" + chosen_commit).removeClass("chosen");
-        $("#commit-button" + commit_index).addClass("chosen");
-
         chosen_commit = commit_index;
         $.ajax({
             url:"/get_code",
@@ -293,6 +304,14 @@
                 editor.getDoc().setValue(data.code);
             }
         });
+    }
+    function draw_node(commit_index){
+        $("#commit-button" + chosen_commit).removeClass("chosen").addClass("unchosen");
+        $("#commit-button" + commit_index).addClass("chosen").removeClass("unchosen");
+    }
+    function choose_node(commit_index){
+        draw_node(commit_index);
+        get_code(commit_index);
     }
 
     function joinToChat(){
@@ -391,8 +410,8 @@
                         var target = $("#comp");
                         target.empty();
                         dv = CodeMirror.MergeView(target[0], {
-                            value: data.code,
-                            orig: editor.getValue(),
+                            value: editor.getValue(),
+                            origLeft: data.code,
                             mode: {
                                 name: chat_code_type,
                                 version: 2,

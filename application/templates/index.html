@@ -2,12 +2,24 @@
 
 {% block title %}Василёк{% endblock %}
 
+{% block includes %}
+<!-- CODEMIRROR -->
+<script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/lib/codemirror.css') }}">
+<script src="{{ url_for('static', filename='js/codemirror/mode/xml/xml.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/htmlmixed/htmlmixed.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/css/css.js') }}"></script>
+<script src="{{ url_for('static', filename='js/codemirror/mode/clike/clike.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="modal fade" id="myModalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
         <div class="modal-dialog">
             <div class="main-content">
                 <form action="" method="POST">
-                    {{ form.hidden_tag() }}
+                    {{ login_form.hidden_tag() }}
                     <div class="form-group">
                         <div class="modal-header">
                             <label class="center-block">Вход</label>
@@ -30,6 +42,7 @@
         <div class="modal-dialog" >
             <div class="main-content">
                 <form method="POST" action = "/create_chat" enctype="multipart/form-data">
+                    {{ chat_create_form.hidden_tag() }}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">Создание чата</h4>
@@ -56,7 +69,7 @@
                                     </div>
                             </div>
                             <div class="col-md-10 col-md-offset-1">
-                                <textarea class="form-control" rows="5" name="code"></textarea>
+                                <textarea name="code" id="codeField"></textarea>
                             </div>
                         </div>
                     </div>
@@ -80,40 +93,16 @@
             </div>
         </div>
         <div class = "row">
-            <div class="col-md-4 col-md-offset-2">
-            
+            <div class="col-md-4 col-md-offset-2 main-content">
                 <div class="thumbnail" type="text/css" style="background:transparent;" >
-                
-                
             <img src="/static/img/code_xmpl.jpeg"  width="200" height="200">
             <div class="caption">
-            
             <h4 class = "text-center" style="font-size: 20; color:#ffffff">Редактор кода с подсвечиванием синтаксиса</h4>
-            
              </div>
              </div>
              </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               <div class="col-md-4">
                <div class="thumbnail" type="text/css" style="background:transparent;">
-
             <img class="center-block" src="/static/img/chat_xmpl.jpeg"  width="200" height="200">
             <div class="caption">
             <h4 class = "text-center" style="font-size: 20; color:#ffffff">Онлайн-чат</h4>
@@ -121,8 +110,6 @@
         </div>
        </div>
         </div>
-
-
         <div class = "row">
             <div class="col-md-4 col-md-offset-2">
             <div class="thumbnail" type="text/css" style="background:transparent;">
@@ -142,7 +129,6 @@
         </div>
         </div>
         </div>
-
 <div class = "row">
             <div class="col-md-4 col-md-offset-4">
             <div class="thumbnail" type="text/css" style="background:transparent;">
@@ -152,29 +138,25 @@
             </div>
             </div>
             </div>
-             
         </div>
         <div class = "row">
         <h4 class = "text-center">А самое главное...</h4>
         <div class="col-md-12 ">
-        
         <img class="center-block" src="/static/img/search_xmpl.jpg"  width="250" height="150">
         </div>
             </div>
             </div>
-             
         <div class = "row">
                 <h4 class = "text-center" style="font-size: 30; color:#ffffff; margin-top: 50px;">Начните кодить прямо сейчас!<h4>
                 {% if in_session %}
                 <div class="col-md-8 col-md-offset-2 "  >
-                <button class="btn btn-lg btn-primary btn-block center-block " id="chat-create-btn" data-toggle="modal" data-target="#myModal">
-
+                <button class="btn btn-lg btn-primary center-block" id="chat-create-btn" data-toggle="modal" data-target="#myModal">
                     Создать чат
                 </button>
                 </div>
                 {% else %}
                 <div class="col-md-8 col-md-offset-2 "  >
-                <button class="btn btn-lg btn-primary btn-block  disabled center-block" id="chat-create-btn" data-placement="right" data-toggle="tooltip" title="Необходимо войти">
+                <button class="btn btn-lg btn-primary center-block" id="chat-create-btn" data-toggle="modal" data-target="#myModalLogin">
                     Создать чат
                 </button>
                 </div>
@@ -183,9 +165,6 @@
                     {% with message = get_flashed_messages()[0] %}
                     <p class="text-center">{{ message }}</p>
                     {% endwith %}
-              
-
-              
                  <div class="col-md-8 col-md-offset-2 main-content" >
                 <form>
                     <p class = "text-center" style="font-size: 20; margin-top: 10px"> Поиск чата</p>
@@ -195,7 +174,6 @@
                             <input type="submit" class="btn btn-primary" value="Найти"  formmethod="get">
                         </span>
                     </div>
-
                 </form>    
                 {% if chats|length == 0 %}  
                     <p class="text-center">Чаты отсутствуют</p>      
@@ -216,7 +194,7 @@
                                     <button class="btn btn-primary btn-xs">Перейти</button>
                                 {% else %}
                                 <a>
-                                    <button class="btn btn-primary btn-xs disabled" data-placement="right" data-toggle="tooltip" title="Необходимо войти">Перейти</button>
+                                    <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalLogin">Перейти</button>
                                 {% endif %}
                                 </a>
                             </td>
@@ -235,4 +213,46 @@
     </script>
 
 
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    var editor, openModalCount=false;
+    function init_codemirror(){
+        $('#codeField').empty();
+        editor = CodeMirror.fromTextArea($('#codeField').get(0), {
+            mode: {
+                name: "text/x-c++src",
+                version: 2,
+                singleLineStringErrors: false
+            },
+            lineNumbers: true,
+            indentUnit: 4,
+            matchBrackets: true,
+        });
+    }
+    function update_codemirror(){
+        choosen_type =  $("#Compile").val();
+        if (choosen_type == "C") choosen_type="text/x-csrc";
+        if (choosen_type == "C#") choosen_type="text/x-csharp";
+        if (choosen_type == "C++") choosen_type="text/x-c++src";
+        if (choosen_type == "CSS") choosen_type="text/css";
+        if (choosen_type == "HTML") choosen_type="text/html";
+        if (choosen_type == "Java") choosen_type="text/x-java";
+        if (choosen_type == "JavaScript") choosen_type="javascript";
+        if (choosen_type == "Python") choosen_type="text/x-python";
+        editor.setOption("mode", choosen_type);
+    }
+    jQuery(function ($) {
+        $('#myModal').on('shown.bs.modal', function () {
+            if(!openModalCount){
+                init_codemirror();
+                openModalCount = true;
+            }
+        });         
+        $("#Compile").change(function () {
+            update_codemirror();
+        });
+    });
+</script>
 {% endblock %}

@@ -252,17 +252,13 @@
                 },
                 dataType: "json",
                 success: function(data){
-                    console.log(data);
                     text_obj.html(data[lang]);
                 },
                 error: function(data){
-                    if (lang == "ru"){
+                    if (lang == "ru")
                         alert('Извините, произошла ошибка при переводе!')
-                    }
-                    if (lang == "en"){
+                    if (lang == "en")
                         alert('Sorry, there was an error translating!')
-                    }
-
                 }
             });
         });

@@ -186,6 +186,5 @@ def API_create_chat():
     name = form.name.data
     code = form.code.data
     code_type = form.code_type.data
-    print form
     chat_id = chat.create_chat(name, code, code_type, "Sublime bot")
     return '/chat/' + str(chat_id)

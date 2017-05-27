@@ -76,7 +76,7 @@
         if (message.type == "sys"){
             var text =  '<div class="well well-sm text-center system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
-            var text =  '<div class="well well-sm user_message"> <div class="author_mess"> <b>' + message.author + '</b></div> <div class="text_mess">'+ message.message + '</div><div class=flag-rus> <img src="{{ url_for("static", filename="img/flag-rus.gif") }}" class = "translate_img" data-lang="ru" data-index='+ message_id + '> </div>' + '<div class="flag-eng"> <img src="{{ url_for("static", filename="img/flag-eng.gif") }}" class = "translate_img" data-lang="en" data-index=' + message_id + '></div></div>';
+            var text =  '<div class="well well-sm user_message"> <div style="float: right;" class=flag-rus> <img style="display: block;" src="{{ url_for("static", filename="img/flag-rus.gif") }}" class = "translate_img" data-lang="ru" data-index='+ message_id + '> </div> <div class="author_mess"> <b>' + message.author + '</b></div> <div style="float: right;" class="flag-eng"> <img style="display: block;" src="{{ url_for("static", filename="img/flag-eng.gif") }}" class = "translate_img" data-lang="en" data-index=' + message_id + '></div> <div class="text_mess">'+ message.message + '</div> </div>';
         }
         $("#chat-panel").append(text);
         if ($("#voice-check").prop("checked")){

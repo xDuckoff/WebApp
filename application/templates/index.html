@@ -168,11 +168,8 @@
             </button>
         </div>
         {% endif %}
-        <div class="col-md-8 col-md-offset-2 main-content" >
-            {% with message = get_flashed_messages()[0] %}
-            <p class="text-center">{{ message }}</p>
-            {% endwith %}
-            <form>
+        <div class="col-md-8 col-md-offset-2 main-content">
+            <form action="/#find">
                 <p class = "text-center" style="font-size: 20; margin-top: 10px"> Поиск чата</p>
                 <div class="input-group" style="margin-top: 10px;">
                     <input type="search" class="form-control" name="search_title_text" placeholder="Введите название" value="{{search_title_text}}">
@@ -215,6 +212,14 @@
 {% endblock %}
 
 {% block scripts %}
+<script type="text/javascript">
+    $(document).ready(function (){
+        {% with message = get_flashed_messages()[0] %}
+            if ("{{ message }}")
+                alert("{{ message }}");
+        {% endwith %}
+    });
+</script>
 <script type="text/javascript">
     $(document).ready(function(){
         $("[data-toggle='tooltip']").tooltip();

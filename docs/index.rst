@@ -23,6 +23,7 @@ FIXME!
 --------------------------------
 
     $ virtualenv --python=python2.7 venv
+	
     $ source venv/bin/activate
 
 3. Установить необходимые модули
@@ -36,7 +37,9 @@ FIXME!
 - FLASK-сервер
 
     $ export FLASK_APP=run.py
+	
     $ export DATABASE_URL=sqlite:////tmp/db.sqlite
+	
     $ export SOCKET_MODE=True
 
 - Локальный HEROKU-сервер

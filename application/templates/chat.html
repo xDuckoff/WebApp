@@ -159,13 +159,13 @@
         }
     }
 
-    function add_message(message) {
+    function add_message(message, message_id) {
         last_index += 1;
         var t = false;
 
         if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
             t = true;
-        append_to_textarea(message);
+        append_to_textarea(message, message_id);
         if (t)
             $('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);
     }

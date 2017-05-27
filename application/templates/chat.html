@@ -76,7 +76,7 @@
         if (message.type == "sys"){
             var text =  '<div class="well well-sm text-center system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
-            var text =  '<div class="well well-sm user_message">' +"<b>" + message.author + '</b><br>'+ message.message + '<img src="{{ url_for("static", filename="img/flag-rus.gif") }}" class = "translate_img" data-lang="ru" data-index="message_id"><img src="{{ url_for("static", filename="img/flag-eng.gif") }}" class = "translate_img" data-lang="en" data-index=```message_id```></div>';
+            var text =  '<div class="well well-sm user_message"> <div class="author_mess"> <b>' + message.author + '</b></div> <div class="text_mess">'+ message.message + '</div><div class=flag-rus> <img src="{{ url_for("static", filename="img/flag-rus.gif") }}" class = "translate_img" data-lang="ru" data-index='+ message_id + '> </div>' + '<div class="flag-eng"> <img src="{{ url_for("static", filename="img/flag-eng.gif") }}" class = "translate_img" data-lang="en" data-index=' + message_id + '></div></div>';
         }
         $("#chat-panel").append(text);
         if ($("#voice-check").prop("checked")){
@@ -242,6 +242,7 @@
         $("#chat-panel").on("click", ".translate_img", function(){
             var lang = $(this).data('lang');
             var id = $(this).data('index');
+            var text_obj = $(this).parents('.user_message').find('.text_mess');
             $.ajax({
                 url: '/translate',
                 data:{
@@ -250,8 +251,7 @@
                 },
                 dataType: "json",
                 success: function(data){
-                    console.log(data);
-                    console.log(message[id]);
+                    text_obj.html(data[lang])
                 },
                 error: function(data){
                     if (lang == "ru"){

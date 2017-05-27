@@ -194,7 +194,7 @@ def translate_text(text, lang):
     """
     return requests.get(app.config['YA_TL_URL'], {
         "key": app.config['API_KEY'],
-        "text": text,
+        "text": plain_text(text),
         "lang": lang
         }).json()['text'][0]
 

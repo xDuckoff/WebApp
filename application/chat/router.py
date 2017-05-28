@@ -3,7 +3,7 @@
 from flask import render_template, redirect, request, session, flash, url_for
 from application import app
 from json import dumps 
-from application import chat
+from application import chat, csrf
 from application.forms import IsInSession, CreateChatForm, allowed_file, csrf_check
 import markdown
 import cgi
@@ -175,6 +175,7 @@ def get_chat_commits():
 
 
 @app.route('/api/create_chat', methods=['GET', 'POST'])
+@csrf.exempt
 def API_create_chat():
     """
     Данная функция создаёт чат по параметрам, используется для api
@@ -185,6 +186,5 @@ def API_create_chat():
     name = form.name.data
     code = form.code.data
     code_type = form.code_type.data
-    cname = form.cname.data
     chat_id = chat.create_chat(name, code, code_type, "Sublime bot")
     return '/chat/' + str(chat_id)

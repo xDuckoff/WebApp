@@ -1,25 +1,22 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, session, flash, url_for
+from flask import render_template, redirect, request, session, flash
 from application import app
 from json import dumps 
 from application import chat, csrf
-from application.forms import IsInSession, CreateChatForm, allowed_file, csrf_check
-import markdown
-import cgi
-from application.models import Code
+from application.forms import CreateChatForm
+from application.handlers import login_required, csrf_required
+
 
 @app.route('/add_chat')
+@login_required
+@csrf_required
 def add_chat():
     """
     Данная функция добавляет в сессию пользователя номер чата
     
     :return: Добавлен ли пользователь в чат
     """
-    if not IsInSession():
-        return dumps({"success": False, "error": "Login error"}), 403
-    if not csrf_check(request.headers):
-        return dumps({"success": False, "error": "Security error"}), 403
     try:
         chat_id = int(request.args['chat'])
     except ValueError:
@@ -32,20 +29,20 @@ def add_chat():
 
 
 @app.route('/tree', methods=['GET', 'POST'])
+@login_required
+@csrf_required
 def tree():
     """
     Данная функция создаёт дерево коммитов чата
     
     :return: Страницу дерева коммитов
     """
-    if not IsInSession():
-        return 'Login error', 403
-    if not csrf_check(request.headers):
-        return 'Security error', 403
     chat_id = int(request.args['chat'])
     return chat.generate_commits_tree(chat_id)
 
+
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
+@login_required
 def chat_page(chat_id):
     """
     Данная функция возвращает пользователю страницу чата по номеру
@@ -54,9 +51,6 @@ def chat_page(chat_id):
     
     :return: Страница чата
     """
-    if not IsInSession():
-        flash(u'Вы не авторизированны!')
-        return redirect('/')
     if not chat.get_chat_info(chat_id):
         flash(u'Такого чата не существует!')
         return redirect('/')
@@ -67,17 +61,17 @@ def chat_page(chat_id):
     else:
         login = ""
         in_session = False
-    return render_template('chat.html',chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'), chat_info=chat_info, login=login, in_session=in_session)
+    return render_template('chat.html', chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'), chat_info=chat_info, login=login, in_session=in_session)
+
 
 @app.route('/create_chat', methods=['GET', 'POST'])
+@login_required
 def create_chat():
     """
     Данная функция создаёт чат по параметрам
     
     :return: Новая страница чата
     """
-    if not IsInSession():
-        return 'Login error', 403
     form = CreateChatForm()
     name = form.name.data
     if name == '':
@@ -86,7 +80,7 @@ def create_chat():
         code = form.code.data
     else:
         file = form.file.data
-        if file and allowed_file(file.filename):
+        if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']:
             code = file.read()
         else:
             return redirect('/')
@@ -96,80 +90,74 @@ def create_chat():
     chat_id = chat.create_chat(name, code, code_type, session['login'])
     return redirect('/chat/' + str(chat_id))
 
+
 @app.route('/get_messages', methods=['GET', 'POST'])
+@login_required
+@csrf_required
 def get_messages():
     """
     Функция принятия сообщений
     
     :return: Принято ли сообщение
     """
-    if not IsInSession():
-        return 'Login error', 403
-    if not csrf_check(request.headers):
-        return 'Security error', 403
     chat_id = int(request.args['chat'])
     return dumps(chat.get_messages(chat_id, session['login']))
 
+
 @app.route('/send_code', methods=['GET', 'POST'])
+@login_required
+@csrf_required
 def send_code():
     """
     Данная функция отправляет код на сервер от клиента
     
     :return: Отправлен ли код
     """
-    if not IsInSession():
-        return dumps({"success": False, "error": "Login error"}), 403
-    if not csrf_check(request.headers):
-        return dumps({"success": False, "error": "Security error"}), 403
     chat_id = int(request.args['chat'])
     code = request.args['code']
     parent = request.args['parent']
     cname = request.args['cname']
     code_id = chat.send_code(chat_id, code, session['login'], parent, cname)
-    code_id_in_chat = len(Code.query.filter_by(chat=chat_id).all()) - 1
+    code_id_in_chat = chat.get_commits_in_chat(chat_id).count() - 1
     return dumps({"success": True, "error": "", "commit": code_id_in_chat})
 
 
 @app.route('/get_code', methods=['GET', 'POST'])
+@login_required
+@csrf_required
 def get_code():
     """
     Данная функция отправляет код с сервера к клиенту
     
     :return: Код
     """
-    if not IsInSession():
-        return 'Login error', 403
-    if not csrf_check(request.headers):
-        return 'Security error', 403
     chat_id = int(request.args['chat'])
     index = int(request.args['index'])
     return dumps(chat.get_code(chat_id, index))
 
+
 @app.route('/get_chat_info', methods=['GET', 'POST'])
+@login_required
+@csrf_required
 def get_chat_info():
     """
     Данная функция передаёт информациб о чате от сервера к клиенту
     
     :return: Информация о чате
     """
-    if not IsInSession():
-        return 'Login error', 403
-    if not csrf_check(request.headers):
-        return 'Security error', 403
     chat_id = int(request.args['chat'])
     return dumps(chat.get_chat_info(chat_id))
 
+
 @app.route('/get_commits', methods=['GET', 'POST'])
+@login_required
+@csrf_required
 def get_chat_commits():
     """
     Данная функция передаёт пользователю дерево коммитов исходного кода
     
     :return: Дерево коммитов
     """
-    if not IsInSession():
-        return 'Login error', 403
-    if not csrf_check(request.headers):
-        return 'Security error', 403
     chat_id = int(request.args['chat'])
     return dumps(chat.generate_tree(chat_id))
 

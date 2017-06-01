@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from flask import session
 from application.models import Message, Code, Chat
-from application import db
-from application import app
+from application import db, app
 import sockets
 import cgi
 from json import dumps
 import requests
 import re
-import cgi
+
 
 def create_chat(name, code, code_type, username):
     """
@@ -32,6 +30,7 @@ def create_chat(name, code, code_type, username):
     send_code(chat_id, code, username, 0)
     return chat_id
 
+
 def get_chat_info(id):
     """
     Данная функция передаёт пользователю информацию о чате по номеру
@@ -43,7 +42,8 @@ def get_chat_info(id):
     result = Chat.query.get(id)
     if not result:
         return {}
-    return {'name':result.name, 'code_type':result.code_type}
+    return {'name': result.name, 'code_type': result.code_type}
+
 
 def send_message(id, text, type, username):
     """
@@ -61,6 +61,7 @@ def send_message(id, text, type, username):
     text_en = translate_text(text, 'en')
     db.session.add(Message(text, text_ru, text_en, username, id, type))
     db.session.commit()
+
 
 def get_messages(id, username):
     """
@@ -87,6 +88,7 @@ def get_messages(id, username):
         ret.append({"author": i.author, "message": i.content, "plain_message": plain_text(i.content), "type": type})
     return ret
 
+
 def send_code(id, text, username, parent, cname = u'Начальная версия'):
     """
     Отправление кода на сервер
@@ -110,6 +112,7 @@ def send_code(id, text, username, parent, cname = u'Начальная верс�
     sockets.send_code_sockets(id)
     return code_id
 
+
 def get_code(id, index):
     """
     Функция передаёт код с сервера пользователю
@@ -122,6 +125,7 @@ def get_code(id, index):
     """
     result = Code.query.filter_by(chat=id)[index]
     return {"author": result.author, "code": result.content}
+
 
 def find_chat(name):
     """
@@ -139,6 +143,7 @@ def find_chat(name):
     except ValueError:
         return Chat.query.filter(Chat.name.like('%'+name+'%')).all()[::-1]
 
+
 def sys_message(data, room):
     """
     Системное сообщение
@@ -152,6 +157,7 @@ def sys_message(data, room):
     send_message(int(room), data, 'sys', u'Системное сообщение')
     sockets.sys_message_sockets(data, room)
 
+
 def get_commits_in_chat(chat):
     """
     Данная функция передаёт с сервера клиенту дерево коммитов
@@ -161,6 +167,7 @@ def get_commits_in_chat(chat):
     :return: Дерево коммитов
     """
     return Code.query.filter_by(chat=chat)
+
 
 def generate_commits_tree(chat):
     """
@@ -182,6 +189,7 @@ def generate_commits_tree(chat):
         commits_data[commit.parent]["children"].append(commits_data[index])
     return dumps(commits_data[0])
 
+
 def translate_text(text, lang):
     """
     Функция переводит текст
@@ -197,6 +205,7 @@ def translate_text(text, lang):
         "text": plain_text(text),
         "lang": lang
         }).json()['text'][0]
+
 
 def get_translated_message(chat_id, message_id):
     """
@@ -215,6 +224,7 @@ def get_translated_message(chat_id, message_id):
         "en": message.content_en
         })
 
+
 def plain_text(text):
     """
     Функция удаляет html-теги из текста
@@ -226,6 +236,7 @@ def plain_text(text):
     text = re.sub(r'\<[^>]*>', ' ', text)
     text = re.sub(r'\s+', ' ', text)
     return text.strip()
+
 
 def message_escape(text):
     """

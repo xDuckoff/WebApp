@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-from application import app
-from application import chat
-from flask import redirect, request, session
-from application.forms import IsInSession
+
+from application import app, chat
+from application.handlers import login_required, csrf_required
+from flask import request, session
 import markdown
 from json import dumps 
 
 wereSocketsCreated = 0
+
+
 def create_routers(socketio):
     global wereSocketsCreated
     if not wereSocketsCreated:
@@ -47,7 +49,6 @@ def create_routers(socketio):
                 """
                 join_room(room)
 
-
             @socketio.on('leave')
             def on_leave(room):
                 """
@@ -60,6 +61,8 @@ def create_routers(socketio):
 
         if app.config['SOCKET_MODE'] == 'False':
             @app.route('/send_message', methods=['GET', 'POST'], endpoint='send_message')
+            @login_required
+            @csrf_required
             def send_message():
                 """
                 **Работает без сокетов**
@@ -67,8 +70,6 @@ def create_routers(socketio):
                 
                 :return: Отправилось ли сообщение
                 """
-                if not IsInSession():
-                    return dumps({"success": False, "error": "Login error"}), 403
                 chat_id = int(request.args['chat'])
                 message = request.args['message']
                 if len(message) > 1000 or len(message) == 0:

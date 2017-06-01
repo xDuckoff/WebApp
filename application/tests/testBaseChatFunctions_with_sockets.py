@@ -23,7 +23,7 @@ CNAME = "Test commit"
 CHAT_ID = 0
 
 
-class TestBaseChatFunctions_with_sockets(unittest.TestCase):
+class TestBaseChatFunctionsWithSockets(unittest.TestCase):
 
     def setUp(self):
         global CHAT_ID

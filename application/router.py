@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, session, url_for, request, send_from_directory, abort
+from flask import render_template, redirect, session, request, send_from_directory, abort
 from application import app, chat
-from forms import LoginForm, login_user, IsInSession, CreateChatForm
-import requests, os
+from forms import LoginForm, CreateChatForm
+import os
+import cgi
 
 """
 Данный файл содержит основные страницы проекта.
 """
+
 
 @app.route('/logout')
 def logout():
@@ -38,7 +40,6 @@ def translate():
         return 'No index', 400
 
 
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     """
@@ -52,7 +53,8 @@ def index():
     chat_create_form = CreateChatForm()
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        login_user(login_form.login.data)
+        session['login'] = cgi.escape(login_form.login.data)
+        session['joined_chats'] = []
     if 'login' in session:
         login = session['login']
     else:
@@ -60,7 +62,7 @@ def index():
     allowed_ex = map(lambda x: '.' + x, app.config["ALLOWED_EXTENSIONS"])
     return render_template('index.html', 
         chats=chats, 
-        in_session=IsInSession(), 
+        in_session=bool(login), 
         login_form=login_form,
         chat_create_form=chat_create_form,
         search_title_text=chat_title, 
@@ -81,7 +83,6 @@ def docs_page(filename):
     rootdir = os.getcwd()
     path = rootdir + '/docs/_build/html/'
     return send_from_directory(path, filename)
-
 
 
 from application.chat.sockets import init_sockets

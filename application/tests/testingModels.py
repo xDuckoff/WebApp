@@ -52,7 +52,6 @@ class Testmodels(unittest.TestCase):
         self.assertIsInstance(Chat.id.type, db.Integer)
         self.assertIsInstance(Chat.name.type, db.String)
 
-
     def test_type_model_message(self):
 
         self.assertIsInstance(Message.id.type, db.Integer)
@@ -60,7 +59,6 @@ class Testmodels(unittest.TestCase):
         self.assertIsInstance(Message.author.type, db.String)
         self.assertIsInstance(Message.chat.type, db.Integer)
         self.assertIsInstance(Message.type.type, db.String)
-
 
     def test_type_model_code(self):
 

@@ -5,9 +5,6 @@ import os
 from application import app
 import flask_migrate
 from application import chat
-from application.forms import login_user
-from flask.sessions import SessionInterface
-from flask import session
 
 """
 Файл содержит тесты роутов

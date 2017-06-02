@@ -9,9 +9,10 @@
 <script src="{{ url_for('static', filename='js/Treant.js') }}"></script>
 <script type="text/javascript" charset="utf-8">
     var INTERVAL = 1000;
-    var chat_index = {{ chat_id }};
-    var chat_code_type ="{{ chat_info['code_type'] }}";
-    var chosen_commit = 0;
+    var chat_index = {{ chat_id }},
+        chat_code_type = "{{ chat_info['code_type'] }}",
+        startCommit = {{ chat_info.start_code.id }},
+        chosen_commit = 0;
     $.ajaxSetup({
         headers: {
             'X-Csrf-Token': "{{ csrf_token() }}"
@@ -42,7 +43,7 @@
 
 {% if socket_mode %}
 <script type="text/javascript" charset="utf-8">
-    var parent_index = -1;
+    var parent_index = startCommit;
     jQuery(function ($) {
         joinToChat();
         get_messages(false);
@@ -283,62 +284,67 @@
         if (chat_id == '') window.location = "/login";
         else window.location = "/login?chat=" + chat_id;
         });
+
+        $('#tree').on("click", ".commit_node", function(){
+            var commitId = $(this).data('id');
+            draw_node(commitId);
+            get_code(commitId);
+        });
     });
 
-    function get_tree(objecy_id) {
+    function get_tree(objectId) {
         $.ajax({
-            url:"/tree",
-            type:"GET",
-            data:{
+            url: "/tree",
+            type: "GET",
+            data: {
                 chat: chat_index
             },
-            dataType: "html",
-            success: function( node_structure ) {
-                config = {
-                    container: "#" + objecy_id,
-                    levelSeparation: 70,
-                    siblingSeparation: 70,
-                    rootOrientation: "WEST",
-                    connectors: {
-                        style:{
-                            stroke: 'white'
+            dataType: "json",
+            success: function( nodeStructure ) {
+                var config = {
+                        container: "#" + objectId,
+                        levelSeparation: 70,
+                        siblingSeparation: 70,
+                        rootOrientation: "WEST",
+                        connectors: {
+                            style:{
+                                stroke: 'white'
+                            }
                         }
-                    }
-                };
+                    };
 
-                simple_chart_config = {
-                    chart: config,
-                    nodeStructure: $.parseJSON(node_structure)
-                };
-                var tree = new Treant(simple_chart_config);
+                var simple_chart_config = {
+                        chart: config,
+                        nodeStructure: nodeStructure
+                    };
+                var tree = new Treant(simple_chart_config, function(){}, $);
                 draw_node(chosen_commit);
             }
         });
     }
 
-    function get_code(commit_index){
-        chosen_commit = commit_index;
+    function get_code(codeId){
+        codeId = codeId || startCommit;
+        chosen_commit = codeId;
         $.ajax({
-            url:"/get_code",
-            type:"GET",
-            data:{
+            url: "/get_code",
+            type: "GET",
+            data: {
                 chat: chat_index,
-                index: commit_index
+                index: codeId
             },
             dataType: "json",
             success: function(data){
-                parent_index = commit_index;
+                parent_index = codeId;
                 editor.getDoc().setValue(data.code);
             }
         });
     }
-    function draw_node(commit_index){
-        $("#commit-button" + chosen_commit).removeClass("chosen").addClass("unchosen");
-        $("#commit-button" + commit_index).addClass("chosen").removeClass("unchosen");
-    }
-    function choose_node(commit_index){
-        draw_node(commit_index);
-        get_code(commit_index);
+    function draw_node(commitIndex){
+        var nodes = $('.commit_node');
+        nodes.removeClass('chosen')
+                .filter('[data-id=' + commitIndex + ']')
+                .addClass('chosen');
     }
 
     function joinToChat(){

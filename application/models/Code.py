@@ -33,3 +33,7 @@ class Code(db.Model):
         self.chat_link = chat_link
         self.parent_link = parent_link
         self.message = message
+
+    @staticmethod
+    def get_root_in_chat(chat_id):
+        return Code.query.filter_by(chat_link=chat_id, parent_link=None).first()

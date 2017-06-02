@@ -43,7 +43,11 @@ def get_chat_info(id):
     result = Chat.query.get(id)
     if not result:
         return {}
-    return {'name':result.name, 'code_type':result.code_type}
+    return {
+        'name': result.name,
+        'code_type': result.code_type,
+        'start_code': result.codes[0]
+    }
 
 
 def send_message(chat_id, text, type_code, username):
@@ -61,30 +65,35 @@ def send_message(chat_id, text, type_code, username):
     db.session.add(Message(text, username, chat_id, type_code))
     db.session.commit()
 
-def get_messages(id, username):
+
+def get_messages(chat_id, username):
     """
     Данная функция передаёт сообщения из базы данных
     
-    :param id: Номер чата
+    :param chat_id: Номер чата
     
     :param username:  Имя пользователя
     
     :return: Сообщения пользователей
     """
-    result = Message.query.filter_by(chat=id)
-    ret = []
-    for i in result:
-
-        if i.type == "usr":
-            if i.author == username:
-                type = "mine"
+    chat = Chat.query.get(chat_id)
+    result = []
+    for message in chat.messages:
+        if message.type == "usr":
+            if message.author == username:
+                type_msg = "mine"
             else:
-                type = "others"
+                type_msg = "others"
         else:
-            type = "sys"
+            type_msg = "sys"
+        result.append({
+            "author": message.author,
+            "message": message.content,
+            "plain_message": plain_text(message.content),
+            "type": type_msg
+        })
+    return result
 
-        ret.append({"author": i.author, "message": i.content, "plain_message": plain_text(i.content), "type": type})
-    return ret
 
 def send_code(chat_id, text, username, parent=None, cname = u'Начальная версия'):
     """
@@ -109,18 +118,20 @@ def send_code(chat_id, text, username, parent=None, cname = u'Начальная
     sockets.send_code_sockets(chat_id)
     return code_to_send.id
 
-def get_code(id, index):
+
+def get_code(id):
     """
     Функция передаёт код с сервера пользователю
     
-    :param id: Номер чата
-    
-    :param index: Индекс
+    :param id: идентификатор исходного кода
     
     :return: Автор и код
     """
-    result = Code.query.filter_by(chat=id)[index]
-    return {"author": result.author, "code": result.content}
+    result = Code.query.get(id)
+    return {
+        "author": result.author,
+        "code": result.content
+    }
 
 def find_chat(name):
     """
@@ -151,35 +162,46 @@ def sys_message(data, room):
     send_message(int(room), data, 'sys', u'Системное сообщение')
     sockets.sys_message_sockets(data, room)
 
-def get_commits_in_chat(chat):
+
+def get_commits_in_chat(chat_id):
     """
     Данная функция передаёт с сервера клиенту дерево коммитов
     
-    :param chat: Номер чата
+    :param chat_id: Номер чата
     
     :return: Дерево коммитов
     """
-    return Code.query.filter_by(chat=chat)
+    return Code.query.filter_by(chat_link=chat_id)
 
-def generate_commits_tree(chat):
+
+def generate_commits_tree(chat_id):
     """
     Данная функция генерирует дерево коммитов для чата
     
-    :param chat: Номер чата
+    :param chat_id: Номер чата
     
     :return: Сгенерированное дерево коммитов
     """
-    commits = get_commits_in_chat(chat)
-    commits_data = [{"children": []} for i in range(0, commits.count())]
-    
-    commits_data[0] = {"text": "{name: '0'}", "children":[],
-                       "innerHTML":"<div class = \"circle unchosen\" onclick = \"choose_node(0)\" id=\"commit-button0\">0</div>"}
-    for index in range(commits.count() - 1, 0, -1):
-        commit = commits[index]
-        commits_data[index]["text"] = {"name": str(index)}
-        commits_data[index]["innerHTML"] = "<div class = \"circle unchosen\" onclick = \"{0}\" id=\"commit-button{1}\">{1}</div".format('choose_node('+str(index)+')', str(index))
-        commits_data[commit.parent]["children"].append(commits_data[index])
-    return dumps(commits_data[0])
+    root_code = Code.get_root_in_chat(chat_id)
+    tree = get_tree_node(root_code)
+    return dumps(tree)
+
+
+def get_tree_node(code):
+    NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{id}</div>"
+    node = {
+        "text": {
+            "name": code.id,
+            "title": code.message
+        },
+        "innerHTML": NODE_MARKUP.format(id=code.id)
+    }
+    children = []
+    for child_code in code.children:
+        children.append(get_tree_node(child_code))
+    node["children"] = children
+    return node
+
 
 def translate_text(text, lang):
     """

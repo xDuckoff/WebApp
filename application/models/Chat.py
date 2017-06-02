@@ -2,6 +2,7 @@
 
 from application import db
 
+
 class Chat(db.Model):
     """Модель чата"""
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

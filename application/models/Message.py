@@ -2,6 +2,7 @@
 
 from application import db
 
+
 class Message(db.Model):
     """Модель сообщений в чате
 
@@ -21,10 +22,9 @@ class Message(db.Model):
     author = db.Column(db.String(256))
     type = db.Column(db.String(3))
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
-    chat = db.relationship('Chat',
-        backref=db.backref('messages', lazy='dynamic'))
+    chat = db.relationship('Chat', backref=db.backref('messages'))
 
-    def __init__(self, content, author, chat_link, type):
+    def __init__(self, content, author, chat_link, type_code):
         """Конструктор сообщения
 
         Arguments:
@@ -37,4 +37,4 @@ class Message(db.Model):
         self.content = content
         self.author = author
         self.chat_link = chat_link
-        self.type = type
+        self.type = type_code

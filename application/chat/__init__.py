@@ -29,7 +29,7 @@ def create_chat(name, code, code_type, username):
     db.session.add(chat_to_create)
     db.session.commit()
     chat_id = chat_to_create.id
-    send_code(chat_id, code, username, 0)
+    send_code(chat_id, code, username)
     return chat_id
 
 def get_chat_info(id):
@@ -45,21 +45,20 @@ def get_chat_info(id):
         return {}
     return {'name':result.name, 'code_type':result.code_type}
 
-def send_message(id, text, type, username):
+
+def send_message(chat_id, text, type_code, username):
     """
     Данная функция добавляет сообщение в базу данных для дальнейшего сохранения
     
-    :param id: Номер чата
+    :param chat_id: Номер чата
     
     :param text: Содержание сообщения
     
-    :param type: Является ля
+    :param type_code: Является ля
     
     :param username: Имя пользователя
     """
-    text_ru = translate_text(text, 'ru')
-    text_en = translate_text(text, 'en')
-    db.session.add(Message(text, text_ru, text_en, username, id, type))
+    db.session.add(Message(text, username, chat_id, type_code))
     db.session.commit()
 
 def get_messages(id, username):
@@ -87,11 +86,11 @@ def get_messages(id, username):
         ret.append({"author": i.author, "message": i.content, "plain_message": plain_text(i.content), "type": type})
     return ret
 
-def send_code(id, text, username, parent, cname = u'Начальная версия'):
+def send_code(chat_id, text, username, parent=None, cname = u'Начальная версия'):
     """
     Отправление кода на сервер
     
-    :param id: Номер чата
+    :param chat_id: Номер чата
     
     :param text: Код
     
@@ -101,14 +100,14 @@ def send_code(id, text, username, parent, cname = u'Начальная верс�
     
     :return: Сообщение о коммите и номере кода
     """
-    CodeToSend = Code(text, username, id, parent, cname)
-    db.session.add(CodeToSend)
+    chat = Chat.query.get(chat_id)
+    code_to_send = Code(text, username, chat_id, parent, cname)
+    db.session.add(code_to_send)
     db.session.commit()
-    code_id = CodeToSend.id
-    code_id_in_chat = len(Code.query.filter_by(chat=id).all()) - 1
-    sys_message(u"Изменение кода " + str(code_id_in_chat) + u" : '" + unicode(cname) + u"'", str(id))
-    sockets.send_code_sockets(id)
-    return code_id
+    code_id_in_chat = len(chat.codes) - 1
+    sys_message(u"Изменение кода " + str(code_id_in_chat) + u" : '" + unicode(cname) + u"'", str(chat_id))
+    sockets.send_code_sockets(chat_id)
+    return code_to_send.id
 
 def get_code(id, index):
     """

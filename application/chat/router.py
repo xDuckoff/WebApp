@@ -69,6 +69,7 @@ def chat_page(chat_id):
         in_session = False
     return render_template('chat.html',chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'), chat_info=chat_info, login=login, in_session=in_session)
 
+
 @app.route('/create_chat', methods=['GET', 'POST'])
 def create_chat():
     """
@@ -95,6 +96,7 @@ def create_chat():
         return redirect('/')
     chat_id = chat.create_chat(name, code, code_type, session['login'])
     return redirect('/chat/' + str(chat_id))
+
 
 @app.route('/get_messages', methods=['GET', 'POST'])
 def get_messages():

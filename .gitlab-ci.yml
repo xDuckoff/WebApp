@@ -1,0 +1,27 @@
+image: alpine
+
+before_script:
+  - echo "ipv6" >> /etc/modules 
+  - apk update
+
+stages:
+  - test
+  - production
+
+test:
+  script:
+    - apk add py-virtualenv gcc python-dev musl-dev postgresql-dev
+    - virtualenv --python=python2.7 venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+    - source .env.example 
+    - python test.py
+
+production:
+  stage: production
+  script:
+    - apk add ruby ruby-rdoc ruby-bundler ruby-irb git curl
+    - gem install dpl
+    - dpl --provider=heroku --app=project51 --api-key=2d195020-0423-4cdb-be68-d9ea528c57f6
+  only:
+    - master

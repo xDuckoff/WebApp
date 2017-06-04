@@ -1,4 +1,4 @@
-﻿.. Chatocode documentation master file, created by
+.. Chatocode documentation master file, created by
    sphinx-quickstart on Thu May 11 11:59:53 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
@@ -9,70 +9,54 @@
 Развертывание приложения
 ------------------------
 
-1. Скачать репозиторий и создать виртуальное окружение:
-
-  .. code::
+1. Скачать репозиторий и создать виртуальное окружение::
 
     git clone git@gitlab.com:project51/WebApp.git
     cd WebApp
     virtualenv --python=python2.7 venv
     source venv/bin/activate
 
-3. Установить необходимые модули
-
-  .. code::
+#. Установить необходимые модули::
 
     pip install -r requirements.txt
 
+#. Настроить конфигурацию
 
-4. Настроить конфигурацию
-
-  На основании файла ``.env.example`` создать новый файл под названием ``.env``.
-  В созданном файле исправить значения переменных (если это требуется). Выполнить код:
-
-  .. code::
+   На основании файла ``.env.example`` создать новый файл под названием ``.env``.
+   В созданном файле исправить значения переменных (если это требуется). Выполнить код::
 
     source .env
 
-5. Установить и настроить PostgreSQL
+#. Установить и настроить PostgreSQL
 
-  Сначала надо `установить PostgreSQL <https://www.postgresql.org/download/linux/ubuntu/>`_.
-  Затем надо создать и ...
+   Сначала надо `установить PostgreSQL <https://www.postgresql.org/download/linux/ubuntu/>`_.
+   Затем надо создать пользователя и базы данных.
+   В данном примере логин пользователя будет ``postgres`` и пароль ``postgres``.
+   База данных для приложения будет называться ``project51``, а для тестов - ``project51_test``.::
 
-  После этого надо мигрировать модель данных в Postgres:
+    sudo su postgres
+    psql
+    CREATE ROLE postgres WITH LOGIN PASSWORD 'postgres';
+    CREATE DATABASE project51 WITH OWNER postgres;
+    CREATE DATABASE project51_test WITH OWNER postgres;
 
-  - через *Flask*
+   Теперь проверяем на наличие пользователей командой ``\dg``.
+   А командой ``\l`` смотрим на созданные базы данных. Чтобы выйти из psql: ``Ctrl + D``.
 
-    .. code::
+   После этого надо мигрировать модель данных в Postgres:
 
-      flask db upgrade
+   - через *Flask*: ``flask db upgrade``
+   - через *Heroku*: ``heroku local upgrade``
 
-  - через *Heroku*
+#. Запустить приложение
 
-    .. code::
-
-      heroku local upgrade
-
-
-6. Запустить приложение
-
-
-  - через *Flask*
-
-  .. code::
-
-    flask run
-
-  - через *Heroku*
-
-  .. code::
-
-    heroku local web
+   - через *Flask*: ``flask run``
+   - через *Heroku*: ``heroku local web``
 
 
-7. Подключиться к приложению
+#. Подключиться к приложению
 
-  Открыть в браузере ссылку ``http://localhost:5000/``
+   Открыть в браузере ссылку ``http://localhost:5000/``
 
 
 Ежедневная работа
@@ -86,58 +70,53 @@
 
 Список команд и требований,
 
-		
 API
 ---
 
 **application.models**
 
 .. automodule:: application.models
-    :members:
+   :members:
 
-    **Chat**
+   **Chat**
 
-    .. automodule:: application.models.Chat
-        :members:
+   .. automodule:: application.models.Chat
+      :members:
 
-    **Code**
+   **Code**
 
-    .. automodule:: application.models.Code
-        :members:
+   .. automodule:: application.models.Code
+      :members:
 
-    **Message**
+   **Message**
 
-    .. automodule:: application.models.Message
-        :members:
+   .. automodule:: application.models.Message
+      :members:
 
 **application.router module**
 
 .. automodule:: application.router
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 
 **application.forms**
 
 .. automodule:: application.forms
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 
 **application.chat**
 
 .. automodule:: application.chat
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 .. automodule:: application.chat.router
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-
-
+   :members:
+   :undoc-members:
+   :show-inheritance:

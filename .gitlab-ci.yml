@@ -1,3 +1,7 @@
+variables:
+  DATABASE_URL: "postgres://postgres@postgres/my_database"
+  PROJECT_NAME: "project51"
+
 image: alpine
 
 before_script:
@@ -22,6 +26,6 @@ production:
   script:
     - apk add ruby ruby-rdoc ruby-bundler ruby-irb git curl
     - gem install dpl
-    - dpl --provider=heroku --app=project51 --api-key=2d195020-0423-4cdb-be68-d9ea528c57f6
+    - dpl --provider=heroku --app=$PROJECT_NAME --api-key=$HEROKU_API_KEY
   only:
     - master

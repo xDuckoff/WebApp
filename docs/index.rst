@@ -3,143 +3,112 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Документация Василька
-=====================
+Документация
+============
 
-Развертывание Василька
-======================
+Развертывание приложения
+------------------------
 
-1. Скачать репозиторий
-----------------------
-::
+1. Скачать репозиторий и создать виртуальное окружение:
 
-    git clone git@gitlab.informatics.ru:Syomochkin/Project51-2017.git
+  .. code::
 
-2. Создать виртуальное окружение
---------------------------------
-::
-
+    git clone git@gitlab.com:project51/WebApp.git
+    cd WebApp
     virtualenv --python=python2.7 venv
-	
     source venv/bin/activate
 
 3. Установить необходимые модули
---------------------------------
-::
+
+  .. code::
 
     pip install -r requirements.txt
 
+
 4. Настроить конфигурацию
--------------------------
 
-- FLASK-сервер
-::
+  На основании файла ``.env.example`` создать новый файл под названием ``.env``.
+  В созданном файле исправить значения переменных (если это требуется). Выполнить код:
 
-    export FLASK_APP=run.py
-	
-    export DATABASE_URL=sqlite:////tmp/db.sqlite
-	
-    export SOCKET_MODE=True
+  .. code::
 
-- Локальный HEROKU-сервер
+    source .env
 
-    Создать и заполнить файл .env на основе .env.example
+5. Установить и настроить PostgreSQL
 
-- Удалённый HEROKU-сервер
+  Сначала надо `установить PostgreSQL <https://www.postgresql.org/download/linux/ubuntu/>`_.
+  Затем надо создать и ...
 
-    Settings > Config Variables > Reveal Config Vars
-::
+  После этого надо мигрировать модель данных в Postgres:
 
-    FLASK_APP = run.py
+  - через *Flask*
 
-    DATABASE_URL = postgres://root:root@localhost:3306/test
+    .. code::
 
+      flask db upgrade
 
-5. Настроить БД
----------------
+  - через *Heroku*
 
-- FLASK-сервер
-::
+    .. code::
 
-    flask db upgrade
+      heroku local upgrade
 
-- Локальный HEROKU-сервер
-::
-
-    heroku local upgrade
-
-- Удалённый HEROKU-сервер
-::
-
-    heroku run upgrade
 
 6. Запустить приложение
------------------------
 
-- FLASK-сервер
-::
+
+  - через *Flask*
+
+  .. code::
 
     flask run
 
-- Локальный HEROKU-сервер
-::
+  - через *Heroku*
+
+  .. code::
 
     heroku local web
 
-- Удалённый HEROKU-сервер
-
-    Resources
-
-    Поставить web включённым 
 
 7. Подключиться к приложению
-----------------------------
 
-Откройте интернет-браузер и перейдите по адресу: http://localhost:5000/
+  Открыть в браузере ссылку ``http://localhost:5000/``
+
 
 Ежедневная работа
-=================
+-----------------
 
-Тесты
-=====
+Тут надо написать последовательность команд, которые надо выполять перед началом работы
+
+
+Тестирование кода
+-----------------
+
+Список команд и требований,
+
 		
-Для разработчиков
-=================
+API
+---
 
-application.chat package
-------------------------
-
-**application.chat.router module**
-
-.. automodule:: application.chat.router
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-**Module contents**
-
-.. automodule:: application.chat
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-application package
--------------------
-
-**application.forms module**
-
-.. automodule:: application.forms
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-**application.models module**
+**application.models**
 
 .. automodule:: application.models
     :members:
-    :undoc-members:
-    :show-inheritance:
+
+    **Chat**
+
+    .. automodule:: application.models.Chat
+        :members:
+
+    **Code**
+
+    .. automodule:: application.models.Code
+        :members:
+
+    **Message**
+
+    .. automodule:: application.models.Message
+        :members:
 
 **application.router module**
 
@@ -149,12 +118,26 @@ application package
     :show-inheritance:
 
 
-**Module contents**
+**application.forms**
 
-.. automodule:: application
+.. automodule:: application.forms
     :members:
     :undoc-members:
     :show-inheritance:
+
+
+**application.chat**
+
+.. automodule:: application.chat
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: application.chat.router
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 
 

@@ -6,14 +6,13 @@ from application import db
 class Message(db.Model):
     """Модель сообщений в чате
 
-    Variables:
-        id {[type]} -- идентификатор
-        content {[type]} -- исходное содержание сообщения
-        content_ru {[type]} -- содержание сообщения, переведенное на русский
-        content_en {[type]} -- содержание сообщения, переведнное на английский
-        author {[type]} -- автор сообщения
-        chat_link {[type]} -- ссылка на чат, которому принадлежит сообщение
-        type {[type]} -- тип сообщения: обычное (`usr`), системное (`sys`)
+    :param id: идентификатор
+    :param content:  исходное содержание сообщения
+    :param content_ru:  содержание сообщения, переведенное на русский
+    :param content_en:  содержание сообщения, переведнное на английский
+    :param author:  автор сообщения
+    :param type:  тип сообщения: обычное (`usr`), системное (`sys`)
+    :param chat_link:  ссылка на чат, которому принадлежит сообщение
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
@@ -25,15 +24,6 @@ class Message(db.Model):
     chat = db.relationship('Chat', backref=db.backref('messages'))
 
     def __init__(self, content, author, chat_link, type_code):
-        """Конструктор сообщения
-
-        Arguments:
-            content {[type]} -- [description]
-            author {[type]} -- [description]
-            chat {[type]} -- [description]
-            type {[type]} -- [description]
-        """
-
         self.content = content
         self.author = author
         self.chat_link = chat_link

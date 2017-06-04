@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
-
 from application import db
 
 
 class Code(db.Model):
     """Модель исходного кода в чате
 
-    Variables:
-        id {[type]} -- идентификатор
-        content {[type]} -- содержимое исходного кода
-        author {[type]} -- автор кода
-        chat_link {[type]} -- ссылка на чат, к которому принадлежит данных код
-        parent {[type]} -- ссылка на родителя, от которого образовался данных код
-        message {[type]} -- сообщение-описание редакции исходного кода
+    :param id: идентификатор
+    :param content: содержимое исходного кода
+    :param author: автор кода
+    :param message: сообщение-описание редакции исходного кода
+    :param chat_link: ссылка на чат, к которому принадлежит данных код
+    :param parent_link: ссылка на родителя, от которого образовался данных код
     """
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -26,7 +24,6 @@ class Code(db.Model):
     children = db.relationship('Code')
 
     def __init__(self, content, author, chat_link, parent_link, message=u'Начальная версия'):
-        """Конструктор исходного кода"""
 
         self.content = content
         self.author = author
@@ -36,4 +33,9 @@ class Code(db.Model):
 
     @staticmethod
     def get_root_in_chat(chat_id):
+        """Получение родительского кода в чате
+
+        :param chat_id: идентификатор чата, в котором и необходимо проводить поиск
+        :return: объект Code, который не имеет родителей
+        """
         return Code.query.filter_by(chat_link=chat_id, parent_link=None).first()

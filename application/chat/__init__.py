@@ -61,9 +61,13 @@ def send_message(chat_id, text, type_code, username):
     :param type_code: Является ля
     
     :param username: Имя пользователя
+
+    :return: Объект созданного сообщения
     """
-    db.session.add(Message(text, username, chat_id, type_code))
+    message = Message(text, username, chat_id, type_code)
+    db.session.add(message)
     db.session.commit()
+    return message
 
 
 def get_messages(chat_id, username):
@@ -100,13 +104,13 @@ def send_code(chat_id, text, username, parent=None, cname = u'Начальная
     Отправление кода на сервер
     
     :param chat_id: Номер чата
-    
+
     :param text: Код
-    
+
     :param username: Имя пользователя
-     
+
     :param parent: Место в дереве коммитов
-    
+
     :return: Сообщение о коммите и номере кода
     """
     chat = Chat.query.get(chat_id)

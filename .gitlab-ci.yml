@@ -27,5 +27,3 @@ production:
     - apk add ruby ruby-rdoc ruby-bundler ruby-irb git curl
     - gem install dpl
     - dpl --provider=heroku --app=$PROJECT_NAME --api-key=$HEROKU_API_KEY
-  only:
-    - master

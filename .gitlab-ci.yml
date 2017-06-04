@@ -1,11 +1,17 @@
-variables:
-  DATABASE_URL: "postgres://postgres@postgres/my_database"
-  PROJECT_NAME: "project51"
-
 image: alpine
 
+services:
+  - postgres
+
+variables:
+  POSTGRES_DB: project51_test
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  DATABASE_URL: "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres/$POSTGRES_DB"
+  PROJECT_NAME: "project51"
+
 before_script:
-  - echo "ipv6" >> /etc/modules 
+  - echo "ipv6" >> /etc/modules
   - apk update
 
 stages:
@@ -13,13 +19,15 @@ stages:
   - production
 
 test:
+  image: postgres
   script:
     - apk add py-virtualenv gcc python-dev musl-dev postgresql-dev
     - virtualenv --python=python2.7 venv
     - source venv/bin/activate
     - pip install -r requirements.txt
-    - source .env.example 
-    - python test.py
+    - source .env.example
+    - export TEST_DATABASE_URL=$DATABASE_URL
+    - nose2 -v
 
 production:
   stage: production

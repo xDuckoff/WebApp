@@ -67,7 +67,15 @@ def chat_page(chat_id):
     else:
         login = ""
         in_session = False
-    return render_template('chat.html',chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'), chat_info=chat_info, login=login, in_session=in_session)
+    return render_template(
+        'chat.html',
+        chat_id=chat_id,
+        socket_mode=(app.config['SOCKET_MODE'] == 'True'),
+        chat_info=chat_info,
+        login=login,
+        in_session=in_session
+    )
+
 
 @app.route('/create_chat', methods=['GET', 'POST'])
 def create_chat():
@@ -96,6 +104,7 @@ def create_chat():
     chat_id = chat.create_chat(name, code, code_type, session['login'])
     return redirect('/chat/' + str(chat_id))
 
+
 @app.route('/get_messages', methods=['GET', 'POST'])
 def get_messages():
     """
@@ -109,6 +118,7 @@ def get_messages():
         return 'Security error', 403
     chat_id = int(request.args['chat'])
     return dumps(chat.get_messages(chat_id, session['login']))
+
 
 @app.route('/send_code', methods=['GET', 'POST'])
 def send_code():
@@ -126,8 +136,7 @@ def send_code():
     parent = request.args['parent']
     cname = request.args['cname']
     code_id = chat.send_code(chat_id, code, session['login'], parent, cname)
-    code_id_in_chat = len(Code.query.filter_by(chat=chat_id).all()) - 1
-    return dumps({"success": True, "error": "", "commit": code_id_in_chat})
+    return dumps({"success": True, "error": "", "commit": code_id})
 
 
 @app.route('/get_code', methods=['GET', 'POST'])
@@ -141,9 +150,8 @@ def get_code():
         return 'Login error', 403
     if not csrf_check(request.headers):
         return 'Security error', 403
-    chat_id = int(request.args['chat'])
     index = int(request.args['index'])
-    return dumps(chat.get_code(chat_id, index))
+    return dumps(chat.get_code(index))
 
 @app.route('/get_chat_info', methods=['GET', 'POST'])
 def get_chat_info():

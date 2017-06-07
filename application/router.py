@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+"""Основные веб-страницы проекта"""
+
 from flask import render_template, redirect, session, request, send_from_directory
 from application import app
 from forms import LoginForm, CreateChatForm
@@ -8,15 +10,10 @@ import cgi
 from application.models import Chat
 from json import dumps
 
-"""
-Данный файл содержит основные страницы проекта.
-"""
-
 
 @app.route('/logout')
 def logout():
-    """
-    Функция выхода из сессиии в проекте
+    """Функция выхода из сессиии в проекте
     
     :return: Переход на главную страницу
     """
@@ -26,8 +23,7 @@ def logout():
 
 @app.route('/translate')
 def translate():
-    """
-    Функция перевода страницы
+    """Функция перевода страницы
     
     :return: Запрос на сервера Яндекса, для перевода страницы
     """
@@ -43,8 +39,7 @@ def translate():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    """
-    Данная функция генерирует главную страницу для пользователя
+    """Данная функция генерирует главную страницу для пользователя
     
     :return: Главная страница с чатами пользователя, является ли человек в сессии, формой входа(Если человек не \
     зарегистрирован, заголовок чата
@@ -74,11 +69,9 @@ def index():
 
 @app.route('/documentation/<path:filename>')
 def docs_page(filename):
-    """
-    Данная функция открывает пользователю страницу с документацией
+    """Данная функция открывает пользователю страницу с документацией
     
     :param filename: Имя файла
-    
     :return: Выбранный файл с документацией
     """
     rootdir = os.getcwd()

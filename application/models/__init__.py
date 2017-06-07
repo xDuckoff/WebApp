@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Пакет моделей данных
-"""
+
+"""Пакет моделей данных"""
 
 from Message import Message
 from Code import Code

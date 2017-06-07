@@ -13,8 +13,7 @@ from application.models import Chat, Message, Code
 @login_required
 @csrf_required
 def add_chat():
-    """
-    Данная функция добавляет в сессию пользователя номер чата
+    """Данная функция добавляет в сессию пользователя номер чата
     
     :return: Добавлен ли пользователь в чат
     """
@@ -33,8 +32,7 @@ def add_chat():
 @login_required
 @csrf_required
 def tree():
-    """
-    Данная функция создаёт дерево коммитов чата
+    """Данная функция создаёт дерево коммитов чата
     
     :return: Страницу дерева коммитов
     """
@@ -46,11 +44,9 @@ def tree():
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 @login_required
 def chat_page(chat_id):
-    """
-    Данная функция возвращает пользователю страницу чата по номеру
-    
+    """Данная функция возвращает пользователю страницу чата по номеру
+
     :param chat_id: Номер чата
-    
     :return: Страница чата
     """
     chat = Chat.get(chat_id)
@@ -73,9 +69,8 @@ def chat_page(chat_id):
 @app.route('/create_chat', methods=['GET', 'POST'])
 @login_required
 def create_chat():
-    """
-    Данная функция создаёт чат по параметрам
-    
+    """Данная функция создаёт чат по параметрам
+
     :return: Новая страница чата
     """
     form = CreateChatForm()
@@ -101,9 +96,8 @@ def create_chat():
 @login_required
 @csrf_required
 def get_messages():
-    """
-    Функция принятия сообщений
-    
+    """Функция принятия сообщений
+
     :return: Принято ли сообщение
     """
     chat_id = int(request.args['chat'])
@@ -115,9 +109,8 @@ def get_messages():
 @login_required
 @csrf_required
 def send_code():
-    """
-    Данная функция отправляет код на сервер от клиента
-    
+    """Данная функция отправляет код на сервер от клиента
+
     :return: Отправлен ли код
     """
     chat_id = int(request.args['chat'])
@@ -132,9 +125,8 @@ def send_code():
 @login_required
 @csrf_required
 def get_code():
-    """
-    Данная функция отправляет код с сервера к клиенту
-    
+    """Данная функция отправляет код с сервера к клиенту
+
     :return: Код
     """
     index = int(request.args['index'])
@@ -145,9 +137,8 @@ def get_code():
 @login_required
 @csrf_required
 def get_chat_info():
-    """
-    Данная функция передаёт информациб о чате от сервера к клиенту
-    
+    """Данная функция передаёт информациб о чате от сервера к клиенту
+
     :return: Информация о чате
     """
     chat_id = int(request.args['chat'])
@@ -159,9 +150,8 @@ def get_chat_info():
 @login_required
 @csrf_required
 def get_chat_commits():
-    """
-    Данная функция передаёт пользователю дерево коммитов исходного кода
-    
+    """Данная функция передаёт пользователю дерево коммитов исходного кода
+
     :return: Дерево коммитов
     """
     chat_id = int(request.args['chat'])
@@ -172,8 +162,7 @@ def get_chat_commits():
 @app.route('/api/create_chat', methods=['GET', 'POST'])
 @csrf.exempt
 def API_create_chat():
-    """
-    Данная функция создаёт чат по параметрам, используется для api
+    """Данная функция создаёт чат по параметрам, используется для api
 
     :return: Адрес новой страницы чата
     """
@@ -188,18 +177,12 @@ def API_create_chat():
 if app.config['SOCKET_MODE'] == 'True':
     from flask_socketio import join_room, leave_room
 
-    """
-    Данный файл содержит функции и страницы сокетов и чата
-    """
 
     @socketio.on('message')
     def handle_message(json):
-        """
-        **Работает только с сокетами**
-        Данная функция принимает сообщения от пользователя
+        """Данная функция принимает сообщения от пользователя через сокеты
 
         :param json: json запрос
-
         :return: Сообщние
         """
         chat_id = int(json['room'])
@@ -211,12 +194,9 @@ if app.config['SOCKET_MODE'] == 'True':
 
     @socketio.on('join')
     def on_join(room):
-        """
-        **Работает только с сокетами**
-        Данная функция сообщает о присоединение пользователя к чату
+        """Данная функция сообщает о присоединение пользователя к чату
 
         :param room: номер чата
-
         :return: Системное сообщение о входе пользователя
         """
         join_room(room)
@@ -224,9 +204,7 @@ if app.config['SOCKET_MODE'] == 'True':
 
     @socketio.on('leave')
     def on_leave(room):
-        """
-        **Работает только с сокетами**
-        Данная функция удаляет человека из чата
+        """Данная функция удаляет человека из чата
 
         :param room: Номер чата
         """
@@ -237,9 +215,7 @@ else:
     @login_required
     @csrf_required
     def send_message():
-        """
-        **Работает без сокетов**
-        Данная функция отправляет сообщение пользователю
+        """Данная функция отправляет сообщение пользователю
 
         :return: Отправилось ли сообщение
         """

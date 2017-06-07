@@ -32,17 +32,12 @@ class Message(db.Model):
 
     @staticmethod
     def send(chat_id, text, type, username=u'Системное сообщение'):
-        """
-        Данная функция добавляет сообщение в базу данных для дальнейшего сохранения
+        """Данная функция добавляет сообщение в базу данных для дальнейшего сохранения
 
         :param chat_id: Номер чата
-
         :param text: Содержание сообщения
-
         :param type: Тип сообщения
-
         :param username: Имя пользователя
-
         :return: Объект созданного сообщения
         """
         if len(text) > 1000 or len(text) == 0:
@@ -55,8 +50,7 @@ class Message(db.Model):
         return message
 
     def translate(self):
-        """
-        Функция для перевода сообщений
+        """Функция для перевода сообщений
 
         :return: Переведённое сообщение
         """
@@ -67,8 +61,7 @@ class Message(db.Model):
         }
 
     def plain(self):
-        """
-        Функция удаляет html-теги из текста
+        """Функция удаляет html-теги из текста
 
         :return: Текст без html-тегов
         """

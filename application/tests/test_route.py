@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-Тесты роутов
-"""
+
+"""Тесты роутов"""
 
 import unittest
 import os

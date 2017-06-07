@@ -33,19 +33,13 @@ class Code(db.Model):
 
     @staticmethod
     def send(chat_id, text, username, parent=None, cname=u'Начальная версия'):
-        """
-        Отправление кода на сервер
+        """Отправление кода на сервер
 
         :param chat_id: Номер чата
-
         :param text: Код
-
         :param username: Имя пользователя
-
         :param parent: Место в дереве коммитов
-        
         :param cname: Комметарий к коду
-
         :return: Сообщение о коммите и номере кода
         """
         code_to_send = Code(text, username, chat_id, parent, cname)
@@ -59,11 +53,9 @@ class Code(db.Model):
 
     @staticmethod
     def get(id):
-        """
-        Функция передаёт код с сервера пользователю
+        """Функция передаёт код с сервера пользователю
 
         :param id: идентификатор исходного кода
-
         :return: Автор и код
         """
         code = Code.query.get(id)

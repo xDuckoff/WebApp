@@ -21,17 +21,12 @@ class Chat(db.Model):
 
     @staticmethod
     def create(chat_name, code, code_type, username):
-        """
-        Данная функция создаёт чат
+        """Данная функция создаёт чат
 
         :param chat_name: Имя чата
-
         :param code: Код чата
-
         :param code_type: Язык программирования
-
         :param username: Имя пользователя
-
         :return: Номер чата
         """
         chat_to_create = Chat(chat_name, code_type)
@@ -43,18 +38,15 @@ class Chat(db.Model):
 
     @staticmethod
     def get(id):
-        """
-        Функция возвращает чат по id
-        
-        :param id: Номер искомого чата
+        """Функция возвращает чат по id
 
+        :param id: Номер искомого чата
         :return: Объект чата
         """
         return Chat.query.get(id)
 
     def get_info(self):
-        """
-        Данная функция передаёт пользователю информацию о чате
+        """Данная функция передаёт пользователю информацию о чате
 
         :return: Имя чата и язык программирования чата
         """
@@ -66,11 +58,9 @@ class Chat(db.Model):
 
     @staticmethod
     def find(name):
-        """
-        Функция нахождения чата
+        """Функция нахождения чата
 
         :param name: Имя чата
-
         :return: Все чаты, в название которых содержится имя чата
         """
         if name == '':
@@ -82,11 +72,9 @@ class Chat(db.Model):
             return Chat.query.filter(Chat.name.like('%' + name + '%')).all()[::-1]
 
     def get_messages(self, username=""):
-        """
-        Данная функция передаёт сообщения из базы данных
-    
+        """Данная функция передаёт сообщения из базы данных
+
         :param username:  Имя пользователя
-    
         :return: Сообщения пользователей
         """
         result = []
@@ -103,8 +91,7 @@ class Chat(db.Model):
         return result
 
     def get_commits_tree(self):
-        """
-        Данная функция генерирует дерево коммитов для чата
+        """Данная функция генерирует дерево коммитов для чата
 
         :return: Сгенерированное дерево коммитов
         """

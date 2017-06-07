@@ -140,6 +140,7 @@ def get_code():
     index = int(request.args['index'])
     return dumps(chat.get_code(index))
 
+
 @app.route('/get_chat_info', methods=['GET', 'POST'])
 @login_required
 @csrf_required

@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from flask import session
 from application.models import Message, Code, Chat
 from application import db, app
 import sockets
-import cgi
 from json import dumps
 import requests
 import re
 import cgi
+
 
 def create_chat(name, code, code_type, username):
     """

@@ -5,8 +5,7 @@
 
 import unittest
 import os
-from application import app, db, chat, forms
-from flask import session
+from application import app, db, chat
 
 
 class TestPages(unittest.TestCase):

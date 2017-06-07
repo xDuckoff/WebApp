@@ -32,21 +32,21 @@ class Code(db.Model):
         self.message = message
 
     @staticmethod
-    def send(chat_id, text, username, parent=None, cname=u'Начальная версия'):
+    def send(chat_id, text, username, parent=None, message=u'Начальная версия'):
         """Отправление кода на сервер
 
         :param chat_id: Номер чата
         :param text: Код
         :param username: Имя пользователя
         :param parent: Место в дереве коммитов
-        :param cname: Комметарий к коду
+        :param message: Комметарий к коду
         :return: Сообщение о коммите и номере кода
         """
-        code_to_send = Code(text, username, chat_id, parent, cname)
+        code_to_send = Code(text, username, chat_id, parent, message)
         db.session.add(code_to_send)
         db.session.commit()
         code_id_in_chat = u"undefined"
-        Message.send(chat_id, u"Изменение кода " + code_id_in_chat + u" : '" + unicode(cname) + u"'", 'sys')
+        Message.send(chat_id, u"Изменение кода " + code_id_in_chat + u" : '" + message + u"'", 'sys')
         if app.config['SOCKET_MODE'] == 'True':
             socketio.emit('commit', room=str(chat_id), broadcast=True)
         return code_to_send.id

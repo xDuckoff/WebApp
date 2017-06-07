@@ -65,10 +65,10 @@ class Chat(db.Model):
         """
         if name == '':
             return Chat.query.all()[:-10:-1]
-        try:
+        if name.isdigit():
             chat_id = int(name)
             return Chat.query.filter_by(id=chat_id).all()
-        except ValueError:
+        else:
             return Chat.query.filter(Chat.name.like('%' + name + '%')).all()[::-1]
 
     def get_messages(self, username=""):

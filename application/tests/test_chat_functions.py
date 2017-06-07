@@ -62,4 +62,4 @@ class BaseChatFunctionsWithSockets(BaseChatFunctions):
         app.config['TEST_MODE'] = True
         init_sockets()
         db.create_all()
-        self.chat_id = chat.create_chat(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
+        self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)

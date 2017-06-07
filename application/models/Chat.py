@@ -98,12 +98,7 @@ class Chat(db.Model):
                     type_msg = "others"
             else:
                 type_msg = "sys"
-            result.append({
-                "author": message.author,
-                "message": message.content,
-                "plain_message": message.plain(),
-                "type": type_msg
-            })
+            result.append(message.json())
         return result
 
     def get_commits_tree(self):

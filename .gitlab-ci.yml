@@ -1,0 +1,40 @@
+image: alpine
+
+services:
+  - postgres
+
+variables:
+  POSTGRES_DB: project51_test
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  DATABASE_HOST: 'postgres:5432'
+  PROJECT_NAME: "project51"
+  DATABASE_URL: "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$DATABASE_HOST/$POSTGRES_DB"
+  TEST_DATABASE_URL: "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$DATABASE_HOST/$POSTGRES_DB"
+  FLASK_APP: 'run.py'
+  SOCKET_MODE: 'False'
+
+before_script:
+  - echo "ipv6" >> /etc/modules
+  - apk update
+
+stages:
+  - test
+  - production
+
+test:
+  script:
+    - apk add py-virtualenv gcc python-dev musl-dev postgresql-dev
+    - virtualenv --python=python2.7 venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+    - nose2 -v
+
+production:
+  stage: production
+  script:
+    - apk add ruby ruby-rdoc ruby-bundler ruby-irb git curl
+    - gem install dpl
+    - dpl --provider=heroku --app=$PROJECT_NAME --api-key=$HEROKU_API_KEY
+  only:
+    - master

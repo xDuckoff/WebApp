@@ -85,12 +85,12 @@ body{
     opacity: 1;
 }
 
-.chosen {
+.commit_node{
+    background: white;
+}
+.commit_node.chosen {
     background: red;
     font-weight: 600;
-}
-.unchosen {
-    background: white; 
 }
 
 #voice-img{

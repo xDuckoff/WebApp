@@ -61,7 +61,14 @@ def chat_page(chat_id):
     else:
         login = ""
         in_session = False
-    return render_template('chat.html', chat_id=chat_id, socket_mode=(app.config['SOCKET_MODE'] == 'True'), chat_info=chat_info, login=login, in_session=in_session)
+    return render_template(
+        'chat.html',
+        chat_id=chat_id,
+        socket_mode=(app.config['SOCKET_MODE'] == 'True'),
+        chat_info=chat_info,
+        login=login,
+        in_session=in_session
+    )
 
 
 @app.route('/create_chat', methods=['GET', 'POST'])
@@ -118,8 +125,7 @@ def send_code():
     parent = request.args['parent']
     cname = request.args['cname']
     code_id = chat.send_code(chat_id, code, session['login'], parent, cname)
-    code_id_in_chat = chat.get_commits_in_chat(chat_id).count() - 1
-    return dumps({"success": True, "error": "", "commit": code_id_in_chat})
+    return dumps({"success": True, "error": "", "commit": code_id})
 
 
 @app.route('/get_code', methods=['GET', 'POST'])
@@ -131,10 +137,8 @@ def get_code():
     
     :return: Код
     """
-    chat_id = int(request.args['chat'])
     index = int(request.args['index'])
-    return dumps(chat.get_code(chat_id, index))
-
+    return dumps(chat.get_code(index))
 
 @app.route('/get_chat_info', methods=['GET', 'POST'])
 @login_required

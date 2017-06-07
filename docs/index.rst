@@ -107,16 +107,3 @@ API
    :members:
    :undoc-members:
    :show-inheritance:
-
-
-**application.chat**
-
-.. automodule:: application.chat
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-.. automodule:: application.chat.router
-   :members:
-   :undoc-members:
-   :show-inheritance:

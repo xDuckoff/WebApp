@@ -24,7 +24,7 @@ class BaseChatFunctions(unittest.TestCase):
 
     def setUp(self):
         app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['TEST_DATABASE_URL']
-        app.config['SOCKET_MODE'] = 'True'
+        app.config['SOCKET_MODE'] = 'False'
         app.config['TEST_MODE'] = True
         db.create_all()
         self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
@@ -55,11 +55,11 @@ class BaseChatFunctions(unittest.TestCase):
         self.assertEquals(sent_code.get('code'), CODE)
 
 
-class BaseChatFunctionsWithoutSockets(BaseChatFunctions):
+class BaseChatFunctionsWithSockets(BaseChatFunctions):
 
     def setUp(self):
         app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['TEST_DATABASE_URL']
-        app.config['SOCKET_MODE'] = 'False'
+        app.config['SOCKET_MODE'] = 'True'
         app.config['TEST_MODE'] = True
         db.create_all()
         self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)

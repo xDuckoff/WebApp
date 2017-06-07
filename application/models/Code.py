@@ -63,3 +63,31 @@ class Code(db.Model):
             "author": code.author,
             "code": code.content
         }
+
+    @staticmethod
+    def get_root_in_chat(chat_id):
+        return Code.query.filter_by(chat_link=chat_id, parent_link=None).first()
+
+    @staticmethod
+    def get_commits_tree(chat_id):
+        """Данная функция генерирует дерево коммитов для чата
+
+        :return: Сгенерированное дерево коммитов
+        """
+        tree = Code.get_root_in_chat(chat_id).get_tree_node()
+        return tree
+
+    def get_tree_node(self):
+        NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{id}</div>"
+        node = {
+            "text": {
+                "name": self.id,
+                "title": self.message
+            },
+            "innerHTML": NODE_MARKUP.format(id=self.id)
+        }
+        children = []
+        for child_code in self.children:
+            children.append(child_code.get_tree_node())
+        node["children"] = children
+        return node

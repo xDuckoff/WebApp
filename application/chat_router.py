@@ -37,8 +37,7 @@ def tree():
     :return: Страницу дерева коммитов
     """
     chat_id = int(request.args['chat'])
-    chat = Chat.get(chat_id)
-    return dumps(chat.get_commits_tree())
+    return dumps(Code.get_commits_tree(chat_id))
 
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
@@ -144,19 +143,6 @@ def get_chat_info():
     chat_id = int(request.args['chat'])
     chat = Chat.get(chat_id)
     return dumps(chat.get_info())
-
-
-@app.route('/get_commits', methods=['GET', 'POST'])
-@login_required
-@csrf_required
-def get_chat_commits():
-    """Данная функция передаёт пользователю дерево коммитов исходного кода
-
-    :return: Дерево коммитов
-    """
-    chat_id = int(request.args['chat'])
-    chat = Chat.get(chat_id)
-    return dumps(chat.get_commits_tree())
 
 
 @app.route('/api/create_chat', methods=['GET', 'POST'])

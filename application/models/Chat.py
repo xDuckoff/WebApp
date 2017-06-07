@@ -53,7 +53,7 @@ class Chat(db.Model):
         return {
             'name': self.name,
             'code_type': self.code_type,
-            'start_code': self.codes[0]
+            'start_code': Code.get_root_in_chat(self.id)
         }
 
     @staticmethod
@@ -89,26 +89,3 @@ class Chat(db.Model):
                 msg['type'] = "sys"
             result.append(msg)
         return result
-
-    def get_commits_tree(self):
-        """Данная функция генерирует дерево коммитов для чата
-
-        :return: Сгенерированное дерево коммитов
-        """
-        tree = self.get_tree_node(self.codes[0])
-        return tree
-
-    def get_tree_node(self, code):
-        NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{id}</div>"
-        node = {
-            "text": {
-                "name": code.id,
-                "title": code.message
-            },
-            "innerHTML": NODE_MARKUP.format(id=code.id)
-        }
-        children = []
-        for child_code in code.children:
-            children.append(self.get_tree_node(child_code))
-        node["children"] = children
-        return node

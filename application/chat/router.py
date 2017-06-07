@@ -6,6 +6,7 @@ from json import dumps
 from application import chat, csrf
 from application.forms import CreateChatForm
 from application.handlers import login_required, csrf_required
+from application.models import Chat
 
 
 @app.route('/add_chat')
@@ -94,7 +95,7 @@ def create_chat():
     code_type = form.code_type.data
     if code_type not in ["C", "C#", "C++", "CSS", "HTML", "Java", "JavaScript", "Python"]:
         return redirect('/')
-    chat_id = chat.create_chat(name, code, code_type, session['login'])
+    chat_id = Chat.create(name, code, code_type, session['login'])
     return redirect('/chat/' + str(chat_id))
 
 
@@ -179,5 +180,5 @@ def API_create_chat():
     name = form.name.data
     code = form.code.data
     code_type = form.code_type.data
-    chat_id = chat.create_chat(name, code, code_type, "Sublime bot")
+    chat_id = Chat.create(name, code, code_type, "Sublime bot")
     return '/chat/' + str(chat_id)

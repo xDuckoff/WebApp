@@ -7,6 +7,7 @@ import unittest
 import os
 from application import app, db, chat
 from application.chat.sockets import init_sockets
+from application.models import Chat
 
 USERNAME = 'Bot'
 CHAT_NAME = 'Test Chat'
@@ -27,7 +28,7 @@ class BaseChatFunctions(unittest.TestCase):
         app.config['SOCKET_MODE'] = 'False'
         app.config['TEST_MODE'] = True
         db.create_all()
-        self.chat_id = chat.create_chat(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
+        self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
 
     def tearDown(self):
         db.session.remove()

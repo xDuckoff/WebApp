@@ -5,7 +5,8 @@
 
 import unittest
 import os
-from application import app, db, chat
+from application import app, db
+from application.models import Chat
 
 
 class TestPages(unittest.TestCase):
@@ -32,7 +33,7 @@ class TestPages(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_should_chat_page_not_be_exist_without_login(self):
-        chat_id = chat.create_chat("NAME", "CODE", "B++", "NICKNAME")
+        chat_id = Chat.create("NAME", "CODE", "B++", "NICKNAME")
         chat_page_url = TestPages.CHAT_PAGE_URL.format(chat_id=chat_id)
         response = self.app.get(chat_page_url)
         self.assertEqual(response.status_code, 302)

@@ -9,28 +9,6 @@ import re
 import cgi
 
 
-def create_chat(name, code, code_type, username):
-    """
-    Данная функция создаёт чат
-    
-    :param name: Имя чата
-    
-    :param code: Код чата
-    
-    :param code_type: Язык программирования
-    
-    :param username: Имя пользователя
-    
-    :return: Номер чата
-    """
-    chat_to_create = Chat(name, code_type)
-    db.session.add(chat_to_create)
-    db.session.commit()
-    chat_id = chat_to_create.id
-    send_code(chat_id, code, username)
-    return chat_id
-
-
 def get_chat_info(id):
     """
     Данная функция передаёт пользователю информацию о чате по номеру

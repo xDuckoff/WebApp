@@ -91,14 +91,15 @@ class Chat(db.Model):
         """
         result = []
         for message in self.messages:
+            msg = message.json()
             if message.type == "usr":
                 if message.author == username:
-                    type_msg = "mine"
+                    msg['type'] = "mine"
                 else:
-                    type_msg = "others"
+                    msg['type'] = "others"
             else:
-                type_msg = "sys"
-            result.append(message.json())
+                msg['type'] = "sys"
+            result.append(msg)
         return result
 
     def get_commits_tree(self):

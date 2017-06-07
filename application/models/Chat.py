@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+
 from application import db
-from application.chat import send_code
+from application.models import Code
 
 
 class Chat(db.Model):
     """Модель чата
 
-    :param id: идентификатор
     :param name: наименование чата
     :param code_type: тип исходного кода в этом чате
     """
@@ -38,5 +38,94 @@ class Chat(db.Model):
         db.session.add(chat_to_create)
         db.session.commit()
         chat_id = chat_to_create.id
-        send_code(chat_id, code, username)
+        Code.send(chat_id, code, username)
         return chat_id
+
+    @staticmethod
+    def get(id):
+        """
+        Функция возвращает чат по id
+        
+        :param id: Номер искомого чата
+
+        :return: Объект чата
+        """
+        return Chat.query.get(id)
+
+    def get_info(self):
+        """
+        Данная функция передаёт пользователю информацию о чате
+
+        :return: Имя чата и язык программирования чата
+        """
+        return {
+            'name': self.name,
+            'code_type': self.code_type,
+            'start_code': self.codes[0]
+        }
+
+    @staticmethod
+    def find(name):
+        """
+        Функция нахождения чата
+
+        :param name: Имя чата
+
+        :return: Все чаты, в название которых содержится имя чата
+        """
+        if name == '':
+            return Chat.query.all()[:-10:-1]
+        try:
+            chat_id = int(name)
+            return Chat.query.filter_by(id=chat_id).all()
+        except ValueError:
+            return Chat.query.filter(Chat.name.like('%' + name + '%')).all()[::-1]
+
+    def get_messages(self, username=""):
+        """
+        Данная функция передаёт сообщения из базы данных
+    
+        :param username:  Имя пользователя
+    
+        :return: Сообщения пользователей
+        """
+        result = []
+        for message in self.messages:
+            if message.type == "usr":
+                if message.author == username:
+                    type_msg = "mine"
+                else:
+                    type_msg = "others"
+            else:
+                type_msg = "sys"
+            result.append({
+                "author": message.author,
+                "message": message.content,
+                "plain_message": message.plain(),
+                "type": type_msg
+            })
+        return result
+
+    def get_commits_tree(self):
+        """
+        Данная функция генерирует дерево коммитов для чата
+
+        :return: Сгенерированное дерево коммитов
+        """
+        tree = self.get_tree_node(self.codes[0])
+        return tree
+
+    def get_tree_node(self, code):
+        NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{id}</div>"
+        node = {
+            "text": {
+                "name": code.id,
+                "title": code.message
+            },
+            "innerHTML": NODE_MARKUP.format(id=code.id)
+        }
+        children = []
+        for child_code in code.children:
+            children.append(self.get_tree_node(child_code))
+        node["children"] = children
+        return node

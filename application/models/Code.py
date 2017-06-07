@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from application import db
+from application import app, db, socketio
+from application.models import Message
 
 
 class Code(db.Model):
     """Модель исходного кода в чате
 
-    :param id: идентификатор
     :param content: содержимое исходного кода
     :param author: автор кода
     :param message: сообщение-описание редакции исходного кода
@@ -32,10 +32,42 @@ class Code(db.Model):
         self.message = message
 
     @staticmethod
-    def get_root_in_chat(chat_id):
-        """Получение родительского кода в чате
-
-        :param chat_id: идентификатор чата, в котором и необходимо проводить поиск
-        :return: объект Code, который не имеет родителей
+    def send(chat_id, text, username, parent=None, cname=u'Начальная версия'):
         """
-        return Code.query.filter_by(chat_link=chat_id, parent_link=None).first()
+        Отправление кода на сервер
+
+        :param chat_id: Номер чата
+
+        :param text: Код
+
+        :param username: Имя пользователя
+
+        :param parent: Место в дереве коммитов
+        
+        :param cname: Комметарий к коду
+
+        :return: Сообщение о коммите и номере кода
+        """
+        code_to_send = Code(text, username, chat_id, parent, cname)
+        db.session.add(code_to_send)
+        db.session.commit()
+        code_id_in_chat = u"undefined"
+        Message.send(chat_id, u"Изменение кода " + code_id_in_chat + u" : '" + unicode(cname) + u"'", 'sys')
+        if app.config['SOCKET_MODE'] == 'True':
+            socketio.emit('commit', room=str(chat_id), broadcast=True)
+        return code_to_send.id
+
+    @staticmethod
+    def get(id):
+        """
+        Функция передаёт код с сервера пользователю
+
+        :param id: идентификатор исходного кода
+
+        :return: Автор и код
+        """
+        code = Code.query.get(id)
+        return {
+            "author": code.author,
+            "code": code.content
+        }

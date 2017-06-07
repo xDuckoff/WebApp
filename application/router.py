@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, session, request, send_from_directory, abort
-from application import app, chat
+from flask import render_template, redirect, session, request, send_from_directory
+from application import app
 from forms import LoginForm, CreateChatForm
 import os
 import cgi
+from application.models import Chat
+from json import dumps
 
 """
 Данный файл содержит основные страницы проекта.
@@ -29,15 +31,14 @@ def translate():
     
     :return: Запрос на сервера Яндекса, для перевода страницы
     """
+    chat_id = int(request.args['chat'])
+    message_id = int(request.args['index'])
+    chat = Chat.get(chat_id)
     try:
-        chat_id = int(request.args['chat'])
-        message_id = int(request.args['index'])
-    except ValueError:
-        abort(400)
-    try:
-        return chat.get_translated_message(chat_id, message_id)
+        message = chat.messages[message_id]
     except IndexError:
         return 'No index', 400
+    return dumps(message.translate())
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -49,7 +50,7 @@ def index():
     зарегистрирован, заголовок чата
     """
     chat_title = request.args.get('search_title_text', '')
-    chats = chat.find_chat(chat_title)
+    chats = Chat.find(chat_title)
     chat_create_form = CreateChatForm()
     login_form = LoginForm()
     if login_form.validate_on_submit():
@@ -84,8 +85,4 @@ def docs_page(filename):
     path = rootdir + '/docs/_build/html/'
     return send_from_directory(path, filename)
 
-
-from application.chat.sockets import init_sockets
-init_sockets()
-
-import application.chat.router
+import application.chat_router

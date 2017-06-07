@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, session, flash
-from application import app
+from flask import render_template, redirect, request, session
+from application import app, socketio
 from json import dumps 
-from application import chat, csrf
+from application import csrf
 from application.forms import CreateChatForm
 from application.handlers import login_required, csrf_required
-from application.models import Chat
+from application.models import Chat, Message, Code
 
 
 @app.route('/add_chat')
@@ -23,7 +23,7 @@ def add_chat():
     except ValueError:
         return dumps({"success": False, "error": "Bad Chat ID"}), 400
     if chat_id not in session['joined_chats']:
-        chat.sys_message(session['login'] + u" присоединился", chat_id)
+        Message.send(chat_id, session['login'] + u" присоединился", 'sys')
         session['joined_chats'].append(chat_id)
         session.modified = True
     return dumps({"success": True, "error": ""})
@@ -39,7 +39,8 @@ def tree():
     :return: Страницу дерева коммитов
     """
     chat_id = int(request.args['chat'])
-    return chat.generate_commits_tree(chat_id)
+    chat = Chat.get(chat_id)
+    return dumps(chat.get_commits_tree())
 
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
@@ -52,10 +53,7 @@ def chat_page(chat_id):
     
     :return: Страница чата
     """
-    if not chat.get_chat_info(chat_id):
-        flash(u'Такого чата не существует!')
-        return redirect('/')
-    chat_info = chat.get_chat_info(chat_id)
+    chat = Chat.get(chat_id)
     if 'login' in session:
         login = session['login']
         in_session = True
@@ -66,7 +64,7 @@ def chat_page(chat_id):
         'chat.html',
         chat_id=chat_id,
         socket_mode=(app.config['SOCKET_MODE'] == 'True'),
-        chat_info=chat_info,
+        chat_info=chat.get_info(),
         login=login,
         in_session=in_session
     )
@@ -109,7 +107,8 @@ def get_messages():
     :return: Принято ли сообщение
     """
     chat_id = int(request.args['chat'])
-    return dumps(chat.get_messages(chat_id, session['login']))
+    chat = Chat.get(chat_id)
+    return dumps(chat.get_messages(session['login']))
 
 
 @app.route('/send_code', methods=['GET', 'POST'])
@@ -125,7 +124,7 @@ def send_code():
     code = request.args['code']
     parent = request.args['parent']
     cname = request.args['cname']
-    code_id = chat.send_code(chat_id, code, session['login'], parent, cname)
+    code_id = Code.send(chat_id, code, session['login'], parent, cname)
     return dumps({"success": True, "error": "", "commit": code_id})
 
 
@@ -139,7 +138,7 @@ def get_code():
     :return: Код
     """
     index = int(request.args['index'])
-    return dumps(chat.get_code(index))
+    return dumps(Code.get(index))
 
 
 @app.route('/get_chat_info', methods=['GET', 'POST'])
@@ -152,7 +151,8 @@ def get_chat_info():
     :return: Информация о чате
     """
     chat_id = int(request.args['chat'])
-    return dumps(chat.get_chat_info(chat_id))
+    chat = Chat.get(chat_id)
+    return dumps(chat.get_info())
 
 
 @app.route('/get_commits', methods=['GET', 'POST'])
@@ -165,7 +165,8 @@ def get_chat_commits():
     :return: Дерево коммитов
     """
     chat_id = int(request.args['chat'])
-    return dumps(chat.generate_tree(chat_id))
+    chat = Chat.get(chat_id)
+    return dumps(chat.get_commits_tree())
 
 
 @app.route('/api/create_chat', methods=['GET', 'POST'])
@@ -182,3 +183,72 @@ def API_create_chat():
     code_type = form.code_type.data
     chat_id = Chat.create(name, code, code_type, "Sublime bot")
     return '/chat/' + str(chat_id)
+
+
+if app.config['SOCKET_MODE'] == 'True':
+    from flask_socketio import join_room, leave_room
+
+    """
+    Данный файл содержит функции и страницы сокетов и чата
+    """
+
+    @socketio.on('message')
+    def handle_message(json):
+        """
+        **Работает только с сокетами**
+        Данная функция принимает сообщения от пользователя
+
+        :param json: json запрос
+
+        :return: Сообщние
+        """
+        chat_id = int(json['room'])
+        try:
+            Message.send(chat_id, json['message'], 'usr', session['login'])
+        except OverflowError:
+            pass
+
+
+    @socketio.on('join')
+    def on_join(room):
+        """
+        **Работает только с сокетами**
+        Данная функция сообщает о присоединение пользователя к чату
+
+        :param room: номер чата
+
+        :return: Системное сообщение о входе пользователя
+        """
+        join_room(room)
+
+
+    @socketio.on('leave')
+    def on_leave(room):
+        """
+        **Работает только с сокетами**
+        Данная функция удаляет человека из чата
+
+        :param room: Номер чата
+        """
+        leave_room(room)
+
+else:
+    @app.route('/send_message', methods=['GET', 'POST'], endpoint='send_message')
+    @login_required
+    @csrf_required
+    def send_message():
+        """
+        **Работает без сокетов**
+        Данная функция отправляет сообщение пользователю
+
+        :return: Отправилось ли сообщение
+        """
+        chat_id = int(request.args['chat'])
+        message = request.args['message']
+        try:
+            Message.send(chat_id, message, 'usr', session['login'])
+        except OverflowError:
+            result = {"success": False, "error": "Length Limit(1, 1000)"}
+        else:
+            result = {"success": True, "error": ""}
+        return dumps(result)

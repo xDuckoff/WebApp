@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from application import db
+
+from application import app, db, socketio
+import re
+import cgi
+from markdown import markdown
 
 
 class Message(db.Model):
     """Модель сообщений в чате
 
-    :param id: идентификатор
     :param content:  исходное содержание сообщения
-    :param content_ru:  содержание сообщения, переведенное на русский
-    :param content_en:  содержание сообщения, переведнное на английский
     :param author:  автор сообщения
-    :param type:  тип сообщения: обычное (`usr`), системное (`sys`)
     :param chat_link:  ссылка на чат, которому принадлежит сообщение
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -23,7 +23,66 @@ class Message(db.Model):
     chat = db.relationship('Chat', backref=db.backref('messages'))
 
     def __init__(self, content, author, chat_link, type_code):
+        content = Message.escape(content)
+        content = markdown(content)
         self.content = content
         self.author = author
         self.chat_link = chat_link
         self.type = type_code
+
+    @staticmethod
+    def send(chat_id, text, type, username=u'Системное сообщение'):
+        """
+        Данная функция добавляет сообщение в базу данных для дальнейшего сохранения
+
+        :param chat_id: Номер чата
+
+        :param text: Содержание сообщения
+
+        :param type: Тип сообщения
+
+        :param username: Имя пользователя
+
+        :return: Объект созданного сообщения
+        """
+        if len(text) > 1000 or len(text) == 0:
+            raise OverflowError
+        message = Message(text, username, chat_id, type)
+        db.session.add(message)
+        db.session.commit()
+        if app.config['SOCKET_MODE'] == 'True':
+            socketio.emit('message',
+                          {'message': message.content, 'plain_message': message.plain(), 'author': username, 'type': type},
+                          room=str(chat_id), broadcast=True)
+        return message
+
+    def translate(self):
+        """
+        Функция для перевода сообщений
+
+        :return: Переведённое сообщение
+        """
+        return {
+            "no": self.content,
+            "ru": self.content_ru,
+            "en": self.content_en
+        }
+
+    def plain(self):
+        """
+        Функция удаляет html-теги из текста
+
+        :return: Текст без html-тегов
+        """
+        text = self.content
+        text = re.sub(r'\<[^>]*>', ' ', text)
+        text = re.sub(r'\s+', ' ', text)
+        return text.strip()
+
+    @staticmethod
+    def escape(text):
+        text = text.replace('```', '`')
+        parts = text.split('`')
+        for i in range(0, len(parts), 2):
+            parts[i] = cgi.escape(parts[i])
+        return '`'.join(parts)

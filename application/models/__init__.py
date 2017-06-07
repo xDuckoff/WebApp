@@ -2,6 +2,6 @@
 """Пакет моделей данных
 """
 
-from Chat import Chat
 from Message import Message
 from Code import Code
+from Chat import Chat

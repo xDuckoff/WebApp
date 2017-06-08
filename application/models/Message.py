@@ -46,7 +46,7 @@ class Message(db.Model):
         db.session.add(message)
         db.session.commit()
         if app.config['SOCKET_MODE'] == 'True':
-            socketio.emit('message', message.json(), room=str(chat_id), broadcast=True)
+            socketio.emit('message', message.get_info(username), room=str(chat_id), broadcast=True)
         return message
 
     def translate(self):
@@ -78,5 +78,12 @@ class Message(db.Model):
             parts[i] = cgi.escape(parts[i])
         return '`'.join(parts)
 
-    def json(self):
-        return {'message': self.content, 'plain_message': self.plain(), 'author': self.author, 'type': self.type}
+    def get_info(self, username):
+        if self.type == "usr":
+            if self.author == username:
+                client_type = "mine"
+            else:
+                client_type = "others"
+        else:
+            client_type = "sys"
+        return {'message': self.content, 'plain_message': self.plain(), 'author': self.author, 'type': client_type}

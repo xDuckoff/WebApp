@@ -77,15 +77,4 @@ class Chat(db.Model):
         :param username:  Имя пользователя
         :return: Сообщения пользователей
         """
-        result = []
-        for message in self.messages:
-            msg = message.json()
-            if message.type == "usr":
-                if message.author == username:
-                    msg['type'] = "mine"
-                else:
-                    msg['type'] = "others"
-            else:
-                msg['type'] = "sys"
-            result.append(msg)
-        return result
+        return [message.get_info(username) for message in self.messages]

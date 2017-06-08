@@ -93,17 +93,30 @@ API
    .. automodule:: application.models.Message
       :members:
 
-**application.router module**
+**application.router**
 
 .. automodule:: application.router
    :members:
    :undoc-members:
    :show-inheritance:
 
+**application.chat_router**
+
+.. automodule:: application.chat_router
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 **application.forms**
 
 .. automodule:: application.forms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+**application.handlers**
+
+.. automodule:: application.handlers
    :members:
    :undoc-members:
    :show-inheritance:

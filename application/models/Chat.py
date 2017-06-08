@@ -16,6 +16,11 @@ class Chat(db.Model):
     code_type = db.Column(db.String(256))
 
     def __init__(self, name, code_type):
+        """Создание объекта Chat
+
+        :param name: Заголовок чата
+        :param code_type: Язык программирования, используемый в чате
+        """
         self.name = name
         self.code_type = code_type
 

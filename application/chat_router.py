@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+"""Web-Страницы чата"""
+
 from flask import render_template, redirect, request, session
 from application import app, socketio
 from json import dumps 

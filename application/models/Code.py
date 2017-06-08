@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from application import app, db, socketio
 from application.models import Message
 
@@ -24,7 +25,14 @@ class Code(db.Model):
     children = db.relationship('Code')
 
     def __init__(self, content, author, chat_link, parent_link, message=u'Начальная версия'):
+        """Создание объекта Code
 
+        :param content: Код
+        :param author: Автор кода
+        :param chat_link: Id чата, в котором находится код
+        :param parent_link: Id "родителя" кода
+        :param message: Комментарий к коду
+        """
         self.content = content
         self.author = author
         self.chat_link = chat_link
@@ -66,6 +74,11 @@ class Code(db.Model):
 
     @staticmethod
     def get_root_in_chat(chat_id):
+        """Получение стартового коммита в чате
+
+        :param chat_id: Id чата
+        :return: Объект стартового коммита
+        """
         return Code.query.filter_by(chat_link=chat_id, parent_link=None).first()
 
     @staticmethod
@@ -78,6 +91,10 @@ class Code(db.Model):
         return tree
 
     def get_tree_node(self):
+        """Генерация вершины в дереве коммитов
+
+        :return: Вершина в дереве коммитов
+        """
         NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{id}</div>"
         node = {
             "text": {

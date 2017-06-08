@@ -22,13 +22,20 @@ class Message(db.Model):
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages'))
 
-    def __init__(self, content, author, chat_link, type_code):
+    def __init__(self, content, author, chat_link, type):
+        """Создание объекта Message
+
+        :param content: Текст сообщения
+        :param author: Автор сообщения
+        :param chat_link: Id чата, в котором находится сообщение
+        :param type: Тип сообщения(системное/пользовательское)
+        """
         content = Message.escape(content)
         content = markdown(content)
         self.content = content
         self.author = author
         self.chat_link = chat_link
-        self.type = type_code
+        self.type = type
 
     @staticmethod
     def send(chat_id, text, type, username=u'Системное сообщение'):
@@ -72,6 +79,11 @@ class Message(db.Model):
 
     @staticmethod
     def escape(text):
+        """Экранирование текста
+
+        :param text: Исходный текст
+        :return: Экранированный текст 
+        """
         text = text.replace('```', '`')
         parts = text.split('`')
         for i in range(0, len(parts), 2):
@@ -79,6 +91,11 @@ class Message(db.Model):
         return '`'.join(parts)
 
     def get_info(self, username):
+        """Получение информации о сообщении
+        
+        :param username: Имя пользователя
+        :return: Информация о сообщении
+        """
         if self.type == "usr":
             if self.author == username:
                 client_type = "mine"

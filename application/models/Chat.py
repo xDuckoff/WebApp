@@ -16,17 +16,12 @@ class Chat(db.Model):
     code_type = db.Column(db.String(256))
 
     def __init__(self, name, code_type):
-        """Создание объекта Chat
-
-        :param name: Заголовок чата
-        :param code_type: Язык программирования, используемый в чате
-        """
         self.name = name
         self.code_type = code_type
 
     @staticmethod
     def create(chat_name, code, code_type, username):
-        """Данная функция создаёт чат
+        """Создаёт чат
 
         :param chat_name: Имя чата
         :param code: Код чата
@@ -43,7 +38,7 @@ class Chat(db.Model):
 
     @staticmethod
     def get(id):
-        """Функция возвращает чат по id
+        """Возвращает чат по id
 
         :param id: Номер искомого чата
         :return: Объект чата
@@ -51,7 +46,7 @@ class Chat(db.Model):
         return Chat.query.get(id)
 
     def get_info(self):
-        """Данная функция передаёт пользователю информацию о чате
+        """Возвращает форматированный чат в виде словаря
 
         :return: Имя чата и язык программирования чата
         """
@@ -63,10 +58,11 @@ class Chat(db.Model):
 
     @staticmethod
     def find(name):
-        """Функция нахождения чата
+        """Нахождение чатов по названию или по идентификатору,\
+        если ``name`` является числом
 
         :param name: Имя чата
-        :return: Все чаты, в название которых содержится имя чата
+        :return: Все чаты, в названии которых содержится имя чата
         """
         if name == '':
             return Chat.query.all()[:-10:-1]
@@ -77,7 +73,7 @@ class Chat(db.Model):
             return Chat.query.filter(Chat.name.like('%' + name + '%')).all()[::-1]
 
     def get_messages(self, username=""):
-        """Данная функция передаёт сообщения из базы данных
+        """Получение всех сообщений в чате в форматированном виде
 
         :param username:  Имя пользователя
         :return: Сообщения пользователей

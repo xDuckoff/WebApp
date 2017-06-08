@@ -12,6 +12,7 @@ class Message(db.Model):
     :param content:  исходное содержание сообщения
     :param author:  автор сообщения
     :param chat_link:  ссылка на чат, которому принадлежит сообщение
+    :param type: тип сообщения: системное или пользовательское
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
@@ -23,13 +24,6 @@ class Message(db.Model):
     chat = db.relationship('Chat', backref=db.backref('messages'))
 
     def __init__(self, content, author, chat_link, type):
-        """Создание объекта Message
-
-        :param content: Текст сообщения
-        :param author: Автор сообщения
-        :param chat_link: Id чата, в котором находится сообщение
-        :param type: Тип сообщения(системное/пользовательское)
-        """
         content = Message.escape(content)
         content = markdown(content)
         self.content = content
@@ -39,7 +33,7 @@ class Message(db.Model):
 
     @staticmethod
     def send(chat_id, text, type, username=u'Системное сообщение'):
-        """Данная функция добавляет сообщение в базу данных для дальнейшего сохранения
+        """Отправляет сообщение в базу для сохранения
 
         :param chat_id: Номер чата
         :param text: Содержание сообщения
@@ -82,7 +76,7 @@ class Message(db.Model):
         """Экранирование текста
 
         :param text: Исходный текст
-        :return: Экранированный текст 
+        :return: Экранированный текст
         """
         text = text.replace('```', '`')
         parts = text.split('`')
@@ -91,8 +85,8 @@ class Message(db.Model):
         return '`'.join(parts)
 
     def get_info(self, username):
-        """Получение информации о сообщении
-        
+        """Получение форматированного сообщения в виде словаря
+
         :param username: Имя пользователя
         :return: Информация о сообщении
         """
@@ -103,4 +97,9 @@ class Message(db.Model):
                 client_type = "others"
         else:
             client_type = "sys"
-        return {'message': self.content, 'plain_message': self.plain(), 'author': self.author, 'type': client_type}
+        return {
+            'message': self.content,
+            'plain_message': self.plain(),
+            'author': self.author,
+            'type': client_type
+        }

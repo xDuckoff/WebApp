@@ -25,14 +25,6 @@ class Code(db.Model):
     children = db.relationship('Code')
 
     def __init__(self, content, author, chat_link, parent_link, message=u'Начальная версия'):
-        """Создание объекта Code
-
-        :param content: Код
-        :param author: Автор кода
-        :param chat_link: Id чата, в котором находится код
-        :param parent_link: Id "родителя" кода
-        :param message: Комментарий к коду
-        """
         self.content = content
         self.author = author
         self.chat_link = chat_link
@@ -61,7 +53,7 @@ class Code(db.Model):
 
     @staticmethod
     def get(id):
-        """Функция передаёт код с сервера пользователю
+        """Возвращает форматированный код по ``id`` в виде словаря
 
         :param id: идентификатор исходного кода
         :return: Автор и код
@@ -83,7 +75,7 @@ class Code(db.Model):
 
     @staticmethod
     def get_commits_tree(chat_id):
-        """Данная функция генерирует дерево коммитов для чата
+        """Получение сгенериррованного дерева коммитов для чата
 
         :return: Сгенерированное дерево коммитов
         """
@@ -91,7 +83,7 @@ class Code(db.Model):
         return tree
 
     def get_tree_node(self):
-        """Генерация вершины в дереве коммитов
+        """Получение вершины в дереве коммитов, форматированной для TreantJS
 
         :return: Вершина в дереве коммитов
         """
@@ -103,8 +95,6 @@ class Code(db.Model):
             },
             "innerHTML": NODE_MARKUP.format(id=self.id)
         }
-        children = []
-        for child_code in self.children:
-            children.append(child_code.get_tree_node())
+        children = [child.get_tree_node() for child in self.children]
         node["children"] = children
         return node

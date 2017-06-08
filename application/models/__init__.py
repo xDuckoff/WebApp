@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""Пакет моделей данных
-"""
 
-from Chat import Chat
+"""Пакет моделей данных"""
+
 from Message import Message
 from Code import Code
+from Chat import Chat

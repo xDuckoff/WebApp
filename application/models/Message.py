@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-from application import db
+
+from application import app, db, socketio
+import re
+import cgi
+from markdown import markdown
 
 
 class Message(db.Model):
     """Модель сообщений в чате
 
-    :param id: идентификатор
     :param content:  исходное содержание сообщения
-    :param content_ru:  содержание сообщения, переведенное на русский
-    :param content_en:  содержание сообщения, переведнное на английский
     :param author:  автор сообщения
-    :param type:  тип сообщения: обычное (`usr`), системное (`sys`)
     :param chat_link:  ссылка на чат, которому принадлежит сообщение
+    :param type: тип сообщения: системное или пользовательское
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
@@ -22,8 +23,83 @@ class Message(db.Model):
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages'))
 
-    def __init__(self, content, author, chat_link, type_code):
+    def __init__(self, content, author, chat_link, type):
+        content = Message.escape(content)
+        content = markdown(content)
         self.content = content
         self.author = author
         self.chat_link = chat_link
-        self.type = type_code
+        self.type = type
+
+    @staticmethod
+    def send(chat_id, text, type, username=u'Системное сообщение'):
+        """Отправляет сообщение в базу для сохранения
+
+        :param chat_id: Номер чата
+        :param text: Содержание сообщения
+        :param type: Тип сообщения
+        :param username: Имя пользователя
+        :return: Объект созданного сообщения
+        """
+        if len(text) > 1000 or len(text) == 0:
+            raise OverflowError
+        message = Message(text, username, chat_id, type)
+        db.session.add(message)
+        db.session.commit()
+        if app.config['SOCKET_MODE'] == 'True':
+            socketio.emit('message', message.get_info(username), room=str(chat_id), broadcast=True)
+        return message
+
+    def translate(self):
+        """Функция для перевода сообщений
+
+        :return: Переведённое сообщение
+        """
+        return {
+            "no": self.content,
+            "ru": self.content_ru,
+            "en": self.content_en
+        }
+
+    def plain(self):
+        """Функция удаляет html-теги из текста
+
+        :return: Текст без html-тегов
+        """
+        text = self.content
+        text = re.sub(r'\<[^>]*>', ' ', text)
+        text = re.sub(r'\s+', ' ', text)
+        return text.strip()
+
+    @staticmethod
+    def escape(text):
+        """Экранирование текста
+
+        :param text: Исходный текст
+        :return: Экранированный текст
+        """
+        text = text.replace('```', '`')
+        parts = text.split('`')
+        for i in range(0, len(parts), 2):
+            parts[i] = cgi.escape(parts[i])
+        return '`'.join(parts)
+
+    def get_info(self, username):
+        """Получение форматированного сообщения в виде словаря
+
+        :param username: Имя пользователя
+        :return: Информация о сообщении
+        """
+        if self.type == "usr":
+            if self.author == username:
+                client_type = "mine"
+            else:
+                client_type = "others"
+        else:
+            client_type = "sys"
+        return {
+            'message': self.content,
+            'plain_message': self.plain(),
+            'author': self.author,
+            'type': client_type
+        }

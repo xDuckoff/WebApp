@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
+"""Конфигурация проекта"""
+
 import os
-
-"""
-Данный файл содержит базовые настройки проекта.
-"""
-
 
 CSRF_ENABLED = True
 SECRET_KEY = '1+$VEPUx@pTtn@s$$$$$woRt'

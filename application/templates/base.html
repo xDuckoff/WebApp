@@ -43,11 +43,7 @@
                     {% endif %}
                 </ul>
                 {% if in_session %}
-                <p class="navbar-text navbar-right"> Вы вошли как
-                    {% autoescape false %}
-                    <strong>{{ login }}</strong>
-                    {% endautoescape %}
-                </p>
+                <p class="navbar-text navbar-right"> Вы вошли как <strong>{{ login|safe }}</strong></p>
                 {% endif %}
             </div>
         </nav>

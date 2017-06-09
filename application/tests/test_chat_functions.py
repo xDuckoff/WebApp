@@ -16,6 +16,8 @@ CODE = 'from test import test'
 CODE_TYPE = "Test++"
 PARENT_CODE_ID = None
 COMMIT_MESSAGE = "Tester commit"
+START_COMMIT_MESSAGE = u'Начальная версия'
+NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{id}</div>"
 
 
 class BaseChatFunctions(BaseTestModel):
@@ -57,7 +59,17 @@ class BaseChatFunctions(BaseTestModel):
         self.assertEquals(code.content, CHAT_CODE)
         self.assertEquals(code.chat_link, self.chat_id)
         self.assertEquals(code.parent_link, None)
-        self.assertEquals(code.message, u'Начальная версия')
+        self.assertEquals(code.message, START_COMMIT_MESSAGE)
+
+    def test_get_commits_tree(self):
+        self.assertEqual(Code.get_commits_tree(self.chat_id), {
+            'text': {
+                'name': 1,
+                'title': START_COMMIT_MESSAGE
+            },
+            'children': [],
+            'innerHTML': NODE_MARKUP.format(id=1)
+        })
 
 
 class BaseChatFunctionsWithSockets(BaseChatFunctions):

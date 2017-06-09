@@ -51,6 +51,14 @@ class BaseChatFunctions(BaseTestModel):
         self.assertGreaterEqual(len(Chat.find(str(self.chat_id))), 1)
         self.assertGreaterEqual(len(Chat.find()), 1)
 
+    def test_get_root_in_chat(self):
+        code = Code.get_root_in_chat(self.chat_id)
+        self.assertEquals(code.author, USERNAME)
+        self.assertEquals(code.content, CHAT_CODE)
+        self.assertEquals(code.chat_link, self.chat_id)
+        self.assertEquals(code.parent_link, None)
+        self.assertEquals(code.message, u'Начальная версия')
+
 
 class BaseChatFunctionsWithSockets(BaseChatFunctions):
 

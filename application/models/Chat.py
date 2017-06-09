@@ -57,7 +57,7 @@ class Chat(db.Model):
         }
 
     @staticmethod
-    def find(name):
+    def find(name=''):
         """Нахождение чатов по названию или по идентификатору,\
         если ``name`` является числом
 

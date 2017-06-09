@@ -46,6 +46,11 @@ class BaseChatFunctions(BaseTestModel):
         self.assertEquals(sent_code.get('author'), USERNAME)
         self.assertEquals(sent_code.get('code'), CODE)
 
+    def test_find_chat(self):
+        self.assertGreaterEqual(len(Chat.find(CHAT_NAME)), 1)
+        self.assertGreaterEqual(len(Chat.find(str(self.chat_id))), 1)
+        self.assertGreaterEqual(len(Chat.find()), 1)
+
 
 class BaseChatFunctionsWithSockets(BaseChatFunctions):
 

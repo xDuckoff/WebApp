@@ -2,26 +2,19 @@
 
 """Тесты роутов"""
 
-import unittest
-import os
-from application import app, db
+from base_test_model import BaseTestModel
+from application import app
 from application.models import Chat
 
 
-class TestPages(unittest.TestCase):
+class TestPages(BaseTestModel):
     MAIN_PAGE_URL = "/"
     CHAT_PAGE_URL = "/chat/{chat_id}"
     LOGOUT_PAGE_URL = "/logout"
 
     def setUp(self):
-        app.config['CSRF_ENABLED'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['TEST_DATABASE_URL']
-        app.config['TEST_MODE'] = True
-        db.create_all()
+        BaseTestModel.setUp(self)
         self.app = app.test_client()
-
-    def tearDown(self):
-        db.drop_all()
 
     def test_should_logout_page_be_exist(self):
         response = self.app.get(TestPages.LOGOUT_PAGE_URL)

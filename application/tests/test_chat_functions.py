@@ -2,9 +2,8 @@
 
 """Тесты основных функций чата"""
 
-import unittest
-import os
-from application import app, db
+from base_test_model import BaseTestModel
+from application import app
 from application.models import Chat, Code, Message
 
 USERNAME = 'Bot'
@@ -19,18 +18,12 @@ PARENT_CODE_ID = None
 COMMIT_MESSAGE = "Tester commit"
 
 
-class BaseChatFunctions(unittest.TestCase):
+class BaseChatFunctions(BaseTestModel):
 
     def setUp(self):
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['TEST_DATABASE_URL']
+        BaseTestModel.setUp(self)
         app.config['SOCKET_MODE'] = 'False'
-        app.config['TEST_MODE'] = True
-        db.create_all()
         self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
-
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
 
     def test_create_chat(self):
         chat = Chat.get(self.chat_id)
@@ -57,8 +50,6 @@ class BaseChatFunctions(unittest.TestCase):
 class BaseChatFunctionsWithSockets(BaseChatFunctions):
 
     def setUp(self):
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['TEST_DATABASE_URL']
+        BaseTestModel.setUp(self)
         app.config['SOCKET_MODE'] = 'True'
-        app.config['TEST_MODE'] = True
-        db.create_all()
         self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)

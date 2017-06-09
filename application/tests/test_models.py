@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Тесты моделей данных
-"""
+"""Тесты моделей данных"""
 
 from base_test_model import BaseTestModel
 from application import db

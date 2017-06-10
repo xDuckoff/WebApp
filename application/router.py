@@ -2,13 +2,14 @@
 
 """Основные веб-страницы проекта"""
 
-from flask import render_template, redirect, session, request, send_from_directory
-from application import app
-from forms import LoginForm, CreateChatForm
 import os
 import cgi
-from application.models import Chat
 from json import dumps
+from flask import render_template, redirect, session, \
+                  request, send_from_directory
+from application import app
+from forms import LoginForm, CreateChatForm
+from application.models import Chat
 
 
 @app.route('/logout')
@@ -41,8 +42,8 @@ def translate():
 def index():
     """Данная функция генерирует главную страницу для пользователя
     
-    :return: Главная страница с чатами пользователя, является ли человек в сессии, формой входа(Если человек не \
-    зарегистрирован, заголовок чата
+    :return: Главная страница с чатами пользователя, является ли человек \
+    в сессии, формой входа(Если человек не зарегистрирован, заголовок чата
     """
     chat_title = request.args.get('search_title_text', '')
     chats = Chat.find(chat_title)
@@ -55,16 +56,16 @@ def index():
         login = session['login']
     else:
         login = ""
-    allowed_ex = map(lambda x: '.' + x, app.config["ALLOWED_EXTENSIONS"])
-    return render_template('index.html', 
-        chats=chats, 
-        in_session=bool(login), 
-        login_form=login_form,
-        chat_create_form=chat_create_form,
-        search_title_text=chat_title, 
-        login=login,
-        allowed_ex=",".join(allowed_ex)
-        )
+    allowed_ex = ['.' + x for x in app.config["ALLOWED_EXTENSIONS"]]
+    return render_template('index.html', \
+                           chats=chats, \
+                           in_session=bool(login), \
+                           login_form=login_form, \
+                           chat_create_form=chat_create_form, \
+                           search_title_text=chat_title, \
+                           login=login, \
+                           allowed_ex=",".join(allowed_ex) \
+                          )
 
 @app.route('/documentation/<path:filename>')
 def docs_page(filename):

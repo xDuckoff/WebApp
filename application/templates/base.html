@@ -2,14 +2,11 @@
     <head>
         <title>{% block title %}{% endblock %}</title>
         <meta charset = "UTF-8">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-        <script src="{{ url_for('static', filename='js/jquery.min.js') }}" type="text/javascript"></script>
-        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" type="text/javascript"></script>
         <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_flower_only.png') }}" type="image/x-icon">
         <link rel="icon" href="{{ url_for('static', filename='img/logo_flower_only.png') }}" type="image/x-icon">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
         {% block includes %}{% endblock %}
-        {% block scripts %}{% endblock %}
     </head>
     <body>
         <nav class="navbar navbar-inverse navbar-static-top">
@@ -41,12 +38,15 @@
                         </a>
                     </li>
                     {% endif %}
-                 </ul>
-				 {% if in_session %}
+                </ul>
+                {% if in_session %}
                     <p class="navbar-text navbar-right"> Вы вошли как <strong>{{login}}</strong></p>
                 {% endif %}
             </div>
         </nav>
         {% block content %}{% endblock %}
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}" type="text/javascript"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" type="text/javascript"></script>
+        {% block scripts %}{% endblock %}
     </body>
 </html>

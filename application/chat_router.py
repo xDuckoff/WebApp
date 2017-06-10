@@ -4,7 +4,7 @@
 
 from flask import render_template, redirect, request, session
 from application import app, socketio
-from json import dumps 
+from json import dumps
 from application import csrf
 from application.forms import CreateChatForm
 from application.handlers import login_required, csrf_required
@@ -16,7 +16,7 @@ from application.models import Chat, Message, Code
 @csrf_required
 def add_chat():
     """Данная функция добавляет в сессию пользователя номер чата
-    
+
     :return: Добавлен ли пользователь в чат
     """
     try:
@@ -35,7 +35,7 @@ def add_chat():
 @csrf_required
 def tree():
     """Данная функция создаёт дерево коммитов чата
-    
+
     :return: Страницу дерева коммитов
     """
     chat_id = int(request.args['chat'])

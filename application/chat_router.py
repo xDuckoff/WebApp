@@ -83,14 +83,13 @@ def create_chat():
     else:
         file_with_code = form.file.data
         if file_with_code and '.' in file_with_code.filename and \
-           file_with_code.filename.rsplit('.', 1)[1].lower() in \
-           app.config['ALLOWED_EXTENSIONS']:
+                file_with_code.filename.rsplit('.', 1)[1].lower() \
+                in app.config['ALLOWED_EXTENSIONS']:
             code = file_with_code.read()
         else:
             return redirect('/')
     code_type = form.code_type.data
-    if code_type not in ["C", "C#", "C++", "CSS", "HTML", \
-                         "Java", "JavaScript", "Python"]:
+    if code_type not in ["C", "C#", "C++", "CSS", "HTML", "Java", "JavaScript", "Python"]:
         return redirect('/')
     chat_id = Chat.create(name, code, code_type, session['login'])
     return redirect('/chat/' + str(chat_id))
@@ -174,7 +173,7 @@ if app.config['SOCKET_MODE'] == 'True':
         """Данная функция принимает сообщения от пользователя через сокеты
 
         :param json: json запрос
-        :return: Сообщние
+        :return: Сообщение
         """
         chat_id = int(json['room'])
         try:
@@ -202,8 +201,7 @@ if app.config['SOCKET_MODE'] == 'True':
         leave_room(room)
 
 else:
-    @app.route('/send_message', methods=['GET', 'POST'], \
-              endpoint='send_message')
+    @app.route('/send_message', methods=['GET', 'POST'], endpoint='send_message')
     @login_required
     @csrf_required
     def send_message():

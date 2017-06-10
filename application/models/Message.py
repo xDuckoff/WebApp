@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from application import app, db, socketio
 import re
 import cgi
+from application import app, db, socketio
 from markdown import markdown
 
 
@@ -41,14 +41,13 @@ class Message(db.Model):
         :param username: Имя пользователя
         :return: Объект созданного сообщения
         """
-        if len(text) > 1000 or len(text) == 0:
+        if len(text) > 1000 or not text:
             raise OverflowError
         message = Message(text, username, chat_id, type)
         db.session.add(message)
         db.session.commit()
         if app.config['SOCKET_MODE'] == 'True':
-            socketio.emit('message', message.get_info(username), \
-                          room=str(chat_id), broadcast=True)
+            socketio.emit('message', message.get_info(username), room=str(chat_id), broadcast=True)
         return message
 
     def translate(self):

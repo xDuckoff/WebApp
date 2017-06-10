@@ -5,8 +5,7 @@
 import os
 import cgi
 from json import dumps
-from flask import render_template, redirect, session, \
-                  request, send_from_directory
+from flask import render_template, redirect, session, request, send_from_directory
 from application import app
 from forms import LoginForm, CreateChatForm
 from application.models import Chat

@@ -100,10 +100,10 @@ def send_code():
 
     :return: Отправлен ли код
     """
-    chat_id = request.args['chat']
-    code = request.args['code']
-    parent = request.args['parent']
-    cname = request.args['cname']
+    chat_id = request.args.get('chat', '')
+    code = request.args.get('code', '')
+    parent = request.args.get('parent', '')
+    cname = request.args.get('cname', '')
     if not Chat.was_created(chat_id):
         return dumps({"success": False, "error": "Bad chat"}), 400
     chat = Chat.get(chat_id)

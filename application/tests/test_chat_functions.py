@@ -78,6 +78,12 @@ class BaseChatFunctions(BaseTestModel):
         self.assertTrue(chat.has_message(str(message_id)))
         self.assertFalse(chat.has_message(str(message_id + 1)))
 
+    def test_chat_has_code(self):
+        chat = Chat.get(self.chat_id)
+        code_id = Code.send(self.chat_id, CODE, USERNAME, PARENT_CODE_ID, COMMIT_MESSAGE) - 1
+        self.assertTrue(chat.has_message(str(code_id)))
+        self.assertFalse(chat.has_message(str(code_id + 1)))
+
 
 class BaseChatFunctionsWithSockets(BaseChatFunctions):
 

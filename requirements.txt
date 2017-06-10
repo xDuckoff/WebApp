@@ -12,3 +12,4 @@ psycopg2==2.7.1
 gunicorn==19.7.1
 requests==2.13.0
 Sphinx==1.5.5
+mock==2.0.0

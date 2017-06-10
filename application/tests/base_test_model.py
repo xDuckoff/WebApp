@@ -11,7 +11,6 @@ class BaseTestModel(unittest.TestCase):
 
     def setUp(self):
         app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['TEST_DATABASE_URL']
-        app.config['TEST_MODE'] = True
         db.create_all()
 
     def tearDown(self):

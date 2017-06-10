@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Тесты форм"""
+"""Тесты сообщений"""
 
 from base_test_model import BaseTestModel
 from application.models import Message, Chat

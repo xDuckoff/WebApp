@@ -5,7 +5,7 @@ from flask import session
 from application.models import Message
 
 
-class User:
+class User(object):
     """Модель пользователя
     """
 

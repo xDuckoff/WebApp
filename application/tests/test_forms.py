@@ -3,7 +3,7 @@
 """Тесты форм"""
 
 from base_test_model import BaseTestModel
-from application.forms import LoginForm, CreateChatForm
+from application.forms import LoginForm, CreateChatForm, FindChatForm
 from wtforms import StringField, FileField
 
 
@@ -29,3 +29,12 @@ class TestCreateChatForm(BaseTestModel):
         self.assertIs(CreateChatForm.code_type.field_class, StringField)
         self.assertIs(CreateChatForm.file.field_class, FileField)
         self.assertIs(CreateChatForm.code.field_class, StringField)
+
+
+class TestFindChatForm(BaseTestModel):
+
+    def test_available_find_chat_form(self):
+        self.assertTrue(hasattr(FindChatForm, "chat_title"))
+
+    def test_type_find_chat_form(self):
+        self.assertIs(FindChatForm.chat_title.field_class, StringField)

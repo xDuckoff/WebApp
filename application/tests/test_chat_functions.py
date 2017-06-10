@@ -68,6 +68,16 @@ class BaseChatFunctions(BaseTestModel):
         self.assertEqual(tree.get('children'), [])
         self.assertEqual(tree.get('innerHTML'), NODE_MARKUP.format(id=1))
 
+    def test_was_chat_created(self):
+        self.assertTrue(Chat.was_created(str(self.chat_id)))
+        self.assertFalse(Chat.was_created(str(self.chat_id + 1)))
+
+    def test_chat_has_message(self):
+        chat = Chat.get(self.chat_id)
+        message_id = Message.send(self.chat_id, MESSAGE, 'usr', USERNAME).id - 1
+        self.assertTrue(chat.has_message(str(message_id)))
+        self.assertFalse(chat.has_message(str(message_id + 1)))
+
 
 class BaseChatFunctionsWithSockets(BaseChatFunctions):
 

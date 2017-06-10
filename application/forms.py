@@ -18,3 +18,8 @@ class CreateChatForm(FlaskForm):
     code_type = StringField('codetype', validators=[DataRequired()])
     file = FileField('file')
     code = StringField('code')
+
+
+class FindChatForm(FlaskForm):
+    """Поиск чата"""
+    chat_title = StringField('chat_title', default='')

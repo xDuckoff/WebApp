@@ -34,13 +34,13 @@ def tree():
     
     :return: Страницу дерева коммитов
     """
-    chat_id = request.args('chat', '')
+    chat_id = request.args.get('chat', '')
     if not Chat.was_created(chat_id):
         return 'Bad chat', 400
     return dumps(Code.get_commits_tree(int(chat_id)))
 
 
-@app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
+@app.route('/chat/<chat_id>', methods=['GET', 'POST'])
 @login_required
 def chat_page(chat_id):
     """Данная функция возвращает пользователю страницу чата по номеру
@@ -50,7 +50,7 @@ def chat_page(chat_id):
     """
     if not Chat.was_created(chat_id):
         return redirect('/')
-    chat = Chat.get(chat_id)
+    chat = Chat.get(int(chat_id))
     return render_template('chat.html',
                            chat_id=chat.id,
                            socket_mode=(app.config['SOCKET_MODE'] == 'True'),
@@ -100,11 +100,15 @@ def send_code():
 
     :return: Отправлен ли код
     """
-    chat_id = int(request.args['chat'])
+    chat_id = request.args['chat']
     code = request.args['code']
     parent = request.args['parent']
     cname = request.args['cname']
-    code_id = Code.send(chat_id, code, session['login'], parent, cname)
+    if not Chat.was_created(chat_id):
+        return dumps({"success": False, "error": "Bad chat"}), 400
+    chat = Chat.get(chat_id)
+    # FIXME #16 Is Parent Created
+    code_id = Code.send(chat_id, code, User.get_login(), parent, cname)
     return dumps({"success": True, "error": "", "commit": code_id})
 
 
@@ -116,7 +120,8 @@ def get_code():
 
     :return: Код
     """
-    index = int(request.args['index'])
+    # FIXME #16 local id
+    index = int(request.args.get('index', ''))
     return dumps(Code.get(index))
 
 
@@ -128,18 +133,21 @@ def get_chat_info():
 
     :return: Информация о чате
     """
-    chat_id = int(request.args['chat'])
+    chat_id = request.args.get('chat', '')
+    if not Chat.was_created(chat_id):
+        return 'Bad chat', 400
     chat = Chat.get(chat_id)
     return dumps(chat.get_info())
 
 
 @app.route('/api/create_chat', methods=['GET', 'POST'])
 @csrf.exempt
-def API_create_chat():
+def api_create_chat():
     """Данная функция создаёт чат по параметрам, используется для api
 
     :return: Адрес новой страницы чата
     """
+    # FIXME
     form = CreateChatForm()
     name = form.name.data
     code = form.code.data
@@ -159,11 +167,14 @@ if app.config['SOCKET_MODE'] == 'True':
         :param json: json запрос
         :return: Сообщние
         """
-        chat_id = int(json['room'])
+
+        chat_id = json.get('room', '')
+        if not Chat.was_created(chat_id):
+            return
         try:
-            Message.send(chat_id, json['message'], 'usr', session['login'])
+            Message.send(chat_id, json.get('message', ''), 'usr', User.get_login())
         except OverflowError:
-            pass
+            return
 
 
     @socketio.on('join')
@@ -185,7 +196,7 @@ if app.config['SOCKET_MODE'] == 'True':
         leave_room(room)
 
 else:
-    @app.route('/send_message', methods=['GET', 'POST'], endpoint='send_message')
+    @app.route('/send_message', methods=['GET', 'POST'])
     @login_required
     @csrf_required
     def send_message():
@@ -193,12 +204,13 @@ else:
 
         :return: Отправилось ли сообщение
         """
-        chat_id = int(request.args['chat'])
-        message = request.args['message']
+        chat_id = request.args.get('chat', '')
+        message = request.args.get('message', '')
+        if not Chat.was_created(chat_id):
+            return dumps({"success": False, "error": "Bad chat"}), 400
         try:
             Message.send(chat_id, message, 'usr', session['login'])
         except OverflowError:
-            result = {"success": False, "error": "Length Limit(1, 1000)"}
+            return dumps({"success": False, "error": "Length Limit(1, 1000)"}), 400
         else:
-            result = {"success": True, "error": ""}
-        return dumps(result)
+            return dumps({"success": True, "error": ""})

@@ -86,3 +86,6 @@ class Chat(db.Model):
 
     def has_message(self, message_id):
         return message_id.isdigit() and len(self.messages) > int(message_id)
+
+    def has_code(self, code_id):
+        return code_id.isdigit() and len(self.codes) > int(code_id)

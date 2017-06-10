@@ -167,7 +167,6 @@ if app.config['SOCKET_MODE'] == 'True':
         :param json: json запрос
         :return: Сообщние
         """
-
         chat_id = json.get('room', '')
         if not Chat.was_created(chat_id):
             return

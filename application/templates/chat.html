@@ -270,6 +270,8 @@
         });
         {% if not socket_mode %}
         $("#send-btn").click(function() {
+            if ($("#message-input").val() == '')
+                return;
             $.ajax({
                 url: "/send_message",
                 data: {

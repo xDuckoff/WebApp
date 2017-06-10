@@ -23,11 +23,8 @@ class TestMessage(BaseTestModel):
         self.message = Message.send(chat_id, MESSAGE, 'usr', USERNAME)
 
     def test_translate(self):
-        self.assertEqual(self.message.translate(), {
-            "no": CORRECT_MESSAGE,
-            "ru": None,  # FIXME
-            "en": None  # FIXME
-        })
+        translated_message = self.message.translate()
+        self.assertEqual(translated_message.get('no'), CORRECT_MESSAGE)
 
     def test_plain(self):
         self.assertEqual(self.message.plain(), PLAIN_MESSAGE)
@@ -36,9 +33,8 @@ class TestMessage(BaseTestModel):
         self.assertEqual(Message.escape(self.message.content), MESSAGE_ESCAPE)
 
     def test_get_info(self):
-        self.assertEqual(self.message.get_info(USERNAME), {
-            'message': CORRECT_MESSAGE,
-            'plain_message': PLAIN_MESSAGE,
-            'author': USERNAME,
-            'type': 'mine'
-        })
+        message_info = self.message.get_info(USERNAME)
+        self.assertEqual(message_info.get('message'), CORRECT_MESSAGE)
+        self.assertEqual(message_info.get('plain_message'), PLAIN_MESSAGE)
+        self.assertEqual(message_info.get('author'), USERNAME)
+        self.assertEqual(message_info.get('type'), 'mine')

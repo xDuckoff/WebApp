@@ -62,14 +62,11 @@ class BaseChatFunctions(BaseTestModel):
         self.assertEquals(code.message, START_COMMIT_MESSAGE)
 
     def test_get_commits_tree(self):
-        self.assertEqual(Code.get_commits_tree(self.chat_id), {
-            'text': {
-                'name': 1,
-                'title': START_COMMIT_MESSAGE
-            },
-            'children': [],
-            'innerHTML': NODE_MARKUP.format(id=1)
-        })
+        tree = Code.get_commits_tree(self.chat_id)
+        self.assertEqual(tree.get('text').get('name'), 1)
+        self.assertEqual(tree.get('text').get('title'), START_COMMIT_MESSAGE)
+        self.assertEqual(tree.get('children'), [])
+        self.assertEqual(tree.get('innerHTML'), NODE_MARKUP.format(id=1))
 
 
 class BaseChatFunctionsWithSockets(BaseChatFunctions):

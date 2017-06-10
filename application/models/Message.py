@@ -47,7 +47,8 @@ class Message(db.Model):
         db.session.add(message)
         db.session.commit()
         if app.config['SOCKET_MODE'] == 'True':
-            socketio.emit('message', message.get_info(username), room=str(chat_id), broadcast=True)
+            socketio.emit('message', message.get_info(username), \
+                          room=str(chat_id), broadcast=True)
         return message
 
     def translate(self):

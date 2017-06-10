@@ -15,17 +15,17 @@ from application.models import Chat
 @app.route('/logout')
 def logout():
     """Функция выхода из сессии в проекте
-    
+
     :return: Переход на главную страницу
     """
     session.clear()
-    return redirect('/')    
+    return redirect('/')
 
 
 @app.route('/translate')
 def translate():
     """Функция перевода страницы
-    
+
     :return: Запрос на сервера Яндекса, для перевода страницы
     """
     chat_id = int(request.args['chat'])
@@ -41,7 +41,7 @@ def translate():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     """Данная функция генерирует главную страницу для пользователя
-    
+
     :return: Главная страница с чатами пользователя, является ли человек \
     в сессии, формой входа(Если человек не зарегистрирован, заголовок чата
     """
@@ -70,7 +70,7 @@ def index():
 @app.route('/documentation/<path:filename>')
 def docs_page(filename):
     """Данная функция открывает пользователю страницу с документацией
-    
+
     :param filename: Имя файла
     :return: Выбранный файл с документацией
     """

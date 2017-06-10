@@ -24,7 +24,8 @@ class Code(db.Model):
     chat = db.relationship('Chat', backref=db.backref('codes'))
     children = db.relationship('Code')
 
-    def __init__(self, content, author, chat_link, parent_link, message=u'Начальная версия'):
+    def __init__(self, content, author, chat_link, \
+                 parent_link, message=u'Начальная версия'):
         self.content = content
         self.author = author
         self.chat_link = chat_link
@@ -46,7 +47,8 @@ class Code(db.Model):
         db.session.add(code_to_send)
         db.session.commit()
         code_id_in_chat = u"undefined"
-        Message.send(chat_id, u"Изменение кода " + code_id_in_chat + u" : '" + message + u"'", 'sys')
+        Message.send(chat_id, u"Изменение кода " + code_id_in_chat \
+                     + u" : '" + message + u"'", 'sys')
         if app.config['SOCKET_MODE'] == 'True':
             socketio.emit('commit', room=str(chat_id), broadcast=True)
         return code_to_send.id
@@ -87,7 +89,8 @@ class Code(db.Model):
 
         :return: Вершина в дереве коммитов
         """
-        NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{id}</div>"
+        NODE_MARKUP = "<div class=\"commit_node circle unchosen\" \
+                        data-id=\"{id}\">{id}</div>"
         node = {
             "text": {
                 "name": self.id,

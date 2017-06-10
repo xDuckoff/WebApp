@@ -16,7 +16,7 @@ from application.models import Chat, Message, Code
 @csrf_required
 def add_chat():
     """Данная функция добавляет в сессию пользователя номер чата
-    
+
     :return: Добавлен ли пользователь в чат
     """
     try:
@@ -35,7 +35,7 @@ def add_chat():
 @csrf_required
 def tree():
     """Данная функция создаёт дерево коммитов чата
-    
+
     :return: Страницу дерева коммитов
     """
     chat_id = int(request.args['chat'])

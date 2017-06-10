@@ -5,7 +5,6 @@
 from wtforms import StringField, FileField
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
-from flask_wtf.csrf import validate_csrf
 from flask.sessions import SessionInterface
 
 
@@ -19,7 +18,7 @@ class BeakerSessionInterface(SessionInterface):
 
     def open_session(self, app, request):
         """Данная функция создаёт сессию для пользователя
-        
+
         :param app: Приложения
         :param request: Запрос
         :return: Сессию
@@ -28,7 +27,7 @@ class BeakerSessionInterface(SessionInterface):
         return session
 
     def save_session(self, app, session, response):
-        """Данная функция сохраняет сессию поьзователя
+        """Данная функция сохраняет сессию пользователя
 
         :param app: Приложение
         :param session: Сессия

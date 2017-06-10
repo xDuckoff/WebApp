@@ -23,17 +23,12 @@ class Message(db.Model):
     def __init__(self, content, content_ru, content_en, author, chat, type):
         """
         Данная функция создаёт сообщение в базе данных
-        
+
         :param content: Содержание сообщения
-        
         :param content_ru: Содержание сообщения на английском
-        
         :param content_en: Содержание сообщения на английском
-        
         :param author: Автор сообщения
-        
         :param chat: Номер чата, для данного сообщения
-        
         :param type: Тип сообщения
         """
         self.content = content
@@ -46,8 +41,8 @@ class Message(db.Model):
 
 class Code(db.Model):
     """
-    Класс кода содержит в себе имя сообщения, содержание кода, автора кода, 
-    чата кода, номер чата в дереве, и функцию создания кода в базе данных 
+    Класс кода содержит в себе имя сообщения, содержание кода, автора кода,
+    чата кода, номер чата в дереве, и функцию создания кода в базе данных
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
@@ -60,13 +55,10 @@ class Code(db.Model):
                  parent, cname=u'Начальная версия'):
         """
         Функция прикрепления кода к чату
-        
+
         :param content: Содержание кода
-        
         :param author: Имя Автора коммита кода
-        
         :param chat: ID чата, в котором лежит код
-        
         :param parent: Место в дереве коммитов
         """
         self.content = content
@@ -88,9 +80,8 @@ class Chat(db.Model):
     def __init__(self, name, code_type):
         """
         Функция создаёт чат в базе данных
-        
+
         :param name: Название чата
-        
         :param code_type: Язык программирования
         """
         self.name = name

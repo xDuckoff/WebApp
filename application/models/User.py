@@ -49,5 +49,5 @@ class User:
             session['joined_chats'] = []
         if chat_id not in session['joined_chats']:
             session['joined_chats'].append(chat_id)
-            Message.send(chat_id, session['login'] + u" присоединился", 'sys')
+            Message.send(chat_id, User.get_login() + u" присоединился", 'sys')
             session.modified = True

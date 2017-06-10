@@ -2,18 +2,19 @@
 
 """Обработчики функций"""
 
-from flask import redirect, session, request
+from flask import redirect, request
 from flask_wtf import csrf
 from wtforms.validators import ValidationError
 from json import dumps
 from functools import wraps
+from application.models import User
 
 
 def login_required(func):
     """Проверка на регистрацию"""
     @wraps(func)
     def login_check(*args, **kwargs):
-        if 'login' not in session:
+        if not User.is_logined():
             return redirect('/')
         return func(*args, **kwargs)
     return login_check

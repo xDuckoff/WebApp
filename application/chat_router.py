@@ -209,7 +209,7 @@ else:
         if not Chat.was_created(chat_id):
             return dumps({"success": False, "error": "Bad chat"}), 400
         try:
-            Message.send(chat_id, message, 'usr', session['login'])
+            Message.send(chat_id, message, 'usr', User.get_login())
         except OverflowError:
             return dumps({"success": False, "error": "Length Limit(1, 1000)"}), 400
         else:

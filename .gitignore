@@ -6,3 +6,4 @@ venv/
 .env
 *.orig
 /docs/_build/
+.DS_Store

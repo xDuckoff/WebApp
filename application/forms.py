@@ -21,8 +21,9 @@ class CreateChatForm(FlaskForm):
     code = StringField('code', default='')
 
     def is_file_valid(self):
-        return self.file.data and '.' in self.file.data.filename \
-                        and self.file.data.filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+        """Проверка на валидный файл для создания чата"""
+        return self.file.data and '.' in self.file.data.filename and \
+               self.file.data.filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 class FindChatForm(FlaskForm):

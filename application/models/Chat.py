@@ -90,8 +90,17 @@ class Chat(db.Model):
         return chat_id.isdigit() and Chat.get(int(chat_id))
 
     def has_message(self, message_id):
+        """Проверка существования сообщения в чате
 
+        :param message_id: Id сообщения 
+        :return: True, если сообщение существует, False в противном случае
+        """
         return message_id.isdigit() and len(self.messages) > int(message_id)
 
     def has_code(self, code_id):
+        """Проверка существования кода в чате
+
+        :param code_id: Id код 
+        :return: True, если код существует, False в противном случае
+        """
         return code_id.isdigit() and len(self.codes) > int(code_id)

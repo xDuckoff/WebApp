@@ -9,6 +9,7 @@ from application import csrf
 from application.forms import CreateChatForm
 from application.handlers import login_required, csrf_required
 from application.models import Chat, Message, Code, User
+from flask_socketio import join_room, leave_room
 
 
 @app.route('/join_chat', methods=['GET', 'POST'])
@@ -60,6 +61,28 @@ def chat_page(chat_id):
                            )
 
 
+@app.route('/send_message', methods=['GET', 'POST'])
+@login_required
+@csrf_required
+def send_message():
+    """Данная функция отправляет сообщение пользователю
+
+    :return: Отправилось ли сообщение
+    """
+    if app.config['SOCKET_MODE'] == 'True':
+        return dumps({"success": False, "error": "Bad mode"}), 400
+    chat_id = request.args.get('chat', '')
+    message = request.args.get('message', '')
+    if not Chat.was_created(chat_id):
+        return dumps({"success": False, "error": "Bad chat"}), 400
+    try:
+        Message.send(chat_id, message, 'usr', User.get_login())
+    except OverflowError:
+        return dumps({"success": False, "error": "Length Limit(1, 1000)"}), 400
+    else:
+        return dumps({"success": True, "error": ""})
+
+
 @app.route('/get_messages', methods=['GET', 'POST'])
 @login_required
 @csrf_required
@@ -82,13 +105,13 @@ def translate():
     :return: Запрос на сервера Яндекса, для перевода страницы
     """
     chat_id = request.args.get('chat', '')
-    message_id = request.args('index', '')
+    message_id = request.args.get('index', '')
     if not Chat.was_created(chat_id):
         return 'Bad chat', 400
     chat = Chat.get(chat_id)
     if not chat.has_message(message_id):
         return 'Bad message', 400
-    message = chat.messages[message_id]
+    message = chat.messages[int(message_id)]
     return dumps(message.translate())
 
 
@@ -125,21 +148,6 @@ def get_code():
     return dumps(Code.get(index))
 
 
-@app.route('/get_chat_info', methods=['GET', 'POST'])
-@login_required
-@csrf_required
-def get_chat_info():
-    """Данная функция передаёт информациб о чате от сервера к клиенту
-
-    :return: Информация о чате
-    """
-    chat_id = request.args.get('chat', '')
-    if not Chat.was_created(chat_id):
-        return 'Bad chat', 400
-    chat = Chat.get(chat_id)
-    return dumps(chat.get_info())
-
-
 @app.route('/api/create_chat', methods=['GET', 'POST'])
 @csrf.exempt
 def api_create_chat():
@@ -157,8 +165,6 @@ def api_create_chat():
 
 
 if app.config['SOCKET_MODE'] == 'True':
-    from flask_socketio import join_room, leave_room
-
 
     @socketio.on('message')
     def handle_message(json):
@@ -175,7 +181,6 @@ if app.config['SOCKET_MODE'] == 'True':
         except OverflowError:
             return
 
-
     @socketio.on('join')
     def on_join(room):
         """Данная функция сообщает о присоединение пользователя к чату
@@ -185,7 +190,6 @@ if app.config['SOCKET_MODE'] == 'True':
         """
         join_room(room)
 
-
     @socketio.on('leave')
     def on_leave(room):
         """Данная функция удаляет человека из чата
@@ -193,23 +197,3 @@ if app.config['SOCKET_MODE'] == 'True':
         :param room: Номер чата
         """
         leave_room(room)
-
-else:
-    @app.route('/send_message', methods=['GET', 'POST'])
-    @login_required
-    @csrf_required
-    def send_message():
-        """Данная функция отправляет сообщение пользователю
-
-        :return: Отправилось ли сообщение
-        """
-        chat_id = request.args.get('chat', '')
-        message = request.args.get('message', '')
-        if not Chat.was_created(chat_id):
-            return dumps({"success": False, "error": "Bad chat"}), 400
-        try:
-            Message.send(chat_id, message, 'usr', User.get_login())
-        except OverflowError:
-            return dumps({"success": False, "error": "Length Limit(1, 1000)"}), 400
-        else:
-            return dumps({"success": True, "error": ""})

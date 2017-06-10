@@ -8,25 +8,21 @@ from json import dumps
 from application import csrf
 from application.forms import CreateChatForm
 from application.handlers import login_required, csrf_required
-from application.models import Chat, Message, Code
+from application.models import Chat, Message, Code, User
 
 
-@app.route('/add_chat')
+@app.route('/join_chat')
 @login_required
 @csrf_required
-def add_chat():
+def join_chat():
     """Данная функция добавляет в сессию пользователя номер чата
     
     :return: Добавлен ли пользователь в чат
     """
-    try:
-        chat_id = int(request.args['chat'])
-    except ValueError:
-        return dumps({"success": False, "error": "Bad Chat ID"}), 400
-    if chat_id not in session['joined_chats']:
-        Message.send(chat_id, session['login'] + u" присоединился", 'sys')
-        session['joined_chats'].append(chat_id)
-        session.modified = True
+    chat_id = request.args.get('chat', '')
+    if not Chat.was_created(chat_id):
+        return dumps({"success": False, "error": "Bad chat"}), 400
+    User.join_chat(int(chat_id))
     return dumps({"success": True, "error": ""})
 
 
@@ -38,8 +34,10 @@ def tree():
     
     :return: Страницу дерева коммитов
     """
-    chat_id = int(request.args['chat'])
-    return dumps(Code.get_commits_tree(chat_id))
+    chat_id = request.args('chat', '')
+    if not Chat.was_created(chat_id):
+        return 'Bad chat', 400
+    return dumps(Code.get_commits_tree(int(chat_id)))
 
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
@@ -50,47 +48,16 @@ def chat_page(chat_id):
     :param chat_id: Номер чата
     :return: Страница чата
     """
+    if not Chat.was_created(chat_id):
+        return redirect('/')
     chat = Chat.get(chat_id)
-    if 'login' in session:
-        login = session['login']
-        in_session = True
-    else:
-        login = ""
-        in_session = False
-    return render_template(
-        'chat.html',
-        chat_id=chat_id,
-        socket_mode=(app.config['SOCKET_MODE'] == 'True'),
-        chat_info=chat.get_info(),
-        login=login,
-        in_session=in_session
-    )
-
-
-@app.route('/create_chat', methods=['GET', 'POST'])
-@login_required
-def create_chat():
-    """Данная функция создаёт чат по параметрам
-
-    :return: Новая страница чата
-    """
-    form = CreateChatForm()
-    name = form.name.data
-    if name == '':
-        return redirect('/')
-    if form.file.data.filename == '':
-        code = form.code.data
-    else:
-        file = form.file.data
-        if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']:
-            code = file.read()
-        else:
-            return redirect('/')
-    code_type = form.code_type.data
-    if code_type not in ["C", "C#", "C++", "CSS", "HTML", "Java", "JavaScript", "Python"]:
-        return redirect('/')
-    chat_id = Chat.create(name, code, code_type, session['login'])
-    return redirect('/chat/' + str(chat_id))
+    return render_template('chat.html',
+                           chat_id=chat.id,
+                           socket_mode=(app.config['SOCKET_MODE'] == 'True'),
+                           chat_info=chat.get_info(),
+                           login=User.get_login(),
+                           in_session=User.is_logined()
+                           )
 
 
 @app.route('/get_messages', methods=['GET', 'POST'])
@@ -101,9 +68,11 @@ def get_messages():
 
     :return: Принято ли сообщение
     """
-    chat_id = int(request.args['chat'])
+    chat_id = request.args.get('chat', '')
+    if not Chat.was_created(chat_id):
+        return 'Bad chat', 400
     chat = Chat.get(chat_id)
-    return dumps(chat.get_messages(session['login']))
+    return dumps(chat.get_messages(User.get_login()))
 
 
 @app.route('/translate')
@@ -112,13 +81,14 @@ def translate():
 
     :return: Запрос на сервера Яндекса, для перевода страницы
     """
-    chat_id = int(request.args['chat'])
-    message_id = int(request.args['index'])
+    chat_id = request.args.get('chat', '')
+    message_id = request.args('index', '')
+    if not Chat.was_created(chat_id):
+        return 'Bad chat', 400
     chat = Chat.get(chat_id)
-    try:
-        message = chat.messages[message_id]
-    except IndexError:
-        return 'No index', 400
+    if not chat.has_message(message_id):
+        return 'Bad message', 400
+    message = chat.messages[message_id]
     return dumps(message.translate())
 
 

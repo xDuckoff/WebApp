@@ -31,6 +31,14 @@ def index():
     login_form = LoginForm()
     if login_form.validate_on_submit():
         User.login(login_form.login.data)
+    if chat_create_form.validate_on_submit():
+        name = chat_create_form.name.data
+        code_type = chat_create_form.code_type.data
+        code = chat_create_form.code.data
+        if chat_create_form.is_file_valid():
+            code = chat_create_form.file.data.read()
+        chat_id = Chat.create(name, code, code_type, User.get_login())
+        return redirect('/chat/' + str(chat_id))
     return render_template('index.html',
                            chats=Chat.find(find_chat_form.chat_title.data),
                            in_session=User.is_logined(),
@@ -38,7 +46,8 @@ def index():
                            chat_create_form=chat_create_form,
                            find_chat_form=find_chat_form,
                            login=User.get_login(),
-                           allowed_ex=",".join(map(lambda x: '.' + x, app.config["ALLOWED_EXTENSIONS"]))
+                           allowed_ex=",".join(map(lambda x: '.' + x, app.config["ALLOWED_EXTENSIONS"])),
+                           allowed_langs=app.config["ALLOWED_LANGUAGES"]
                            )
 
 

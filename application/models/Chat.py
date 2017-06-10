@@ -79,3 +79,10 @@ class Chat(db.Model):
         :return: Сообщения пользователей
         """
         return [message.get_info(username) for message in self.messages]
+
+    @staticmethod
+    def was_created(chat_id):
+        return chat_id.isdigit() and Chat.get(int(chat_id))
+
+    def has_message(self, message_id):
+        return message_id.isdigit() and len(self.messages) > int(message_id)

@@ -5,6 +5,7 @@
 from wtforms import StringField, FileField
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
+from application import app
 
 
 class LoginForm(FlaskForm):
@@ -17,7 +18,11 @@ class CreateChatForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
     code_type = StringField('codetype', validators=[DataRequired()])
     file = FileField('file')
-    code = StringField('code')
+    code = StringField('code', default='')
+
+    def is_file_valid(self):
+        return self.file.data and '.' in self.file.data.filename \
+                        and self.file.data.filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 class FindChatForm(FlaskForm):

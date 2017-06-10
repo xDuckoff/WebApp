@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import cgi
-from flask import session
+from flask import session, request
 from application.models import Message
+from flask_wtf import csrf
 
 
 class User(object):
@@ -51,3 +52,7 @@ class User(object):
             session['joined_chats'].append(chat_id)
             Message.send(chat_id, User.get_login() + u" присоединился", 'sys')
             session.modified = True
+
+    @staticmethod
+    def check_csrf():
+        csrf.validate_csrf(request.headers['X-Csrf-Token'])

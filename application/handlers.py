@@ -2,8 +2,7 @@
 
 """Обработчики функций"""
 
-from flask import redirect, request
-from flask_wtf import csrf
+from flask import redirect
 from wtforms.validators import ValidationError
 from json import dumps
 from functools import wraps
@@ -25,7 +24,7 @@ def csrf_required(func):
     @wraps(func)
     def csrf_check(*args, **kwargs):
         try:
-            csrf.validate_csrf(request.headers['X-Csrf-Token'])
+            User.check_csrf()
         except ValidationError:
             return dumps({"success": False, "error": "Security error"}), 403
         except KeyError:

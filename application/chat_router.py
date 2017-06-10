@@ -2,7 +2,7 @@
 
 """Web-Страницы чата"""
 
-from flask import render_template, redirect, request, session
+from flask import render_template, redirect, request
 from application import app, socketio
 from json import dumps 
 from application import csrf
@@ -11,9 +11,9 @@ from application.handlers import login_required, csrf_required
 from application.models import Chat, Message, Code, User
 
 
-@app.route('/join_chat')
+@app.route('/join_chat', methods=['GET', 'POST'])
 @login_required
-@csrf_required
+#@csrf_required
 def join_chat():
     """Данная функция добавляет в сессию пользователя номер чата
     
@@ -167,6 +167,7 @@ if app.config['SOCKET_MODE'] == 'True':
         :param json: json запрос
         :return: Сообщние
         """
+
         chat_id = json.get('room', '')
         if not Chat.was_created(chat_id):
             return

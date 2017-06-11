@@ -24,9 +24,7 @@ class Message(db.Model):
     chat = db.relationship('Chat', backref=db.backref('messages'))
 
     def __init__(self, content, author, chat_link, type):
-        content = Message.escape(content)
-        content = markdown(content)
-        self.content = content
+        self.content = Message.markdown_decode(content)
         self.author = author
         self.chat_link = chat_link
         self.type = type
@@ -83,6 +81,17 @@ class Message(db.Model):
         for i in range(0, len(parts), 2):
             parts[i] = cgi.escape(parts[i])
         return '`'.join(parts)
+
+    @staticmethod
+    def markdown_decode(text):
+        """Преобразование текста в HTML в соответствии с синтаксисом Markdown
+
+        :param text: исходный текст
+        :return: преобразовнный в HTML текст
+        """
+        text = Message.escape(text)
+        text = markdown(text)
+        return text
 
     def get_info(self, username):
         """Получение форматированного сообщения в виде словаря

@@ -19,6 +19,7 @@ COMMIT_MESSAGE = "Tester commit"
 START_COMMIT_MESSAGE = u'Начальная версия'
 NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{id}</div>"
 MESSAGE_ESCAPE = """&lt;p&gt;Hello, I am &lt;strong&gt;Bot&lt;/strong&gt;!&lt;/p&gt;"""
+MESSAGE_TYPE = 'usr'
 MAIN_PAGE_URL = "/"
 CHAT_PAGE_URL = "/chat/{chat_id}"
 LOGOUT_PAGE_URL = "/logout"

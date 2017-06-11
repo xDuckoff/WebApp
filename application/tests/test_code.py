@@ -36,17 +36,34 @@ class TestCodeModel(BaseTestModel):
         self.assertEquals(sent_code.get('author'), USERNAME)
         self.assertEquals(sent_code.get('code'), CODE)
 
-    def test_get_root_in_chat(self):
+    def test_get_root_in_chat_with_single_code(self):
         code = Code.get_root_in_chat(self.chat_id)
+        self.assertIsInstance(code, Code)
         self.assertEquals(code.author, USERNAME)
         self.assertEquals(code.content, CHAT_CODE)
         self.assertEquals(code.chat_link, self.chat_id)
         self.assertEquals(code.parent_link, None)
         self.assertEquals(code.message, START_COMMIT_MESSAGE)
 
-    def test_get_commits_tree(self):
+    def test_get_root_in_chat_with_many_codes(self):
+        parent_code = Code.get_root_in_chat(self.chat_id)
+        child_code_id = Code.send(self.chat_id, CHAT_CODE, USERNAME, parent_code.id)
+        got_root_code = Code.get_root_in_chat(self.chat_id)
+        self.assertIsInstance(got_root_code, Code)
+        self.assertEquals(got_root_code.id, parent_code.id)
+
+    def test_get_commits_tree_with_single_code(self):
         tree = Code.get_commits_tree(self.chat_id)
         self.assertEqual(tree.get('text').get('name'), 1)
         self.assertEqual(tree.get('text').get('title'), START_COMMIT_MESSAGE)
         self.assertEqual(tree.get('children'), [])
         self.assertEqual(tree.get('innerHTML'), NODE_MARKUP.format(id=1))
+
+    def test_get_commits_tree_with_many_codes(self):
+        parent_code = Code.get_root_in_chat(self.chat_id)
+        child_code_id = Code.send(self.chat_id, CHAT_CODE, USERNAME, parent_code.id)
+        tree = Code.get_commits_tree(self.chat_id)
+        self.assertIsInstance(tree.get('children'), list)
+        self.assertIsInstance(tree['children'][0], dict)
+        self.assertIsInstance(tree['children'][0].get('text'), dict)
+        self.assertEqual(tree['children'][0]['text'].get('name'), child_code_id)

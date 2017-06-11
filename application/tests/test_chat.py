@@ -52,7 +52,24 @@ class TestChatModel(BaseTestModel):
         self.assertTrue(chat.has_message(str(code_id)))
         self.assertFalse(chat.has_message(str(code_id + 1)))
 
-    def test_find_chat(self):
-        self.assertGreaterEqual(len(Chat.find(CHAT_NAME)), 1)
-        self.assertGreaterEqual(len(Chat.find(str(self.chat_id))), 1)
+    def test_find_chat_by_full_name(self):
+        search_name = CHAT_NAME
+        found_chat_list = Chat.find(search_name)
+        self.assertGreaterEqual(len(found_chat_list), 1)
+        self.assertEqual(found_chat_list[0].name, CHAT_NAME)
+
+    def test_find_chat_by_name(self):
+        search_name = CHAT_NAME[2:-2]
+        found_chat_list = Chat.find(search_name)
+        self.assertGreaterEqual(len(found_chat_list), 1)
+        self.assertIn(search_name, found_chat_list[0].name)
+
+    def test_find_chat_by_id(self):
+        search_id = str(self.chat_id)
+        found_chat_list = Chat.find(search_id)
+        self.assertEqual(len(found_chat_list), 1)
+        self.assertEqual(found_chat_list[0].id, int(search_id))
+
+    def test_find_chat_all(self):
         self.assertGreaterEqual(len(Chat.find()), 1)
+        self.assertLessEqual(len(Chat.find()), 10)

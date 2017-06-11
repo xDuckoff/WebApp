@@ -67,7 +67,14 @@ class TestPages(BaseTestModel):
 
     def test_send_code(self):
         chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
-        response = self.app.get(SEND_CODE_PAGE_URL.format(chat_id=chat_id, code=CODE, parent=1, cname=COMMIT_MESSAGE))
+        send_code_format_values = {
+            "chat_id": chat_id,
+            "code": CODE,
+            "parent": 1,
+            "cname": COMMIT_MESSAGE
+        }
+        send_code_url = SEND_CODE_PAGE_URL.format(**send_code_format_values)
+        response = self.app.get(send_code_url)
         self.assertEqual(response.status_code, 200)
 
     def test_get_code(self):

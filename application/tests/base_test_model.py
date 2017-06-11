@@ -30,6 +30,7 @@ SEND_CODE_PAGE_URL = '/send_code?chat={chat_id}&code={code}&parent={parent}&cnam
 GET_CODE_PAGE_URL = '/get_code?index={code_id}'
 GET_CHAT_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'
 SEND_MESSAGE_PAGE_URL = '/send_message?chat={chat_id}&message={message}'
+DOCS_PAGE_URL = '/documentation/index.html'
 
 
 class BaseTestModel(unittest.TestCase):

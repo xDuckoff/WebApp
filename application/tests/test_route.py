@@ -6,6 +6,7 @@ from base_test_model import *
 from application import app
 from application.models import Chat, User, Message, Code
 from mock import Mock
+from os import system
 
 
 class TestPages(BaseTestModel):
@@ -79,4 +80,9 @@ class TestPages(BaseTestModel):
         app.config['SOCKET_MODE'] = 'False'
         chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
         response = self.app.get(SEND_MESSAGE_PAGE_URL.format(chat_id=chat_id, message=MESSAGE))
+        self.assertEqual(response.status_code, 200)
+
+    def test_make_docs(self):
+        system("cd docs; make html>/dev/null")
+        response = self.app.get(DOCS_PAGE_URL)
         self.assertEqual(response.status_code, 200)

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+"""Функции работы с кодом и деревом коммитов"""
+
 from application import app, db, socketio
 from application.models import Message
 

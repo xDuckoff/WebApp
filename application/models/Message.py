@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+'''Функции работы с сообщениями'''
+
 import re
 import cgi
 from application import app, db, socketio

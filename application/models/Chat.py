@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+'''Функции работы с чатами и их поиска'''
+
 from application import db
 from application.models import Code
 

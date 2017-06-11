@@ -38,4 +38,9 @@ function draw_node(commitIndex){
 
 jQuery(function($) {
     get_tree('tree');
+    $('#tree').on("click", ".commit_node", function(){
+        var commitId = $(this).data('id');
+        draw_node(commitId);
+        get_code(commitId);
+    });
 });

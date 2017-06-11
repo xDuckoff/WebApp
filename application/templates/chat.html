@@ -3,11 +3,8 @@
 {% block title %}{{ chat_info["name"] }}{% endblock %}
 
 {% block includes %}
-<!--Treant-->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/Treant.css') }}" type="text/css"/>
-<!-- CODEMIRROR -->
-<link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/lib/codemirror.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/addon/merge/merge.css') }}">
+    {%- include "libs/treant/links.html" -%}
+    {%- include "libs/codemirror/links.html" -%}
 {% endblock %}
 
 {% block content %}
@@ -97,29 +94,19 @@
 {% endblock %}
 
 {% block scripts %}
-<!--Treant-->
-<script src="{{ url_for('static', filename='js/vendor/raphael.js') }}"></script>
-<script src="{{ url_for('static', filename='js/Treant.js') }}"></script>
+    {%- include "libs/treant/scripts.html" -%}
+    {%- include "libs/codemirror/scripts.html" -%}
 
-<!-- CODEMIRROR -->
-<script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
-<script src="{{ url_for('static', filename='js/diff_match_patch.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/addon/merge/merge.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/mode/xml/xml.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/mode/htmlmixed/htmlmixed.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/mode/css/css.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/mode/clike/clike.js') }}"></script>
     {% if socket_mode %}
-<!--socketIO-->
-<script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+        {%- include "libs/socket.io.html" -%}
     {% endif %}
 
 <script type="text/javascript">
     var INTERVAL = 1000,
         RUS_IMAGE_ICON = '{{ url_for("static", filename="img/flag-rus.gif") }}',
-        ENG_IMAGE_ICON = '{{ url_for("static", filename="img/flag-eng.gif") }}';
+        ENG_IMAGE_ICON = '{{ url_for("static", filename="img/flag-eng.gif") }}',
+        IS_USE_SOCKET = {{ socket_mode | tojson }};
+
     var chat_index = {{ chat_id }},
         chat_code_type = "{{ chat_info['code_type'] }}",
         startCommit = {{ chat_info.start_code.id }},
@@ -143,50 +130,12 @@
     {% endif %}
 <script type="text/javascript">
     jQuery(function ($) {
-    {% if not socket_mode %}
-        joinToChat();
-        get_messages(false);
-        var timerId = setInterval(function (){
-                    get_messages(true);
-                    get_tree("tree");
-                }, INTERVAL);
-    {% endif %}
-    {% if not socket_mode %}
-        $("#send-btn").click(function() {
-            $.ajax({
-                url: "/send_message",
-                data: {
-                    "chat": chat_index,
-                    "message" : $("#message-input").val()
-                }
-            });
-            $("#message-input").val('');
-        });
-    {% endif %}
         $("#login-btn").click(function() {
             if (chat_id == '')
                 window.location = "/login";
             else
                 window.location = "/login?chat=" + chat_id;
         });
-
-        $('#tree').on("click", ".commit_node", function(){
-            var commitId = $(this).data('id');
-            draw_node(commitId);
-            get_code(commitId);
-        });
     });
-
-
-    function joinToChat(){
-        $.ajax({
-            type: "GET",
-            url: "/add_chat",
-            data: {
-                chat: chat_index
-            }
-        });
-    }
 </script>
-
 {% endblock %}

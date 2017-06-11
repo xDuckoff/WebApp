@@ -64,6 +64,15 @@ function get_messages(noti) {
     });
 }
 
+function joinToChat(){
+    $.ajax({
+        type: "GET",
+        url: "/add_chat",
+        data: {
+            chat: chat_index
+        }
+    });
+}
 
 jQuery(function($) {
     $("#message-input").keypress(function(e) {
@@ -96,4 +105,22 @@ jQuery(function($) {
         });
     });
 
+    if (!IS_USE_SOCKET) {
+        joinToChat();
+        get_messages(false);
+        var timerId = setInterval(function (){
+                    get_messages(true);
+                    get_tree("tree");
+                }, INTERVAL);
+        $("#send-btn").click(function() {
+            $.ajax({
+                url: "/send_message",
+                data: {
+                    "chat": chat_index,
+                    "message" : $("#message-input").val()
+                }
+            });
+            $("#message-input").val('');
+        });
+    }
 });

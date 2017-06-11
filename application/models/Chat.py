@@ -39,13 +39,13 @@ class Chat(db.Model):
         return chat_id
 
     @staticmethod
-    def get(id):
+    def get(uid):
         """Возвращает чат по id
 
-        :param id: Номер искомого чата
+        :param uid: Номер искомого чата
         :return: Объект чата
         """
-        return Chat.query.get(id)
+        return Chat.query.get(uid)
 
     def get_info(self):
         """Возвращает форматированный чат в виде словаря

@@ -25,16 +25,16 @@ class Message(db.Model):
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages'))
 
-    def __init__(self, content, author, chat_link, type):
+    def __init__(self, content, author, chat_link, message_type):
         content = Message.escape(content)
         content = markdown(content)
         self.content = content
         self.author = author
         self.chat_link = chat_link
-        self.type = type
+        self.message_type = message_type
 
     @staticmethod
-    def send(chat_id, text, type, username=u'Системное сообщение'):
+    def send(chat_id, text, message_type, username=u'Системное сообщение'):
         """Отправляет сообщение в базу для сохранения
 
         :param chat_id: Номер чата
@@ -45,7 +45,7 @@ class Message(db.Model):
         """
         if len(text) > 1000 or not text:
             raise OverflowError
-        message = Message(text, username, chat_id, type)
+        message = Message(text, username, chat_id, message_type)
         db.session.add(message)
         db.session.commit()
         if app.config['SOCKET_MODE'] == 'True':

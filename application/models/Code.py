@@ -55,13 +55,13 @@ class Code(db.Model):
         return code_to_send.id
 
     @staticmethod
-    def get(id):
+    def get(uid):
         """Возвращает форматированный код по ``id`` в виде словаря
 
-        :param id: идентификатор исходного кода
+        :param uid: идентификатор исходного кода
         :return: Автор и код
         """
-        code = Code.query.get(id)
+        code = Code.query.get(uid)
         return {
             "author": code.author,
             "code": code.content

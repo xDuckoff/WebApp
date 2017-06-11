@@ -2,7 +2,7 @@
 
 """Тесты форм"""
 
-from base_test_model import BaseTestModel
+from base_test_model import *
 from application.forms import LoginForm, CreateChatForm, FindChatForm
 from wtforms import StringField, FileField
 

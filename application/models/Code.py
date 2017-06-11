@@ -48,8 +48,8 @@ class Code(db.Model):
         db.session.add(code_to_send)
         db.session.commit()
         code_id_in_chat = u"undefined"
-        Message.send(chat_id, u"Изменение кода " \
-                    + code_id_in_chat + u" : '" + message + u"'", 'sys')
+        text_for_code_change = u"Изменение кода " + code_id_in_chat + u" : '" + message + u"'"
+        Message.send(chat_id, text_for_code_change, 'sys')
         if app.config['SOCKET_MODE'] == 'True':
             socketio.emit('commit', room=str(chat_id), broadcast=True)
         return code_to_send.id

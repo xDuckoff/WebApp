@@ -76,9 +76,9 @@
     
     function append_to_textarea(message, message_id) {
         if (message.type == "sys"){
-            var text =  '<div class="well well-sm text-center system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
+            var text =  '<div class="well well-sm text-center system_message" data-index="' + message_id + '">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
-            var text =  '<div class="well well-sm user_message"> <div style="float: right;" class=flag-rus> <img style="display: block;" src="{{ url_for("static", filename="img/flag-rus.gif") }}" class = "translate_img" data-lang="ru" data-index='+ message_id + '> </div> <div class="author_mess"> <b>' + message.author + '</b></div> <div style="float: right;" class="flag-eng"> <img style="display: block;" src="{{ url_for("static", filename="img/flag-eng.gif") }}" class = "translate_img" data-lang="en" data-index=' + message_id + '></div> <div class="text_mess">'+ message.message + '</div> </div>';
+            var text =  '<div class="well well-sm user_message" data-index="' + message_id + '">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
         }
         $("#chat-panel").append(text);
         if ($("#voice-check").prop("checked")){
@@ -162,6 +162,7 @@
 
     function add_message(message, message_id) {
         last_index += 1;
+
         var t = false;
 
         if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
@@ -199,6 +200,7 @@
             },
             dataType:'json',
             success: function(data){
+                $('#to_send').val('');
                 chosen_commit = data.commit;
             },
             error: function() {
@@ -246,28 +248,6 @@
         });
         get_tree('tree');
         get_code(0);
-        $("#chat-panel").on("click", ".translate_img", function(){
-            var lang = $(this).data('lang');
-            var id = $(this).data('index');
-            var text_obj = $(this).parents('.user_message').find('.text_mess');
-            $.ajax({
-                url: '/translate',
-                data:{
-                    "chat": chat_index,
-                    "index": id
-                },
-                dataType: "json",
-                success: function(data){
-                    text_obj.html(data[lang]);
-                },
-                error: function(data){
-                    if (lang == "ru")
-                        alert('Извините, произошла ошибка при переводе!')
-                    if (lang == "en")
-                        alert('Sorry, there was an error translating!')
-                }
-            });
-        });
         {% if not socket_mode %}
         $("#send-btn").click(function() {
             if ($("#message-input").val() == '')

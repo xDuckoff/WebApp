@@ -53,12 +53,6 @@ class TestPages(BaseTestModel):
         response = self.app.get(GET_MESSAGES_PAGE_URL.format(chat_id=chat_id))
         self.assertEqual(response.status_code, 200)
 
-    def test_translate_page(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
-        Message.send(chat_id, MESSAGE, 'usr')
-        response = self.app.get(TRANSLATE_PAGE_URL.format(chat_id=chat_id, message_id=1))
-        self.assertEqual(response.status_code, 200)
-
     def test_send_code(self):
         chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         send_code_format_values = {

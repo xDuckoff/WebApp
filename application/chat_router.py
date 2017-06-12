@@ -99,23 +99,6 @@ def get_messages():
     return dumps(chat.get_messages())
 
 
-@app.route('/translate')
-def translate():
-    """Функция перевода страницы
-
-    :return: Запрос на сервера Яндекса, для перевода страницы
-    """
-    chat_id = request.args.get('chat', '')
-    message_id = request.args.get('index', '')
-    if not Chat.was_created(chat_id):
-        return 'Bad chat', 400
-    chat = Chat.get(chat_id)
-    if not chat.has_message(message_id):
-        return 'Bad message', 400
-    message = chat.messages[int(message_id)]
-    return dumps(message.translate())
-
-
 @app.route('/send_code', methods=['GET', 'POST'])
 @login_required
 @csrf_required

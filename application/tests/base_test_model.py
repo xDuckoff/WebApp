@@ -29,7 +29,6 @@ LOGOUT_PAGE_URL = "/logout"
 JOIN_CHAT_PAGE_URL = '/join_chat?chat={chat_id}'
 TREE_PAGE_URL = '/tree?chat={chat_id}'
 GET_MESSAGES_PAGE_URL = '/tree?chat={chat_id}'
-TRANSLATE_PAGE_URL = '/translate?chat={chat_id}&index={message_id}'
 SEND_CODE_PAGE_URL = '/send_code?chat={chat_id}&code={code}&parent={parent}&cname={cname}'
 GET_CODE_PAGE_URL = '/get_code?index={code_id}'
 GET_CHAT_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'

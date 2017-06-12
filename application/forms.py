@@ -14,11 +14,11 @@ class LoginForm(FlaskForm):
 
 
 class BeakerSessionInterface(SessionInterface):
-    """Данный класс содержит интерфейс сесии"""
+    """Данный класс содержит интерфейс сесcии"""
 
     def open_session(self, app, request):
         """Данная функция создаёт сессию для пользователя
-        
+
         :param app: Приложения
         :param request: Запрос
         :return: Сессию
@@ -27,7 +27,7 @@ class BeakerSessionInterface(SessionInterface):
         return session
 
     def save_session(self, app, session, response):
-        """Данная функция сохраняет сессию поьзователя
+        """Данная функция сохраняет сессию пользователя
 
         :param app: Приложение
         :param session: Сессия

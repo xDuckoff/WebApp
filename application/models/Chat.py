@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+'''Функции работы с чатами и их поиска'''
+
 from application import db
 from application.models import Code
 
@@ -37,13 +39,13 @@ class Chat(db.Model):
         return chat_id
 
     @staticmethod
-    def get(id):
+    def get(uid):
         """Возвращает чат по id
 
-        :param id: Номер искомого чата
+        :param uid: Номер искомого чата
         :return: Объект чата
         """
-        return Chat.query.get(id)
+        return Chat.query.get(uid)
 
     def get_info(self):
         """Возвращает форматированный чат в виде словаря
@@ -69,8 +71,7 @@ class Chat(db.Model):
         if name.isdigit():
             chat_id = int(name)
             return Chat.query.filter_by(id=chat_id).all()
-        else:
-            return Chat.query.filter(Chat.name.like('%' + name + '%')).all()[::-1]
+        return Chat.query.filter(Chat.name.like('%' + name + '%')).all()[::-1]
 
     def get_messages(self, username=""):
         """Получение всех сообщений в чате в форматированном виде

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from application import app, db, socketio
+'''Функции работы с сообщениями'''
+
 import re
 import cgi
+from application import app, db, socketio
 from markdown import markdown
 
 
@@ -12,7 +14,7 @@ class Message(db.Model):
     :param content:  исходное содержание сообщения
     :param author:  автор сообщения
     :param chat_link:  ссылка на чат, которому принадлежит сообщение
-    :param type: тип сообщения: системное или пользовательское
+    :param message_type: тип сообщения: системное или пользовательское
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
@@ -23,27 +25,29 @@ class Message(db.Model):
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages'))
 
-    def __init__(self, content, author, chat_link, type):
+
+    def __init__(self, content, author, chat_link, message_type):
         content = Message.escape(content)
         content = markdown(content)
         self.content = content
         self.author = author
         self.chat_link = chat_link
-        self.type = type
+        self.type = message_type
+
 
     @staticmethod
-    def send(chat_id, text, type, username=u'Системное сообщение'):
+    def send(chat_id, text, message_type, username=u'Системное сообщение'):
         """Отправляет сообщение в базу для сохранения
 
         :param chat_id: Номер чата
         :param text: Содержание сообщения
-        :param type: Тип сообщения
+        :param message_type: Тип сообщения
         :param username: Имя пользователя
         :return: Объект созданного сообщения
         """
-        if len(text) > 1000 or len(text) == 0:
+        if len(text) > 1000 or not text:
             raise OverflowError
-        message = Message(text, username, chat_id, type)
+        message = Message(text, username, chat_id, message_type)
         db.session.add(message)
         db.session.commit()
         if app.config['SOCKET_MODE'] == 'True':

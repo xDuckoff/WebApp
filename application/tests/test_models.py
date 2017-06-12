@@ -55,7 +55,13 @@ class TestMessageModel(BaseTestModel):
 class TestCodeModel(BaseTestModel):
 
     def test_available_code(self):
-        code = Code("content", "author", 1, None)
+        code_params = {
+            "content": "content",
+            "author": "author",
+            "chat_link": 1,
+            "parent_link": None
+        }
+        code = Code(**code_params)
         self.assertTrue(hasattr(code, "id"))
         self.assertTrue(hasattr(code, "content"))
         self.assertTrue(hasattr(code, "author"))

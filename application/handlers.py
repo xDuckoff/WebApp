@@ -13,6 +13,7 @@ def login_required(func):
     """Проверка на регистрацию"""
     @wraps(func)
     def login_check(*args, **kwargs):
+        '''Функция проверки'''
         if 'login' not in session:
             return redirect('/')
         return func(*args, **kwargs)
@@ -23,6 +24,7 @@ def csrf_required(func):
     """Проверка csrf-ключа"""
     @wraps(func)
     def csrf_check(*args, **kwargs):
+        '''Функция проверки'''
         try:
             csrf.validate_csrf(request.headers['X-Csrf-Token'])
         except ValidationError:

@@ -71,5 +71,5 @@ class TestChatModel(BaseTestModel):
         self.assertEqual(found_chat_list[0].id, int(search_id))
 
     def test_find_chat_all(self):
-        self.assertGreaterEqual(len(Chat.find()), 1)
-        self.assertLessEqual(len(Chat.find()), 10)
+        self.assertGreaterEqual(len(Chat.find('')), 1)
+        self.assertLessEqual(len(Chat.find('')), 10)

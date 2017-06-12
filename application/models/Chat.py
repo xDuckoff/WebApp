@@ -33,7 +33,7 @@ class Chat(db.Model):
         db.session.add(chat_to_create)
         db.session.commit()
         chat_id = chat_to_create.id
-        Code.send(chat_id, code, username)
+        Code.send(chat_id, code, username, None, u'Стартовый коммит')
         return chat_id
 
     @staticmethod
@@ -57,7 +57,7 @@ class Chat(db.Model):
         }
 
     @staticmethod
-    def find(name=''):
+    def find(name):
         """Нахождение чатов по названию или по идентификатору,\
         если ``name`` является числом
 
@@ -72,7 +72,7 @@ class Chat(db.Model):
         else:
             return Chat.query.filter(Chat.name.like('%' + name + '%')).all()[::-1]
 
-    def get_messages(self, username=""):
+    def get_messages(self, username):
         """Получение всех сообщений в чате в форматированном виде
 
         :param username:  Имя пользователя

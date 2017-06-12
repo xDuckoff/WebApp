@@ -24,7 +24,7 @@ class Code(db.Model):
     chat = db.relationship('Chat', backref=db.backref('codes'))
     children = db.relationship('Code')
 
-    def __init__(self, content, author, chat_link, parent_link, message=u'Начальная версия'):
+    def __init__(self, content, author, chat_link, parent_link, message):
         self.content = content
         self.author = author
         self.chat_link = chat_link
@@ -32,7 +32,7 @@ class Code(db.Model):
         self.message = message
 
     @staticmethod
-    def send(chat_id, text, username, parent=None, message=u'Начальная версия'):
+    def send(chat_id, text, username, parent, message):
         """Отправление кода на сервер
 
         :param chat_id: Номер чата
@@ -46,7 +46,8 @@ class Code(db.Model):
         db.session.add(code_to_send)
         db.session.commit()
         code_id_in_chat = u"undefined"
-        Message.send(chat_id, u"Изменение кода " + code_id_in_chat + u" : '" + message + u"'", 'sys')
+        text = u'Новый коммит {id} : {message}'
+        Message.send(chat_id, text.format(id=code_id_in_chat, message=message), 'sys', u'Системное сообщение')
         if app.config['SOCKET_MODE'] == 'True':
             socketio.emit('commit', room=str(chat_id), broadcast=True)
         return code_to_send.id

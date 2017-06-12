@@ -30,7 +30,7 @@ class Message(db.Model):
         self.type = type
 
     @staticmethod
-    def send(chat_id, text, type, username=u'Системное сообщение'):
+    def send(chat_id, text, type, username):
         """Отправляет сообщение в базу для сохранения
 
         :param chat_id: Номер чата

@@ -47,7 +47,7 @@ class TestCodeModel(BaseTestModel):
 
     def test_get_root_in_chat_with_many_codes(self):
         parent_code = Code.get_root_in_chat(self.chat_id)
-        child_code_id = Code.send(self.chat_id, CHAT_CODE, USERNAME, parent_code.id)
+        Code.send(self.chat_id, CHAT_CODE, USERNAME, parent_code.id)
         got_root_code = Code.get_root_in_chat(self.chat_id)
         self.assertIsInstance(got_root_code, Code)
         self.assertEquals(got_root_code.id, parent_code.id)

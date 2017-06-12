@@ -49,8 +49,8 @@ class TestChatModel(BaseTestModel):
     def test_chat_has_code(self):
         chat = Chat.get(self.chat_id)
         code_id = Code.send(self.chat_id, CODE, USERNAME, PARENT_CODE_ID, COMMIT_MESSAGE) - 1
-        self.assertTrue(chat.has_message(str(code_id)))
-        self.assertFalse(chat.has_message(str(code_id + 1)))
+        self.assertTrue(chat.has_code(str(code_id)))
+        self.assertFalse(chat.has_code(str(code_id + 1)))
 
     def test_find_chat_by_full_name(self):
         search_name = CHAT_NAME

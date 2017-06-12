@@ -74,11 +74,11 @@
 <script type="text/javascript">
     var last_index = 0;
     
-    function append_to_textarea(message) {
+    function append_to_textarea(message, message_id) {
         if (message.type == "sys"){
-            var text =  '<div class="well well-sm text-center system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
+            var text =  '<div class="well well-sm text-center system_message" data-index="' + message_id + '">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
-            var text =  '<div class="well well-sm user_message">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
+            var text =  '<div class="well well-sm user_message" data-index="' + message_id + '">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
         }
         $("#chat-panel").append(text);
         if ($("#voice-check").prop("checked")){
@@ -167,7 +167,7 @@
 
         if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
             t = true;
-        append_to_textarea(message);
+        append_to_textarea(message, message_id);
         if (t)
             $('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);
     }

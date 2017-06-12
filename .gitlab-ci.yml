@@ -19,12 +19,23 @@ before_script:
   - apk update
 
 stages:
+  - codestyle
   - test
   - production
 
-test:
+codestyle:
+  stage: codestyle
   script:
     - apk add py-virtualenv gcc python-dev musl-dev postgresql-dev
+    - virtualenv --python=python2.7 venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+    - pylint application/
+
+test:
+  stage: test
+  script:
+    - apk add py-virtualenv gcc python-dev musl-dev postgresql-dev make
     - virtualenv --python=python2.7 venv
     - source venv/bin/activate
     - pip install -r requirements.txt

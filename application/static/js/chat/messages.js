@@ -67,7 +67,7 @@ function get_messages(noti) {
 function joinToChat(){
     $.ajax({
         type: "GET",
-        url: "/add_chat",
+        url: "/join_chat",
         data: {
             chat: chat_index
         }
@@ -113,6 +113,8 @@ jQuery(function($) {
                     get_tree("tree");
                 }, INTERVAL);
         $("#send-btn").click(function() {
+            if ($("#message-input").val() == '')
+                return;
             $.ajax({
                 url: "/send_message",
                 data: {

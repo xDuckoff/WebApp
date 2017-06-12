@@ -76,9 +76,9 @@
     
     function append_to_textarea(message) {
         if (message.type == "sys"){
-            var text =  '<div class="well well-sm text-center" id="system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
+            var text =  '<div class="well well-sm text-center system_message">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
         }else{
-            var text =  '<div class="well well-sm" id="user_message">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
+            var text =  '<div class="well well-sm user_message">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
         }
         $("#chat-panel").append(text);
         if ($("#voice-check").prop("checked")){
@@ -160,7 +160,9 @@
         }
     }
 
-    function add_message(message) {
+    function add_message(message, message_id) {
+        last_index += 1;
+
         var t = false;
 
         if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
@@ -179,7 +181,7 @@
             dataType: "json",
             success: function(messages) {
                 for (var i = last_index; i < messages.length; i++){
-                    add_message(messages[i]);
+                    add_message(messages[i], i);
                     if (noti) notific(messages[i]);
                 }
                 last_index=messages.length;

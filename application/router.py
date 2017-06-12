@@ -21,22 +21,6 @@ def logout():
     return redirect('/')
 
 
-@app.route('/translate')
-def translate():
-    """Функция перевода страницы
-
-    :return: Запрос на сервера Яндекса, для перевода страницы
-    """
-    chat_id = int(request.args['chat'])
-    message_id = int(request.args['index'])
-    chat = Chat.get(chat_id)
-    try:
-        message = chat.messages[message_id]
-    except IndexError:
-        return 'No index', 400
-    return dumps(message.translate())
-
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     """Данная функция генерирует главную страницу для пользователя

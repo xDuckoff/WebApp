@@ -59,7 +59,7 @@ def chat_page(chat_id):
                            chat_info=chat.get_info(),
                            login=User.get_login(),
                            in_session=User.is_logined()
-                           )
+                          )
 
 
 @app.route('/send_message', methods=['GET', 'POST'])
@@ -130,8 +130,6 @@ def send_code():
     cname = request.args.get('cname', '')
     if not Chat.was_created(chat_id):
         return dumps({"success": False, "error": "Bad chat"}), 400
-    chat = Chat.get(chat_id)
-    # FIXME #16 Is Parent Created
     code_id = Code.send(chat_id, code, parent, cname)
     return dumps({"success": True, "error": "", "commit": code_id})
 
@@ -144,7 +142,6 @@ def get_code():
 
     :return: Код
     """
-    # FIXME #16 local id
     index = int(request.args.get('index', ''))
     return dumps(Code.get(index))
 
@@ -156,7 +153,6 @@ def api_create_chat():
 
     :return: Адрес новой страницы чата
     """
-    # FIXME
     form = CreateChatForm()
     name = form.name.data
     code = form.code.data

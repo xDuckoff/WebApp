@@ -16,7 +16,7 @@ def logout():
     :return: Переход на главную страницу
     """
     User.logout()
-    return redirect('/')    
+    return redirect('/')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -46,9 +46,9 @@ def index():
                            chat_create_form=chat_create_form,
                            find_chat_form=find_chat_form,
                            login=User.get_login(),
-                           allowed_ex=",".join(map(lambda x: '.' + x, app.config["ALLOWED_EXTENSIONS"])),
+                           allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
                            allowed_langs=app.config["ALLOWED_LANGUAGES"]
-                           )
+                          )
 
 
 @app.route('/documentation/<path:filename>')

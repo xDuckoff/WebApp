@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'''Функции работы с сообщениями'''
+"""Функции работы с сообщениями"""
 
 import re
 import cgi
@@ -32,9 +32,8 @@ class Message(db.Model):
         self.chat_link = chat_link
         self.type = message_type
 
-
     @staticmethod
-    def send(chat_id, text, type):
+    def send(chat_id, text, message_type):
         """Отправляет сообщение в базу для сохранения
 
         :param chat_id: Номер чата
@@ -44,7 +43,7 @@ class Message(db.Model):
         """
         if len(text) > 1000 or not text:
             raise OverflowError
-        message = Message(text, chat_id, type)
+        message = Message(text, chat_id, message_type)
         db.session.add(message)
         db.session.commit()
         if app.config['SOCKET_MODE'] == 'True':

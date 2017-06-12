@@ -13,6 +13,7 @@ def login_required(func):
     """Проверка на регистрацию"""
     @wraps(func)
     def login_check(*args, **kwargs):
+        """Перенаправляет на главную страницу, если пользователь не авторизован"""
         if not User.is_logined():
             return redirect('/')
         return func(*args, **kwargs)
@@ -23,6 +24,7 @@ def csrf_required(func):
     """Проверка csrf-ключа"""
     @wraps(func)
     def csrf_check(*args, **kwargs):
+        """Выдаёт ошибку, если пользователь не имеет валидного csrf-ключа"""
         try:
             User.check_csrf()
         except ValidationError:

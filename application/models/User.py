@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+"""Функции пользователя"""
+
 import cgi
 from flask import session, request
 from flask_wtf import csrf
@@ -56,4 +58,5 @@ class User(object):
 
     @staticmethod
     def check_csrf():
+        """Проверка на валидность csrf-ключа"""
         csrf.validate_csrf(request.headers['X-Csrf-Token'])

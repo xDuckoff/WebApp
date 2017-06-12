@@ -13,7 +13,7 @@ from application.models import Chat
 
 @app.route('/logout')
 def logout():
-    """Функция выхода из сессии в проекте 
+    """Функция выхода из сессии в проекте
 
     :return: Переход на главную страницу
     """
@@ -56,15 +56,16 @@ def index():
     else:
         login = ""
     allowed_ex = ['.' + x for x in app.config["ALLOWED_EXTENSIONS"]]
-    return render_template('index.html', \
-                           chats=chats, \
-                           in_session=bool(login), \
-                           login_form=login_form, \
-                           chat_create_form=chat_create_form, \
-                           search_title_text=chat_title, \
-                           login=login, \
-                           allowed_ex=",".join(allowed_ex) \
+    return render_template('index.html',
+                           chats=chats,
+                           in_session=bool(login),
+                           login_form=login_form,
+                           chat_create_form=chat_create_form,
+                           search_title_text=chat_title,
+                           login=login,
+                           allowed_ex=",".join(allowed_ex)
                           )
+
 
 @app.route('/documentation/<path:filename>')
 def docs_page(filename):

@@ -3,12 +3,10 @@
 """Основные веб-страницы проекта"""
 
 import os
-import cgi
-from json import dumps
-from flask import render_template, redirect, session, request, send_from_directory
+from flask import render_template, redirect, send_from_directory
 from application import app
-from forms import LoginForm, CreateChatForm
-from application.models import Chat
+from forms import LoginForm, CreateChatForm, FindChatForm
+from application.models import Chat, User
 
 
 @app.route('/logout')
@@ -17,24 +15,8 @@ def logout():
 
     :return: Переход на главную страницу
     """
-    session.clear()
+    User.logout()
     return redirect('/')
-
-
-@app.route('/translate')
-def translate():
-    """Функция перевода страницы
-
-    :return: Запрос на сервера Яндекса, для перевода страницы
-    """
-    chat_id = int(request.args['chat'])
-    message_id = int(request.args['index'])
-    chat = Chat.get(chat_id)
-    try:
-        message = chat.messages[message_id]
-    except IndexError:
-        return 'No index', 400
-    return dumps(message.translate())
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -44,27 +26,30 @@ def index():
     :return: Главная страница с чатами пользователя, является ли человек \
     в сессии, формой входа(Если человек не зарегистрирован, заголовок чата
     """
-    chat_title = request.args.get('search_title_text', '')
-    chats = Chat.find(chat_title)
+    find_chat_form = FindChatForm()
     chat_create_form = CreateChatForm()
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        session['login'] = cgi.escape(login_form.login.data)
-        session['joined_chats'] = []
-    if 'login' in session:
-        login = session['login']
-    else:
-        login = ""
-    allowed_ex = ['.' + x for x in app.config["ALLOWED_EXTENSIONS"]]
-    return render_template('index.html', \
-                           chats=chats, \
-                           in_session=bool(login), \
-                           login_form=login_form, \
-                           chat_create_form=chat_create_form, \
-                           search_title_text=chat_title, \
-                           login=login, \
-                           allowed_ex=",".join(allowed_ex) \
+        User.login(login_form.login.data)
+    if chat_create_form.validate_on_submit():
+        name = chat_create_form.name.data
+        code_type = chat_create_form.code_type.data
+        code = chat_create_form.code.data
+        if chat_create_form.is_file_valid():
+            code = chat_create_form.file.data.read()
+        chat_id = Chat.create(name, code, code_type)
+        return redirect('/chat/' + str(chat_id))
+    return render_template('index.html',
+                           chats=Chat.find(find_chat_form.chat_title.data),
+                           in_session=User.is_logined(),
+                           login_form=login_form,
+                           chat_create_form=chat_create_form,
+                           find_chat_form=find_chat_form,
+                           login=User.get_login(),
+                           allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
+                           allowed_langs=app.config["ALLOWED_LANGUAGES"]
                           )
+
 
 @app.route('/documentation/<path:filename>')
 def docs_page(filename):

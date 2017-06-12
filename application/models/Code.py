@@ -3,7 +3,7 @@
 """Функции работы с кодом и деревом коммитов"""
 
 from application import app, db, socketio
-from application.models import Message
+from application.models import Message, User
 
 
 class Code(db.Model):
@@ -28,25 +28,23 @@ class Code(db.Model):
 
     def __init__(self, **params):
         self.content = params.get('content', "")
-        self.author = params.get('author', "")
+        self.author = User.get_login()
         self.chat_link = params.get('chat_link')
-        self.parent_link = params.get('parent_link', None)
-        self.message = params.get('message', u'Начальная версия')
+        self.parent_link = params.get('parent_link')
+        self.message = params.get('message')
 
     @staticmethod
-    def send(chat_id, text, username, parent=None, message=u'Начальная версия'):
+    def send(chat_id, text, parent, message):
         """Отправление кода на сервер
 
         :param chat_id: Номер чата
         :param text: Код
-        :param username: Имя пользователя
         :param parent: Место в дереве коммитов
         :param message: Комметарий к коду
         :return: Сообщение о коммите и номере кода
         """
         code_params = {
             "content": text,
-            "author": username,
             "message": message,
             "chat_link": chat_id,
             "parent_link": parent
@@ -55,8 +53,8 @@ class Code(db.Model):
         db.session.add(code_to_send)
         db.session.commit()
         code_id_in_chat = u"undefined"
-        text_for_code_change = u"Изменение кода " + code_id_in_chat + u" : '" + message + u"'"
-        Message.send(chat_id, text_for_code_change, 'sys')
+        text = u'Новое изменение {id} : {message}'
+        Message.send(chat_id, text.format(id=code_id_in_chat, message=message), 'sys')
         if app.config['SOCKET_MODE'] == 'True':
             socketio.emit('commit', room=str(chat_id), broadcast=True)
         return code_to_send.id

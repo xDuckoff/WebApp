@@ -5,7 +5,7 @@
 from wtforms import StringField, FileField
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
-from flask.sessions import SessionInterface
+from application import app
 
 
 class LoginForm(FlaskForm):
@@ -13,32 +13,19 @@ class LoginForm(FlaskForm):
     login = StringField('login', validators=[DataRequired()])
 
 
-class BeakerSessionInterface(SessionInterface):
-    """Данный класс содержит интерфейс сесcии"""
-
-    def open_session(self, app, request):
-        """Данная функция создаёт сессию для пользователя
-
-        :param app: Приложения
-        :param request: Запрос
-        :return: Сессию
-        """
-        session = request.environ['beaker.session']
-        return session
-
-    def save_session(self, app, session, response):
-        """Данная функция сохраняет сессию пользователя
-
-        :param app: Приложение
-        :param session: Сессия
-        :param response: Отклик сессии
-        """
-        session.save()
-
-
 class CreateChatForm(FlaskForm):
     """Создаёт чат"""
     name = StringField('name', validators=[DataRequired()])
     code_type = StringField('codetype', validators=[DataRequired()])
     file = FileField('file')
-    code = StringField('code')
+    code = StringField('code', default='')
+
+    def is_file_valid(self):
+        """Проверка на валидный файл для создания чата"""
+        return self.file.data and '.' in self.file.data.filename and \
+               self.file.data.filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+
+class FindChatForm(FlaskForm):
+    """Поиск чата"""
+    chat_title = StringField('chat_title', default='')

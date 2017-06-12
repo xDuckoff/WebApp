@@ -2,19 +2,19 @@
 
 """Обработчики функций"""
 
-from flask import redirect, session, request
-from flask_wtf import csrf
+from flask import redirect
 from wtforms.validators import ValidationError
 from json import dumps
 from functools import wraps
+from application.models import User
 
 
 def login_required(func):
     """Проверка на регистрацию"""
     @wraps(func)
     def login_check(*args, **kwargs):
-        '''Функция проверки'''
-        if 'login' not in session:
+        """Перенаправляет на главную страницу, если пользователь не авторизован"""
+        if not User.is_logined():
             return redirect('/')
         return func(*args, **kwargs)
     return login_check
@@ -24,9 +24,9 @@ def csrf_required(func):
     """Проверка csrf-ключа"""
     @wraps(func)
     def csrf_check(*args, **kwargs):
-        '''Функция проверки'''
+        """Выдаёт ошибку, если пользователь не имеет валидного csrf-ключа"""
         try:
-            csrf.validate_csrf(request.headers['X-Csrf-Token'])
+            User.check_csrf()
         except ValidationError:
             return dumps({"success": False, "error": "Security error"}), 403
         except KeyError:

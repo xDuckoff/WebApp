@@ -31,7 +31,6 @@
                                 <input class="btn btn-primary" type="submit" value="Вход">
                             </span>
                         </div>
-                        
                     </div>
                 </div>
             </form>
@@ -41,7 +40,7 @@
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
     <div class="modal-dialog" >
         <div class="main-content">
-            <form method="POST" action = "/create_chat" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data">
                 {{ chat_create_form.hidden_tag() }}
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -55,14 +54,9 @@
                                     <input type="text" class="form-control" id="chatname" placeholder="" name = "name" required="required">
                                 </div>
                                 <select class="form-control" id="Compile" name="code_type">
-                                    <option>C</option>
-                                    <option>C#</option>
-                                    <option>C++</option>
-                                    <option>CSS</option>
-                                    <option>HTML</option>
-                                    <option>Java</option>
-                                    <option>JavaScript</option>
-                                    <option>Python</option>
+                                    {% for lang in allowed_langs %}
+                                    <option>{{ lang }}</option>
+                                    {% endfor %}
                                 </select>
                                 <div class="form-group">
                                     <input type="file" name="file" accept="{{ allowed_ex }}">
@@ -179,12 +173,13 @@
         {% endif %}
         <p><a name="find"></a></p>
         <div class="col-md-8 col-md-offset-2 main-content">
-            <form action="#find">
+            <form action="#find" method="POST">
+                {{ find_chat_form.hidden_tag() }}
                 <p class = "text-center" style="font-size: 20; margin-top: 10px">Поиск чата</p>
                 <div class="input-group" style="margin-top: 10px;">
-                    <input type="search" class="form-control" name="search_title_text" placeholder="Введите название" value="{{search_title_text}}">
+                    <input type="search" class="form-control" name="chat_title" placeholder="Введите название" value="{{find_chat_form.chat_title.data}}">
                     <span class="input-group-btn">
-                        <input type="submit" class="btn btn-primary" value="Найти"  formmethod="get">
+                        <input type="submit" class="btn btn-primary" value="Найти">
                     </span>
                 </div>
             </form>

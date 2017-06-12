@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-'''Функции работы с сообщениями'''
+"""Функции работы с сообщениями"""
 
 import re
 import cgi
-from application import app, db, socketio
 from markdown import markdown
+from application.models import User
+from application import app, db, socketio
 
 
 class Message(db.Model):
@@ -23,33 +24,28 @@ class Message(db.Model):
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages'))
 
-
-    def __init__(self, content, author, chat_link, message_type):
-        content = Message.escape(content)
-        content = markdown(content)
-        self.content = content
-        self.author = author
+    def __init__(self, content, chat_link, message_type):
+        self.content = Message.markdown_decode(content)
+        self.author = User.get_login()
         self.chat_link = chat_link
         self.type = message_type
 
-
     @staticmethod
-    def send(chat_id, text, message_type, username=u'Системное сообщение'):
+    def send(chat_id, text, message_type):
         """Отправляет сообщение в базу для сохранения
 
         :param chat_id: Номер чата
         :param text: Содержание сообщения
         :param message_type: Тип сообщения
-        :param username: Имя пользователя
         :return: Объект созданного сообщения
         """
         if len(text) > 1000 or not text:
             raise OverflowError
-        message = Message(text, username, chat_id, message_type)
+        message = Message(text, chat_id, message_type)
         db.session.add(message)
         db.session.commit()
         if app.config['SOCKET_MODE'] == 'True':
-            socketio.emit('message', message.get_info(username), room=str(chat_id), broadcast=True)
+            socketio.emit('message', message.get_info(), room=str(chat_id), broadcast=True)
         return message
 
     def plain(self):
@@ -75,14 +71,24 @@ class Message(db.Model):
             parts[i] = cgi.escape(parts[i])
         return '`'.join(parts)
 
-    def get_info(self, username):
+    @staticmethod
+    def markdown_decode(text):
+        """Преобразование текста в HTML в соответствии с синтаксисом Markdown
+
+        :param text: исходный текст
+        :return: преобразовнный в HTML текст
+        """
+        text = Message.escape(text)
+        text = markdown(text)
+        return text
+
+    def get_info(self):
         """Получение форматированного сообщения в виде словаря
 
-        :param username: Имя пользователя
         :return: Информация о сообщении
         """
         if self.type == "usr":
-            if self.author == username:
+            if self.author == User.get_login():
                 client_type = "mine"
             else:
                 client_type = "others"

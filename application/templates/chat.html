@@ -248,6 +248,8 @@
         get_code(0);
         {% if not socket_mode %}
         $("#send-btn").click(function() {
+            if ($("#message-input").val() == '')
+                return;
             $.ajax({
                 url: "/send_message",
                 data: {
@@ -328,7 +330,7 @@
     function joinToChat(){
         $.ajax({
             type: "GET",
-            url: "/add_chat",
+            url: "/join_chat",
             data: {
                 chat: chat_index
             }

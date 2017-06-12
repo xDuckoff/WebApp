@@ -93,6 +93,11 @@ API
    .. automodule:: application.models.Message
       :members:
 
+   **User**
+
+   .. automodule:: application.models.User
+      :members:
+
 **application.router**
 
 .. automodule:: application.router

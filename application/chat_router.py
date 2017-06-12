@@ -3,7 +3,7 @@
 """Web-Страницы чата"""
 
 from json import dumps
-from flask import render_template, redirect, request, session
+from flask import render_template, redirect, request
 from application import app, socketio
 from application import csrf
 from application.forms import CreateChatForm

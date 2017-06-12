@@ -33,7 +33,7 @@ class Chat(db.Model):
         db.session.add(chat_to_create)
         db.session.commit()
         chat_id = chat_to_create.id
-        Code.send(chat_id, code, username, None, u'Стартовый коммит')
+        Code.send(chat_id, code, username, None, u'Начальная версия')
         return chat_id
 
     @staticmethod

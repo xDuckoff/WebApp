@@ -46,7 +46,7 @@ class Code(db.Model):
         db.session.add(code_to_send)
         db.session.commit()
         code_id_in_chat = u"undefined"
-        text = u'Новый коммит {id} : {message}'
+        text = u'Новое изменение {id} : {message}'
         Message.send(chat_id, text.format(id=code_id_in_chat, message=message), 'sys', u'Системное сообщение')
         if app.config['SOCKET_MODE'] == 'True':
             socketio.emit('commit', room=str(chat_id), broadcast=True)

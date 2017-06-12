@@ -23,8 +23,8 @@ def join_chat():
     chat_id = request.args.get('chat', '')
     if not Chat.was_created(chat_id):
         return dumps({"success": False, "error": "Bad chat"}), 400
-    User.join_chat(int(chat_id))
-    Message.send(chat_id, User.get_login() + u" присоединился", 'sys', u'Системное сообщение')
+    if User.join_chat(int(chat_id)):
+        Message.send(chat_id, User.get_login() + u" присоединился", 'sys', u'Системное сообщение')
     return dumps({"success": True, "error": ""})
 
 

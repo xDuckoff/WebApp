@@ -26,7 +26,7 @@ stages:
 codestyle:
   stage: codestyle
   script:
-    - apk add py-virtualenv
+    - apk add py-virtualenv gcc python-dev musl-dev postgresql-dev
     - virtualenv --python=python2.7 venv
     - source venv/bin/activate
     - pip install -r requirements.txt

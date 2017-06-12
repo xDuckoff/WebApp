@@ -26,12 +26,12 @@ class Code(db.Model):
     chat = db.relationship('Chat', backref=db.backref('codes'))
     children = db.relationship('Code')
 
-    def __init__(self, content, author, chat_link, parent_link, message=u'Начальная версия'):
-        self.content = content
-        self.author = author
-        self.chat_link = chat_link
-        self.parent_link = parent_link
-        self.message = message
+    def __init__(self, **params):
+        self.content = params.get('content', "")
+        self.author = params.get('author', "")
+        self.chat_link = params.get('chat_link')
+        self.parent_link = params.get('parent_link', None)
+        self.message = params.get('message', u'Начальная версия')
 
     @staticmethod
     def send(chat_id, text, username, parent=None, message=u'Начальная версия'):
@@ -44,7 +44,14 @@ class Code(db.Model):
         :param message: Комметарий к коду
         :return: Сообщение о коммите и номере кода
         """
-        code_to_send = Code(text, username, chat_id, parent, message)
+        code_params = {
+            "content": text,
+            "author": username,
+            "message": message,
+            "chat_link": chat_id,
+            "parent_link": parent
+        }
+        code_to_send = Code(**code_params)
         db.session.add(code_to_send)
         db.session.commit()
         code_id_in_chat = u"undefined"

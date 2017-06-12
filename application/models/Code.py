@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+"""Функции работы с кодом и деревом коммитов"""
+
 from application import app, db, socketio
 from application.models import Message, User
 
@@ -8,6 +10,7 @@ class Code(db.Model):
     """Модель исходного кода в чате
 
     :param content: содержимое исходного кода
+    :param author: автор кода
     :param message: сообщение-описание редакции исходного кода
     :param chat_link: ссылка на чат, к которому принадлежит данных код
     :param parent_link: ссылка на родителя, от которого образовался данных код
@@ -23,12 +26,12 @@ class Code(db.Model):
     chat = db.relationship('Chat', backref=db.backref('codes'))
     children = db.relationship('Code')
 
-    def __init__(self, content, chat_link, parent_link, message):
-        self.content = content
+    def __init__(self, **params):
+        self.content = params.get('content', "")
         self.author = User.get_login()
-        self.chat_link = chat_link
-        self.parent_link = parent_link
-        self.message = message
+        self.chat_link = params.get('chat_link')
+        self.parent_link = params.get('parent_link')
+        self.message = params.get('message')
 
     @staticmethod
     def send(chat_id, text, parent, message):
@@ -40,7 +43,13 @@ class Code(db.Model):
         :param message: Комметарий к коду
         :return: Сообщение о коммите и номере кода
         """
-        code_to_send = Code(text, chat_id, parent, message)
+        code_params = {
+            "content": text,
+            "message": message,
+            "chat_link": chat_id,
+            "parent_link": parent
+        }
+        code_to_send = Code(**code_params)
         db.session.add(code_to_send)
         db.session.commit()
         code_id_in_chat = u"undefined"
@@ -51,13 +60,13 @@ class Code(db.Model):
         return code_to_send.id
 
     @staticmethod
-    def get(id):
+    def get(uid):
         """Возвращает форматированный код по ``id`` в виде словаря
 
-        :param id: идентификатор исходного кода
+        :param uid: идентификатор исходного кода
         :return: Автор и код
         """
-        code = Code.query.get(id)
+        code = Code.query.get(uid)
         return {
             "author": code.author,
             "code": code.content

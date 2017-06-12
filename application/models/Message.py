@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from application import app, db, socketio
+'''Функции работы с сообщениями'''
+
 import re
 import cgi
 from markdown import markdown
 from application.models import User
+from application import app, db, socketio
 
 
 class Message(db.Model):
@@ -13,7 +15,7 @@ class Message(db.Model):
     :param content:  исходное содержание сообщения
     :param author:  автор сообщения
     :param chat_link:  ссылка на чат, которому принадлежит сообщение
-    :param type: тип сообщения: системное или пользовательское
+    :param message_type: тип сообщения: системное или пользовательское
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
@@ -24,11 +26,12 @@ class Message(db.Model):
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages'))
 
-    def __init__(self, content, chat_link, type):
+    def __init__(self, content, chat_link, message_type):
         self.content = Message.markdown_decode(content)
         self.author = User.get_login()
         self.chat_link = chat_link
-        self.type = type
+        self.type = message_type
+
 
     @staticmethod
     def send(chat_id, text, type):
@@ -36,10 +39,10 @@ class Message(db.Model):
 
         :param chat_id: Номер чата
         :param text: Содержание сообщения
-        :param type: Тип сообщения
+        :param message_type: Тип сообщения
         :return: Объект созданного сообщения
         """
-        if len(text) > 1000 or len(text) == 0:
+        if len(text) > 1000 or not text:
             raise OverflowError
         message = Message(text, chat_id, type)
         db.session.add(message)

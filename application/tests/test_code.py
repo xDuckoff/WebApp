@@ -14,7 +14,13 @@ class TestCodeModel(BaseTestModel):
         self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
 
     def test_available_code(self):
-        code = Code(CODE, self.chat_id, None, COMMIT_MESSAGE)
+        code_params = {
+            "content": "content",
+            "author": "author",
+            "chat_link": 1,
+            "parent_link": None
+        }
+        code = Code(**code_params)
         self.assertTrue(hasattr(code, "id"))
         self.assertTrue(hasattr(code, "content"))
         self.assertTrue(hasattr(code, "author"))

@@ -4,7 +4,7 @@
 
 from base_test_model import *
 from application import app
-from application.models import Chat, User, Message, Code
+from application.models import Chat, Message, Code
 from mock import Mock
 from os import system
 

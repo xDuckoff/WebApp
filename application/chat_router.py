@@ -2,9 +2,9 @@
 
 """Web-Страницы чата"""
 
-from flask import render_template, redirect, request
-from application import app, socketio
 from json import dumps
+from flask import render_template, redirect, request, session
+from application import app, socketio
 from application import csrf
 from application.forms import CreateChatForm
 from application.handlers import login_required, csrf_required
@@ -33,7 +33,7 @@ def join_chat():
 @csrf_required
 def tree():
     """Данная функция создаёт дерево коммитов чата
-    
+
     :return: Страницу дерева коммитов
     """
     chat_id = request.args.get('chat', '')
@@ -172,7 +172,7 @@ if app.config['SOCKET_MODE'] == 'True':
         """Данная функция принимает сообщения от пользователя через сокеты
 
         :param json: json запрос
-        :return: Сообщние
+        :return: Сообщение
         """
         chat_id = json.get('room', '')
         if not Chat.was_created(chat_id):

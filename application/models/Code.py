@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from application import app, db, socketio
-from application.models import Message
+from application.models import Message, User
 
 
 class Code(db.Model):
     """Модель исходного кода в чате
 
     :param content: содержимое исходного кода
-    :param author: автор кода
     :param message: сообщение-описание редакции исходного кода
     :param chat_link: ссылка на чат, к которому принадлежит данных код
     :param parent_link: ссылка на родителя, от которого образовался данных код
@@ -24,30 +23,29 @@ class Code(db.Model):
     chat = db.relationship('Chat', backref=db.backref('codes'))
     children = db.relationship('Code')
 
-    def __init__(self, content, author, chat_link, parent_link, message):
+    def __init__(self, content, chat_link, parent_link, message):
         self.content = content
-        self.author = author
+        self.author = User.get_login()
         self.chat_link = chat_link
         self.parent_link = parent_link
         self.message = message
 
     @staticmethod
-    def send(chat_id, text, username, parent, message):
+    def send(chat_id, text, parent, message):
         """Отправление кода на сервер
 
         :param chat_id: Номер чата
         :param text: Код
-        :param username: Имя пользователя
         :param parent: Место в дереве коммитов
         :param message: Комметарий к коду
         :return: Сообщение о коммите и номере кода
         """
-        code_to_send = Code(text, username, chat_id, parent, message)
+        code_to_send = Code(text, chat_id, parent, message)
         db.session.add(code_to_send)
         db.session.commit()
         code_id_in_chat = u"undefined"
         text = u'Новое изменение {id} : {message}'
-        Message.send(chat_id, text.format(id=code_id_in_chat, message=message), 'sys', u'Системное сообщение')
+        Message.send(chat_id, text.format(id=code_id_in_chat, message=message), 'sys')
         if app.config['SOCKET_MODE'] == 'True':
             socketio.emit('commit', room=str(chat_id), broadcast=True)
         return code_to_send.id

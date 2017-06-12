@@ -20,20 +20,19 @@ class Chat(db.Model):
         self.code_type = code_type
 
     @staticmethod
-    def create(chat_name, code, code_type, username):
+    def create(chat_name, code, code_type):
         """Создаёт чат
 
         :param chat_name: Имя чата
         :param code: Код чата
         :param code_type: Язык программирования
-        :param username: Имя пользователя
         :return: Номер чата
         """
         chat_to_create = Chat(chat_name, code_type)
         db.session.add(chat_to_create)
         db.session.commit()
         chat_id = chat_to_create.id
-        Code.send(chat_id, code, username, None, u'Начальная версия')
+        Code.send(chat_id, code, None, u'Начальная версия')
         return chat_id
 
     @staticmethod
@@ -72,13 +71,12 @@ class Chat(db.Model):
         else:
             return Chat.query.filter(Chat.name.like('%' + name + '%')).all()[::-1]
 
-    def get_messages(self, username):
+    def get_messages(self):
         """Получение всех сообщений в чате в форматированном виде
 
-        :param username:  Имя пользователя
         :return: Сообщения пользователей
         """
-        return [message.get_info(username) for message in self.messages]
+        return [message.get_info() for message in self.messages]
 
     @staticmethod
     def was_created(chat_id):

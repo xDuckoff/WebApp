@@ -4,6 +4,7 @@ from application import app, db, socketio
 import re
 import cgi
 from markdown import markdown
+from application.models import User
 
 
 class Message(db.Model):
@@ -23,29 +24,28 @@ class Message(db.Model):
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages'))
 
-    def __init__(self, content, author, chat_link, type):
+    def __init__(self, content, chat_link, type):
         self.content = Message.markdown_decode(content)
-        self.author = author
+        self.author = User.get_login()
         self.chat_link = chat_link
         self.type = type
 
     @staticmethod
-    def send(chat_id, text, type, username):
+    def send(chat_id, text, type):
         """Отправляет сообщение в базу для сохранения
 
         :param chat_id: Номер чата
         :param text: Содержание сообщения
         :param type: Тип сообщения
-        :param username: Имя пользователя
         :return: Объект созданного сообщения
         """
         if len(text) > 1000 or len(text) == 0:
             raise OverflowError
-        message = Message(text, username, chat_id, type)
+        message = Message(text, chat_id, type)
         db.session.add(message)
         db.session.commit()
         if app.config['SOCKET_MODE'] == 'True':
-            socketio.emit('message', message.get_info(username), room=str(chat_id), broadcast=True)
+            socketio.emit('message', message.get_info(), room=str(chat_id), broadcast=True)
         return message
 
     def translate(self):
@@ -93,14 +93,13 @@ class Message(db.Model):
         text = markdown(text)
         return text
 
-    def get_info(self, username):
+    def get_info(self):
         """Получение форматированного сообщения в виде словаря
 
-        :param username: Имя пользователя
         :return: Информация о сообщении
         """
         if self.type == "usr":
-            if self.author == username:
+            if self.author == User.get_login():
                 client_type = "mine"
             else:
                 client_type = "others"

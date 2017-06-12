@@ -11,7 +11,7 @@ class TestChatModel(BaseTestModel):
 
     def setUp(self):
         BaseTestModel.setUp(self)
-        self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
+        self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
 
     def test_available_chat(self):
         self.assertTrue(hasattr(Chat, "id"))
@@ -28,9 +28,9 @@ class TestChatModel(BaseTestModel):
         self.assertEquals(chat_info.get('code_type'), CODE_TYPE)
 
     def test_get_messages(self):
-        Message.send(self.chat_id, MESSAGE, 'usr', USERNAME)
+        Message.send(self.chat_id, MESSAGE, 'usr')
         chat = Chat.get(self.chat_id)
-        received_message = chat.get_messages(USERNAME)[-1]
+        received_message = chat.get_messages()[-1]
         self.assertEquals(received_message.get('message'), CORRECT_MESSAGE)
         self.assertEquals(received_message.get('plain_message'), PLAIN_MESSAGE)
         self.assertEquals(received_message.get('type'), 'mine')
@@ -42,13 +42,13 @@ class TestChatModel(BaseTestModel):
 
     def test_chat_has_message(self):
         chat = Chat.get(self.chat_id)
-        message_id = Message.send(self.chat_id, MESSAGE, 'usr', USERNAME).id - 1
+        message_id = Message.send(self.chat_id, MESSAGE, 'usr').id - 1
         self.assertTrue(chat.has_message(str(message_id)))
         self.assertFalse(chat.has_message(str(message_id + 1)))
 
     def test_chat_has_code(self):
         chat = Chat.get(self.chat_id)
-        code_id = Code.send(self.chat_id, CODE, USERNAME, PARENT_CODE_ID, COMMIT_MESSAGE) - 1
+        code_id = Code.send(self.chat_id, CODE, PARENT_CODE_ID, COMMIT_MESSAGE) - 1
         self.assertTrue(chat.has_code(str(code_id)))
         self.assertFalse(chat.has_code(str(code_id + 1)))
 

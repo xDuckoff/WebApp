@@ -5,6 +5,8 @@
 import unittest
 import os
 from application import app, db
+from mock import Mock
+from application.models import User
 
 USERNAME = 'Bot'
 CHAT_NAME = 'Test Chat'
@@ -20,6 +22,7 @@ START_COMMIT_MESSAGE = u'Начальная версия'
 NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{id}</div>"
 MESSAGE_ESCAPE = """&lt;p&gt;Hello, I am &lt;strong&gt;Bot&lt;/strong&gt;!&lt;/p&gt;"""
 MESSAGE_TYPE = 'usr'
+MESSAGE_SYSTEM_TYPE = 'sys'
 MAIN_PAGE_URL = "/"
 CHAT_PAGE_URL = "/chat/{chat_id}"
 LOGOUT_PAGE_URL = "/logout"
@@ -40,6 +43,12 @@ class BaseTestModel(unittest.TestCase):
         app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['TEST_DATABASE_URL']
         db.create_all()
         app.config['SOCKET_MODE'] = 'True'
+        self.real = User
+        self.real.check_csrf = Mock()
+        self.real.get_login = Mock()
+        self.real.get_login.return_value = USERNAME
+        self.real.is_logined = Mock()
+        self.real.is_logined.return_value = True
 
     def tearDown(self):
         db.session.remove()

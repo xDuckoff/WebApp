@@ -11,10 +11,10 @@ class TestCodeModel(BaseTestModel):
 
     def setUp(self):
         BaseTestModel.setUp(self)
-        self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
+        self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
 
     def test_available_code(self):
-        code = Code("content", "author", 1, None, COMMIT_MESSAGE)
+        code = Code(CODE, self.chat_id, None, COMMIT_MESSAGE)
         self.assertTrue(hasattr(code, "id"))
         self.assertTrue(hasattr(code, "content"))
         self.assertTrue(hasattr(code, "author"))
@@ -31,7 +31,7 @@ class TestCodeModel(BaseTestModel):
         self.assertIsInstance(Code.parent_link.type, db.Integer)
 
     def test_code_sending(self):
-        send_code_id = Code.send(self.chat_id, CODE, USERNAME, PARENT_CODE_ID, COMMIT_MESSAGE)
+        send_code_id = Code.send(self.chat_id, CODE, PARENT_CODE_ID, COMMIT_MESSAGE)
         sent_code = Code.get(send_code_id)
         self.assertEquals(sent_code.get('author'), USERNAME)
         self.assertEquals(sent_code.get('code'), CODE)
@@ -47,7 +47,7 @@ class TestCodeModel(BaseTestModel):
 
     def test_get_root_in_chat_with_many_codes(self):
         parent_code = Code.get_root_in_chat(self.chat_id)
-        Code.send(self.chat_id, CHAT_CODE, USERNAME, parent_code.id, COMMIT_MESSAGE)
+        Code.send(self.chat_id, CHAT_CODE, parent_code.id, COMMIT_MESSAGE)
         got_root_code = Code.get_root_in_chat(self.chat_id)
         self.assertIsInstance(got_root_code, Code)
         self.assertEquals(got_root_code.id, parent_code.id)
@@ -61,7 +61,7 @@ class TestCodeModel(BaseTestModel):
 
     def test_get_commits_tree_with_many_codes(self):
         parent_code = Code.get_root_in_chat(self.chat_id)
-        child_code_id = Code.send(self.chat_id, CHAT_CODE, USERNAME, parent_code.id, COMMIT_MESSAGE)
+        child_code_id = Code.send(self.chat_id, CHAT_CODE, parent_code.id, COMMIT_MESSAGE)
         tree = Code.get_commits_tree(self.chat_id)
         self.assertIsInstance(tree.get('children'), list)
         self.assertIsInstance(tree['children'][0], dict)

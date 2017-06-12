@@ -14,12 +14,6 @@ class TestPages(BaseTestModel):
     def setUp(self):
         BaseTestModel.setUp(self)
         self.app = app.test_client()
-        self.real = User
-        self.real.check_csrf = Mock()
-        self.real.get_login = Mock()
-        self.real.get_login.return_value = USERNAME
-        self.real.is_logined = Mock()
-        self.real.is_logined.return_value = True
 
     def test_logout(self):
         self.real.logout = Mock()
@@ -31,7 +25,7 @@ class TestPages(BaseTestModel):
         self.assertEqual(response.status_code, 200)
 
     def test_login_required(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         chat_page_url = CHAT_PAGE_URL.format(chat_id=chat_id)
         response = self.app.get(chat_page_url)
         self.assertEqual(response.status_code, 200)
@@ -45,28 +39,28 @@ class TestPages(BaseTestModel):
         self.assertEqual(response.status_code, 302)
 
     def test_join_in_correct_chat(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         response = self.app.get(JOIN_CHAT_PAGE_URL.format(chat_id=chat_id))
         self.assertEqual(response.status_code, 200)
 
     def test_get_tree(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         response = self.app.get(TREE_PAGE_URL.format(chat_id=chat_id))
         self.assertEqual(response.status_code, 200)
 
     def test_get_messages(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         response = self.app.get(GET_MESSAGES_PAGE_URL.format(chat_id=chat_id))
         self.assertEqual(response.status_code, 200)
 
     def test_translate_page(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
-        Message.send(chat_id, MESSAGE, 'usr', USERNAME)
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        Message.send(chat_id, MESSAGE, 'usr')
         response = self.app.get(TRANSLATE_PAGE_URL.format(chat_id=chat_id, message_id=1))
         self.assertEqual(response.status_code, 200)
 
     def test_send_code(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         send_code_format_values = {
             "chat_id": chat_id,
             "code": CODE,
@@ -78,14 +72,14 @@ class TestPages(BaseTestModel):
         self.assertEqual(response.status_code, 200)
 
     def test_get_code(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
-        code_id = Code.send(chat_id, CODE, USERNAME, 1, COMMIT_MESSAGE)
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        code_id = Code.send(chat_id, CODE, 1, COMMIT_MESSAGE)
         response = self.app.get(GET_CODE_PAGE_URL.format(code_id=code_id))
         self.assertEqual(response.status_code, 200)
 
     def test_send_message_without_sockets(self):
         app.config['SOCKET_MODE'] = 'False'
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, USERNAME)
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         response = self.app.get(SEND_MESSAGE_PAGE_URL.format(chat_id=chat_id, message=MESSAGE))
         self.assertEqual(response.status_code, 200)
 

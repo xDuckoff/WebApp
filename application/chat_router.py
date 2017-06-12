@@ -24,7 +24,7 @@ def join_chat():
     if not Chat.was_created(chat_id):
         return dumps({"success": False, "error": "Bad chat"}), 400
     if User.join_chat(int(chat_id)):
-        Message.send(chat_id, User.get_login() + u" присоединился", 'sys', u'Системное сообщение')
+        Message.send(chat_id, u"Присоединился к чату", 'sys')
     return dumps({"success": True, "error": ""})
 
 
@@ -77,7 +77,7 @@ def send_message():
     if not Chat.was_created(chat_id):
         return dumps({"success": False, "error": "Bad chat"}), 400
     try:
-        Message.send(chat_id, message, 'usr', User.get_login())
+        Message.send(chat_id, message, 'usr')
     except OverflowError:
         return dumps({"success": False, "error": "Length Limit(1, 1000)"}), 400
     else:
@@ -96,7 +96,7 @@ def get_messages():
     if not Chat.was_created(chat_id):
         return 'Bad chat', 400
     chat = Chat.get(chat_id)
-    return dumps(chat.get_messages(User.get_login()))
+    return dumps(chat.get_messages())
 
 
 @app.route('/translate')
@@ -132,7 +132,7 @@ def send_code():
         return dumps({"success": False, "error": "Bad chat"}), 400
     chat = Chat.get(chat_id)
     # FIXME #16 Is Parent Created
-    code_id = Code.send(chat_id, code, User.get_login(), parent, cname)
+    code_id = Code.send(chat_id, code, parent, cname)
     return dumps({"success": True, "error": "", "commit": code_id})
 
 
@@ -161,7 +161,7 @@ def api_create_chat():
     name = form.name.data
     code = form.code.data
     code_type = form.code_type.data
-    chat_id = Chat.create(name, code, code_type, "Sublime bot")
+    chat_id = Chat.create(name, code, code_type)
     return '/chat/' + str(chat_id)
 
 
@@ -178,7 +178,7 @@ if app.config['SOCKET_MODE'] == 'True':
         if not Chat.was_created(chat_id):
             return
         try:
-            Message.send(chat_id, json.get('message', ''), 'usr', User.get_login())
+            Message.send(chat_id, json.get('message', ''), 'usr')
         except OverflowError:
             return
 

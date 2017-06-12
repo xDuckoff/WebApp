@@ -2,11 +2,11 @@
 
 """Обработчики функций"""
 
+from json import dumps
+from functools import wraps
 from flask import redirect, session, request
 from flask_wtf import csrf
 from wtforms.validators import ValidationError
-from json import dumps
-from functools import wraps
 
 
 def login_required(func):

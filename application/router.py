@@ -13,7 +13,7 @@ from application.models import Chat
 
 @app.route('/logout')
 def logout():
-    """Функция выхода из сессии в проекте
+    """Функция выхода из сессии в проекте 
 
     :return: Переход на главную страницу
     """

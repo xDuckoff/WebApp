@@ -4,8 +4,7 @@
 
 from json import dumps
 from functools import wraps
-from flask import redirect, session, request
-from flask_wtf import csrf
+from flask import redirect
 from wtforms.validators import ValidationError
 from application.models import User
 

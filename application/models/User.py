@@ -2,7 +2,6 @@
 
 import cgi
 from flask import session, request
-from application.models import Message
 from flask_wtf import csrf
 
 
@@ -50,7 +49,6 @@ class User(object):
             session['joined_chats'] = []
         if chat_id not in session['joined_chats']:
             session['joined_chats'].append(chat_id)
-            Message.send(chat_id, User.get_login() + u" присоединился", 'sys')
             session.modified = True
 
     @staticmethod

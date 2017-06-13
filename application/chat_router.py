@@ -70,8 +70,6 @@ def send_message():
 
     :return: Отправилось ли сообщение
     """
-    if app.config['SOCKET_MODE'] == 'True':
-        return dumps({"success": False, "error": "Bad mode"}), 400
     chat_id = request.args.get('chat', '')
     message = request.args.get('message', '')
     if not Chat.was_created(chat_id):
@@ -161,21 +159,6 @@ def api_create_chat():
 
 
 if app.config['SOCKET_MODE'] == 'True':
-
-    @socketio.on('message')
-    def handle_message(json):
-        """Данная функция принимает сообщения от пользователя через сокеты
-
-        :param json: json запрос
-        :return: Сообщение
-        """
-        chat_id = json.get('room', '')
-        if not Chat.was_created(chat_id):
-            return
-        try:
-            Message.send(chat_id, json.get('message', ''), 'usr')
-        except OverflowError:
-            return
 
     @socketio.on('join')
     def on_join(room):

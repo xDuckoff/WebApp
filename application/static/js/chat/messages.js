@@ -1,13 +1,3 @@
-function joinToChat(){
-    $.ajax({
-        type: "GET",
-        url: "/join_chat",
-        data: {
-            chat: chat_index
-        }
-    });
-}
-
 jQuery(function($) {
     var CHAT_ID = chat_index;
     window.MessagesArea = {
@@ -129,7 +119,7 @@ jQuery(function($) {
 
         _bindEvents: function() {
             this.content.on('keypress', function(e) {
-                if(e.which == 13) {
+                if ( !e.shiftKey && e.which === 13 ) {
                     MessageSender.send();
                 }
             });
@@ -164,8 +154,4 @@ jQuery(function($) {
 
     MessagesArea.init();
     MessageSender.init();
-
-    if (!IS_USE_SOCKET) {
-        joinToChat();
-    }
 });

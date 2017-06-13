@@ -30,6 +30,9 @@
     font-weight: 700;
 }
 
+.message-sender__content{
+    resize: none;
+}
 .message-sender__hint{
     font-size: .9em;
     opacity: .7;

@@ -19,9 +19,13 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-body chat-panel">
-                    <div class="chat-panel__messages"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body chat-panel">
+                            <div class="chat-panel__messages"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -29,20 +33,20 @@
                     <div class="row">
                         <div class="col-md-12">
                             <textarea class="form-control message-sender__content"
-                                      placeholder="Сообщение"></textarea>
+                                      placeholder="Сообщение"
+                                      rows="3"></textarea>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-9 message-sender__hint">
                             <strong>**жирный**</strong>&nbsp;
                             <em>_курсив_</em>&nbsp;
-                            <code>`встроенный код`</code>&nbsp;
+                            <code>`код`</code>&nbsp;
                             <code>```форматированный```</code>
                         </div>
                         <div class="col-md-3">
                             <button type="button"
-                                    class="btn btn-primary btn-block message-sender__to-send"
-                                    id="send-btn">
+                                    class="btn btn-primary btn-block message-sender__to-send">
                                 Отправить
                             </button>
                         </div>
@@ -51,7 +55,8 @@
                 <div class="col-md-2">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox"  id="voice-check"><img src="{{ url_for('static', filename='img/sound.png') }}" id="voice-img" />
+                            <input type="checkbox" id="voice-check">
+                            <img src="{{ url_for('static', filename='img/sound.png') }}" id="voice-img" />
                         </label>
                     </div>
                 </div>
@@ -117,11 +122,9 @@
 
 <script type="text/javascript">
     var INTERVAL = 1000,
-        RUS_IMAGE_ICON = '{{ url_for("static", filename="img/flag-rus.gif") }}',
-        ENG_IMAGE_ICON = '{{ url_for("static", filename="img/flag-eng.gif") }}',
         IS_USE_SOCKET = {{ socket_mode | tojson }};
 
-    var chat_index = {{ chat_id }},
+    var chat_index = "{{ chat_id }}",
         chat_code_type = "{{ chat_info['code_type'] }}",
         startCommit = {{ chat_info.start_code.id }},
         chosen_commit = 0;

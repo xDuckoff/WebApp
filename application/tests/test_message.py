@@ -58,10 +58,6 @@ class TestMessageModel(BaseTestModel):
             Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
         socketio_emit.assert_not_called()
 
-    def test_message_translate(self):
-        translated_message = self.message.translate()
-        self.assertEqual(translated_message.get('no'), CORRECT_MESSAGE)
-
     def test_message_plain(self):
         self.assertEqual(self.message.plain(), PLAIN_MESSAGE)
 

@@ -12,7 +12,6 @@ MAIN_PAGE_URL = "/"
 LOGOUT_PAGE_URL = "/logout"
 DOCS_PAGE_URL = '/documentation/index.html'
 TREE_PAGE_URL = '/tree?chat={chat_id}'
-TRANSLATE_PAGE_URL = '/translate?chat={chat_id}&index={message_id}'
 CHAT_PAGE_URL = "/chat/{chat_id}"
 CHAT_GET_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'
 CHAT_JOIN_PAGE_URL = '/join_chat?chat={chat_id}'
@@ -94,12 +93,6 @@ class TestMessagePage(BaseTestPages):
         self.real.is_logined.return_value = False
         response = self.app.get(url)
         self.assertEqual(response.status_code, 302)
-
-    def test_translate_page(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
-        Message.send(chat_id, MESSAGE, MESSAGE_TYPE)
-        response = self.app.get(TRANSLATE_PAGE_URL.format(chat_id=chat_id, message_id=1))
-        self.assertEqual(response.status_code, 200)
 
     def test_send_message_without_sockets(self):
         app.config['SOCKET_MODE'] = 'False'

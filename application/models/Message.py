@@ -18,8 +18,6 @@ class Message(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
-    content_ru = db.Column(db.Text)
-    content_en = db.Column(db.Text)
     author = db.Column(db.String(256))
     type = db.Column(db.String(3))
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
@@ -48,17 +46,6 @@ class Message(db.Model):
         if app.config['SOCKET_MODE'] == 'True':
             socketio.emit('message', message.get_info(), room=str(chat_id), broadcast=True)
         return message
-
-    def translate(self):
-        """Функция для перевода сообщений
-
-        :return: Переведённое сообщение
-        """
-        return {
-            "no": self.content,
-            "ru": self.content_ru,
-            "en": self.content_en
-        }
 
     def plain(self):
         """Функция удаляет html-теги из текста

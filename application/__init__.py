@@ -18,3 +18,8 @@ csrf.init_app(app)
 socketio = SocketIO(app)
 
 import router
+
+#import os
+
+#os.system('pip install sphinx-autobuild')
+#os.system('sphinx-autobuild WebApp WebApp/_build/html')

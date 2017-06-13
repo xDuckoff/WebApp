@@ -99,6 +99,22 @@ def get_messages():
     return dumps(chat.get_messages())
 
 
+@app.route('/get_new_messages', methods=['GET'])
+@login_required
+@csrf_required
+def get_new_messages():
+    """Запрос получения новых сообщений в чате
+
+    :return: Принято ли сообщение
+    """
+    chat_id = request.args.get('chat_id', '')
+    last_message_id = int(request.args.get('last_message_id', ''))
+    if not Chat.was_created(chat_id):
+        return 'Bad chat', 400
+    chat = Chat.get(chat_id)
+    return dumps(chat.get_last_messages(last_message_id))
+
+
 @app.route('/translate')
 def translate():
     """Функция перевода страницы

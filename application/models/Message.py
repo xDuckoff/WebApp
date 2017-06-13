@@ -23,7 +23,7 @@ class Message(db.Model):
     author = db.Column(db.String(256))
     type = db.Column(db.String(3))
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
-    chat = db.relationship('Chat', backref=db.backref('messages'))
+    chat = db.relationship('Chat', backref=db.backref('messages', lazy='dynamic'))
 
     def __init__(self, content, chat_link, message_type):
         self.content = Message.markdown_decode(content)
@@ -107,6 +107,7 @@ class Message(db.Model):
         else:
             client_type = "sys"
         return {
+            'id': self.id,
             'message': self.content,
             'plain_message': self.plain(),
             'author': self.author,

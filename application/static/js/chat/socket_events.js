@@ -1,6 +1,6 @@
 jQuery(function ($) {
     joinToChat();
-    get_messages(false);
+    //get_messages(false);
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.on('connect', function() {
         socket.emit('join', chat_index);

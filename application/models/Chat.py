@@ -3,7 +3,7 @@
 """Функции работы с чатами и их поиска"""
 
 from application import db
-from application.models import Code
+from application.models import Code, Message
 
 
 class Chat(db.Model):
@@ -79,6 +79,16 @@ class Chat(db.Model):
         """
         return [message.get_info() for message in self.messages]
 
+    def get_last_messages(self, last_message_id):
+        """Получение последних сообщений в чате в форматированном виде, \
+        которые были сохранены после определенного сообщения
+
+        :param last_message_id: id сообщения, после которого надо получить последние сообщения
+        :return: Сообщения пользователей
+        """
+        last_messages = self.messages.filter(Message.id > last_message_id)
+        return [message.get_info() for message in last_messages]
+
     @staticmethod
     def was_created(chat_id):
         """Проверка существования чата
@@ -94,7 +104,7 @@ class Chat(db.Model):
         :param message_id: Id сообщения
         :return: True, если сообщение существует, False в противном случае
         """
-        return message_id.isdigit() and len(self.messages) > int(message_id)
+        return message_id.isdigit() and self.messages.count() > int(message_id)
 
     def has_code(self, code_id):
         """Проверка существования кода в чате

@@ -28,7 +28,7 @@ class TestChatModel(BaseTestModel):
         self.assertEquals(chat_info.get('code_type'), CODE_TYPE)
 
     def test_get_messages(self):
-        Message.send(self.chat_id, MESSAGE, 'usr')
+        Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
         chat = Chat.get(self.chat_id)
         received_message = chat.get_messages()[-1]
         self.assertEquals(received_message.get('message'), CORRECT_MESSAGE)
@@ -73,3 +73,12 @@ class TestChatModel(BaseTestModel):
     def test_find_chat_all(self):
         self.assertGreaterEqual(len(Chat.find('')), 1)
         self.assertLessEqual(len(Chat.find('')), 10)
+
+    def test_get_new_messages(self):
+        Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
+        chat = Chat.get(self.chat_id)
+        old_message = Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
+        new_message = Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
+        got_last_messages = chat.get_last_messages(old_message.id)
+        self.assertEqual(len(got_last_messages), 1)
+        self.assertEqual(got_last_messages[0].get('id'), new_message.id)

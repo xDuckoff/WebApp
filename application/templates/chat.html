@@ -5,6 +5,7 @@
 {% block includes %}
     {%- include "libs/treant/links.html" -%}
     {%- include "libs/codemirror/links.html" -%}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -19,27 +20,40 @@
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-body" id="chat-panel">
-
+                <div class="panel-body chat-panel">
+                    <div class="chat-panel__messages"></div>
                 </div>
             </div>
-            <label for="message-input" class="sr-only">Сообщение</label>
             <div class="row">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="message-input" placeholder="Пиши здесь" maxlength="1000">
-                        <div class="input-group-btn">
-                                <button type="button" class="btn btn-primary btn-block" style="border-radius: 0px" id="send-btn">Отправить</button>
+                <div class="col-md-10 message-sender">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <textarea class="form-control message-sender__content"
+                                      placeholder="Сообщение"></textarea>
                         </div>
-                        <span class="input-group-addon">
-                            <input type="checkbox"  id="voice-check"> <image src="{{ url_for('static', filename='img/sound.png') }}" id="voice-img"></image>
-                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9 message-sender__hint">
+                            <strong>**жирный**</strong>&nbsp;
+                            <em>_курсив_</em>&nbsp;
+                            <code>`встроенный код`</code>&nbsp;
+                            <code>```форматированный```</code>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button"
+                                    class="btn btn-primary btn-block message-sender__to-send"
+                                    id="send-btn">
+                                Отправить
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <strong>**жирный**</strong> <em>_курсив_</em> <code>`встроенный код`</code> <code>```форматированный```</code>
+                <div class="col-md-2">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"  id="voice-check"><img src="{{ url_for('static', filename='img/sound.png') }}" id="voice-img" />
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>

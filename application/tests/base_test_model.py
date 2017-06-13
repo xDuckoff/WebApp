@@ -23,18 +23,6 @@ NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{id}<
 MESSAGE_ESCAPE = """&lt;p&gt;Hello, I am &lt;strong&gt;Bot&lt;/strong&gt;!&lt;/p&gt;"""
 MESSAGE_TYPE = 'usr'
 MESSAGE_SYSTEM_TYPE = 'sys'
-MAIN_PAGE_URL = "/"
-CHAT_PAGE_URL = "/chat/{chat_id}"
-LOGOUT_PAGE_URL = "/logout"
-JOIN_CHAT_PAGE_URL = '/join_chat?chat={chat_id}'
-TREE_PAGE_URL = '/tree?chat={chat_id}'
-GET_MESSAGES_PAGE_URL = '/tree?chat={chat_id}'
-TRANSLATE_PAGE_URL = '/translate?chat={chat_id}&index={message_id}'
-SEND_CODE_PAGE_URL = '/send_code?chat={chat_id}&code={code}&parent={parent}&cname={cname}'
-GET_CODE_PAGE_URL = '/get_code?index={code_id}'
-GET_CHAT_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'
-SEND_MESSAGE_PAGE_URL = '/send_message?chat={chat_id}&message={message}'
-DOCS_PAGE_URL = '/documentation/index.html'
 
 
 class BaseTestModel(unittest.TestCase):

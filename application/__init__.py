@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 """Основные положения запуска приложения"""
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -17,3 +16,7 @@ csrf.init_app(app)
 socketio = SocketIO(app)
 
 import router
+
+import flask_migrate
+with app.app_context():    
+	flask_migrate.upgrade()

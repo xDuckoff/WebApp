@@ -19,6 +19,14 @@ def logout():
     return redirect('/')
 
 
+@app.route('/help')
+def help_page():
+    """Функция переходан на страницу обратной связи
+
+    :return: Переход на страницу обратной связи
+    """
+    return render_template('help.html')
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     """Данная функция генерирует главную страницу для пользователя

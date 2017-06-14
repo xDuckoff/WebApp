@@ -3,7 +3,17 @@ body{
     height: 100%;
     background-color: #2f3e4e;
     color: #dddddd;
-    
+}
+
+#contractform{
+    position: absolute;
+    width: 20%;
+    height: 20%;
+    margin: auto;
+}
+
+.req { 
+    color: #ca5354; 
 }
 
 .main-content{

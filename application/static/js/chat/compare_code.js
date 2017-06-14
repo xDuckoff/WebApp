@@ -1,4 +1,4 @@
- jQuery(function ($) {
+jQuery(function ($) {
     $('#compare').on('shown.bs.modal', function () {
         $.ajax({
             url:"/get_code",

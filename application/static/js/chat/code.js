@@ -1,63 +1,179 @@
-function send_code() {
-    $.ajax({
-        url:"/send_code",
-        type:"GET",
-        data:{
-            chat: chat_index,
-            code: editor.getValue(),
-            parent: parent_index,
-            cname: $('#to_send').val()
-        },
-        dataType:'json',
-        success: function(data){
-            chosen_commit = data.commit;
-        },
-        error: function() {
-            alert('Извините, произошла ошибка при загрузке кода!');
-        }
-    });
-}
-function get_code(codeId){
-    codeId = codeId || startCommit;
-    chosen_commit = codeId;
-    $.ajax({
-        url: "/get_code",
-        type: "GET",
-        data: {
-            chat: chat_index,
-            index: codeId
-        },
-        dataType: "json",
-        success: function(data){
-            parent_index = codeId;
-            editor.getDoc().setValue(data.code);
-        }
-    });
-}
-
 jQuery(function($) {
-    code_types = {
-        "C": "text/x-csrc",
-        "C#": "text/x-csharp",
-        "C++": "text/x-c++src",
-        "CSS": "text/css",
-        "HTML": "text/html",
-        "Java": "text/x-java",
-        "JavaScript": "text/javascript",
-        "Python": "text/x-python"
-    };
-    chat_code_type = code_types[chat_code_type];
-    editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
-        mode: {
-            name: chat_code_type,
-            version: 2,
-            singleLineStringErrors: false
-        },
-        lineNumbers: true,
-        indentUnit: 4,
-        matchBrackets: true,
-        value: "print('Hello World!')"
-    });
-    get_code(0);
+    window.CodeEditor = {
+        field: null,
+        currentCommit: CODE_START_COMMIT,
 
+        init: function() {
+            this.setCodeMirrorToField();
+            this.getCode(this.currentCommit);
+        },
+
+        setCodeMirrorToField: function() {
+            var field = $('.code-editor').get(0);
+            this.field = CodeMirror.fromTextArea(field, {
+                mode: {
+                    name: CODE_TYPE,
+                    version: 2,
+                    singleLineStringErrors: false
+                },
+                lineNumbers: true,
+                indentUnit: 4,
+                matchBrackets: true,
+                value: "print('Hello World!')"
+            });
+        },
+
+        getCode: function(codeId) {
+            $.ajax({
+                url: "/get_code",
+                type: "GET",
+                data: {
+                    chat: CHAT_ID,
+                    index: codeId
+                },
+                dataType: "json",
+                success: function(data){
+                    CodeEditor.currentCommit = codeId;
+                    CodeEditor.field
+                        .getDoc()
+                        .setValue(data.code);
+                }
+            });
+        },
+
+        sendCode: function(message) {
+            $.ajax({
+                url:"/send_code",
+                type:"GET",
+                data: {
+                    chat: CHAT_ID,
+                    code: CodeEditor.field.getValue(),
+                    parent: this.currentCommit,
+                    message: message
+                },
+                dataType:'json',
+                success: function(data){
+                    CodeEditor.currentCommit = data.commit;
+                },
+                error: function() {
+                    alert('Извините, произошла ошибка при сохранении кода!');
+                }
+            });
+        }
+    };
+
+    window.CodeTree = {
+        canvas: $('.code-tree'),
+        config: {
+            container: '.code-tree',
+            levelSeparation: 70,
+            siblingSeparation: 70,
+            rootOrientation: "WEST",
+            connectors: {
+                style: {
+                    stroke: 'white'
+                }
+            }
+        },
+
+        init: function() {
+            this.update();
+            this.canvas.on("click", ".commit_node", function(){
+                var codeId = $(this).data('id');
+                CodeTree.highlightNode(codeId);
+                CodeEditor.getCode(codeId);
+            });
+            this.watch();
+        },
+
+        watch: function() {
+            if (IS_USE_SOCKET) {
+                ChatSocket.on('commit', function() {
+                    CodeTree.update();
+                });
+            } else {
+                this._watchTimer = setInterval(function() {
+                    CodeTree.update();
+                }, INTERVAL);
+            }
+        },
+
+        update: function() {
+            $.ajax({
+                url: "/tree",
+                type: "GET",
+                data: {
+                    chat: CHAT_ID
+                },
+                dataType: "json",
+                success: function( data ) {
+                    CodeTree.render(data);
+                }
+            });
+        },
+
+        render: function(data) {
+            var simple_chart_config = {
+                    chart: $.extend({}, this.config),
+                    nodeStructure: data
+                };
+            new Treant(simple_chart_config, function(){
+                CodeTree.highlightNode(CodeEditor.currentCommit);
+            }, $);
+        },
+
+        highlightNode: function(codeId) {
+            var nodes = this.canvas.find('.commit_node');
+            nodes.removeClass('chosen')
+                    .filter('[data-id=' + codeId + ']')
+                    .addClass('chosen');
+        }
+    };
+
+    window.CodeSender = {
+        element: $('#code-sender'),
+        message: null,
+        toSend: null,
+        init: function() {
+            this.message = this.element.find('.code-sender__message') ;
+            this.toSend = this.element.find('.code-sender__to-send');
+            this._bindEvents();
+        },
+
+        _bindEvents: function() {
+            this.element.on('hidden.bs.modal', function () {
+                CodeSender.clear();
+            });
+            this.toSend.on('click', function() {
+                CodeSender.send();
+            });
+        },
+
+        clear: function() {
+            this.message.val('')
+                .parent('.form-group')
+                .removeClass('has-error')
+        },
+
+        send: function() {
+            if (this.isValid()) {
+                CodeEditor.sendCode(this.message.val());
+                this.element.modal('hide');
+            }
+        },
+
+        isValid: function() {
+            if ( !this.message.val() ) {
+                this.message
+                    .parent('.form-group')
+                    .addClass('has-error');
+                return false;
+            }
+            return true;
+        }
+    };
+
+    CodeEditor.init();
+    CodeTree.init();
+    CodeSender.init();
 });

@@ -29,16 +29,16 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-10 message-sender">
+                <div class="message-sender col-md-10">
                     <div class="row">
                         <div class="col-md-12">
-                            <textarea class="form-control message-sender__content"
+                            <textarea class="message-sender__content form-control"
                                       placeholder="Сообщение"
                                       rows="3"></textarea>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-9 message-sender__hint">
+                        <div class="message-sender__hint col-md-9">
                             <strong>**жирный**</strong>&nbsp;
                             <em>_курсив_</em>&nbsp;
                             <code>`код`</code>&nbsp;
@@ -46,7 +46,7 @@
                         </div>
                         <div class="col-md-3">
                             <button type="button"
-                                    class="btn btn-primary btn-block message-sender__to-send">
+                                    class="message-sender__to-send btn btn-primary btn-block">
                                 Отправить
                             </button>
                         </div>
@@ -62,16 +62,27 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6" id="column">
-            <textarea class="form-control" id="code-editor" rows="3"></textarea>
-            <button type="submit" class="btn btn-default btn-block chat-control-btn" id="go-btn" data-toggle="modal" data-target="#send">Сохранить изменения</button>
-            <div class="row">
-                <div class="col-sm-12" id="column">
-                    <div type="submit" class="btn btn-default btn-block chat-control-btn" id="compare-btn">Сравнить с исходным кодом</div>
+        <div class="col-md-6">
+            <div>
+                <textarea class="code-editor"></textarea>
+            </div>
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-md-6">
+                    <div class="btn btn-default btn-block"
+                         data-toggle="modal"
+                         data-target="#code-sender">
+                        Сохранить изменения
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="btn btn-default btn-block"
+                         id="compare-btn">
+                        Сравнить с исходным кодом
+                    </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12" id="tree"></div>
+                <div class="code-tree col-md-12"></div>
             </div>
         </div>
     </div>
@@ -84,7 +95,7 @@
                     <h4 class="modal-title" id="myLabel" align=center>Сравнить с исходным кодом</h4>
                 </div>
                 <div class="modal-body">
-                    <div rows="3" id="comp"></div>
+                    <div id="comp"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-default" id="close-btn">Закрыть</button>
@@ -92,7 +103,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="send" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="code-sender" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" >
             <div class="main-content">
                 <div class="modal-header">
@@ -100,11 +111,15 @@
                     <p class="modal-title" id="myLabel">Отправка кода</p>
                 </div>
                 <div class="modal-body">
-                        <input type="text" class="form-control" placeholder="Название коммита" id="to_send">
+                    <div class="form-group">
+                        <input type="text"
+                               class="code-sender__message form-control"
+                               placeholder="Название коммита">
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="s" class="btn btn-default" id="send-btn" data-dismiss="modal" onclick="send_code()">Отправить</button>
-                    <button type="s" class="btn btn-default" id="send-btn" data-dismiss="modal" onclick="$('#to_send').val('');">Отмена</button>
+                    <div class="code-sender__to-send btn btn-primary">Отправить</div>
+                    <div class="btn btn-default" data-dismiss="modal">Отмена</div>
                 </div>
             </div>
         </div>
@@ -117,14 +132,13 @@
     {%- include "libs/treant/scripts.html" -%}
     {%- include "libs/codemirror/scripts.html" -%}
 
-    {% if socket_mode %}
-        {%- include "libs/socket.io.html" -%}
-    {% endif %}
-
 <script type="text/javascript">
     var INTERVAL = 1000,
         IS_USE_SOCKET = {{ socket_mode | tojson }},
-        MAIN_ICON_URL = "{{ url_for('static', filename='img/logo-x32.png') }}";
+        MAIN_ICON_URL = "{{ url_for('static', filename='img/logo-x32.png') }}",
+        CHAT_ID = "{{ chat_id }}",
+        CODE_TYPE = "{{ chat_info['code_type'] }}",
+        CODE_START_COMMIT = {{ chat_info.start_code.id }};
 
     var chat_index = "{{ chat_id }}",
         chat_code_type = "{{ chat_info['code_type'] }}",
@@ -138,15 +152,15 @@
     });
 </script>
 
-<script src="{{ url_for('static', filename='js/chat/voice.kit.js') }}"></script>
-{#<script src="{{ url_for('static', filename='js/chat/notification.kit.js') }}"></script>#}
-<script src="{{ url_for('static', filename='js/chat/messages.js') }}"></script>
-<script src="{{ url_for('static', filename='js/chat/code.js') }}"></script>
-<script src="{{ url_for('static', filename='js/chat/tree.js') }}"></script>
-<script src="{{ url_for('static', filename='js/chat/compare_code.js') }}"></script>
     {% if socket_mode %}
+        {%- include "libs/socket.io.html" -%}
 <script src="{{ url_for('static', filename='js/chat/socket_events.js') }}"></script>
     {% endif %}
+
+<script src="{{ url_for('static', filename='js/chat/voice.kit.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat/messages.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat/code.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat/compare_code.js') }}"></script>
 <script type="text/javascript">
     jQuery(function ($) {
         // joinToChat

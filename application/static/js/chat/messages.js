@@ -1,5 +1,4 @@
 jQuery(function($) {
-    var CHAT_ID = chat_index;
     window.MessagesArea = {
         SYSTEM_TEMPLATE: "<div class=\"well well-sm system-message\">" +
             "<div class=\"system-message__author\">{{author}}</div>" +
@@ -21,10 +20,13 @@ jQuery(function($) {
         },
 
         watch: function() {
-            if (!IS_USE_SOCKET) {
+            if (IS_USE_SOCKET) {
+                ChatSocket.on('message', function(message) {
+                    MessagesArea.addMessage(message, true);
+                });
+            } else {
                 this._watchTimer = setInterval(function() {
                     MessagesArea.checkNewMessages(true);
-                    //get_tree("tree");
                 }, INTERVAL);
             }
         },

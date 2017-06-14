@@ -1,12 +1,3 @@
-function joinToChat(){
-    $.ajax({
-        type: "GET",
-        url: "/join_chat",
-        data: {
-            chat: chat_index
-        }
-    });
-}
 
 jQuery(function() {
     var CHAT_ID = chat_index;
@@ -20,14 +11,11 @@ jQuery(function() {
     });
 
     socket.on('message', function(message) {
-        MessagesArea.addMessage(message);
-        // notific(data);
+        MessagesArea.addMessage(message, true);
     });
 
     socket.on('commit', function() {
         // TODO
         // get_tree("tree");
     });
-
-    joinToChat();
 });

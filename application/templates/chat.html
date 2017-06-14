@@ -113,6 +113,7 @@
 {% endblock %}
 
 {% block scripts %}
+    {%- include "libs/push.html" -%}
     {%- include "libs/treant/scripts.html" -%}
     {%- include "libs/codemirror/scripts.html" -%}
 
@@ -122,7 +123,8 @@
 
 <script type="text/javascript">
     var INTERVAL = 1000,
-        IS_USE_SOCKET = {{ socket_mode | tojson }};
+        IS_USE_SOCKET = {{ socket_mode | tojson }},
+        MAIN_ICON_URL = "{{ url_for('static', filename='img/logo-x32.png') }}";
 
     var chat_index = "{{ chat_id }}",
         chat_code_type = "{{ chat_info['code_type'] }}",
@@ -137,7 +139,7 @@
 </script>
 
 <script src="{{ url_for('static', filename='js/chat/voice.kit.js') }}"></script>
-<script src="{{ url_for('static', filename='js/chat/notification.kit.js') }}"></script>
+{#<script src="{{ url_for('static', filename='js/chat/notification.kit.js') }}"></script>#}
 <script src="{{ url_for('static', filename='js/chat/messages.js') }}"></script>
 <script src="{{ url_for('static', filename='js/chat/code.js') }}"></script>
 <script src="{{ url_for('static', filename='js/chat/tree.js') }}"></script>
@@ -147,6 +149,15 @@
     {% endif %}
 <script type="text/javascript">
     jQuery(function ($) {
+        // joinToChat
+        $.ajax({
+            type: "GET",
+            url: "/join_chat",
+            data: {
+                chat: chat_index
+            }
+        });
+
         $("#login-btn").click(function() {
             if (chat_id == '')
                 window.location = "/login";

@@ -42,15 +42,15 @@ jQuery(function($) {
             });
         },
 
-        renderMessages: function(messages) {
+        renderMessages: function(messages, isNotify) {
+            isNotify = isNotify || false;
             for (var i = 0; i < messages.length; i++) {
-                this.addMessage(messages[i]);
-                //if (noti)
-                //    notific(messages[i]);
+                this.addMessage(messages[i], isNotify);
             }
         },
 
-        addMessage: function(message) {
+        addMessage: function(message, isNotify) {
+            isNotify = isNotify || false;
             if (message.type === "sys"){
                 this.renderSystemMessage(message);
             } else {
@@ -58,6 +58,9 @@ jQuery(function($) {
             }
             this.lastMessageId = message.id;
             this.scrollToEnd();
+            if (isNotify) {
+                this.doNotification(message);
+            }
             // TODO
             //if ($("#voice-check").prop("checked")){
             //    if (message.type != 'sys') {
@@ -100,9 +103,19 @@ jQuery(function($) {
                 },
                 dataType: "json",
                 success: function(messages) {
-                    MessagesArea.renderMessages(messages);
+                    MessagesArea.renderMessages(messages, true);
                 }
             });
+        },
+
+        doNotification: function(message) {
+            if (message.type !== 'mine') {
+                Push.create(message.author, {
+                    body: message.plain_message,
+                    icon: MAIN_ICON_URL,
+                    timeout: 4000
+                });
+            }
         }
     };
 

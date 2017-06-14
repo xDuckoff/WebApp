@@ -48,7 +48,7 @@ def index():
                            login=User.get_login(),
                            allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
                            allowed_languages=app.config["ALLOWED_LANGUAGES"]
-                           )
+                          )
 
 
 @app.route('/documentation/<path:filename>')

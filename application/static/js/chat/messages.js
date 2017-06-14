@@ -8,6 +8,7 @@ jQuery(function($) {
             "<div class=\"user-message__author\">{{author}}</div>" +
             "<div class=\"user-message__content\">{{content}}</div>" +
         "</div>",
+        SYSTEM_TYPE: 'sys',
         element: $('.chat-panel'),
         area: null,
         lastMessageId: null,
@@ -53,7 +54,7 @@ jQuery(function($) {
 
         addMessage: function(message, isNotify) {
             isNotify = isNotify || false;
-            if (message.type === "sys"){
+            if (message.type === this.SYSTEM_TYPE){
                 this.renderSystemMessage(message);
             } else {
                 this.renderUserMessage(message);
@@ -62,17 +63,8 @@ jQuery(function($) {
             this.scrollToEnd();
             if (isNotify) {
                 this.doNotification(message);
+                this.soundMessage(message);
             }
-            // TODO
-            //if ($("#voice-check").prop("checked")){
-            //    if (message.type != 'sys') {
-            //        var text_to_play = message.author + ' сказал ' + message.plain_message;
-            //        voice.addText(text_to_play);
-            //    } else {
-            //        var text_to_play = message.message;
-            //        voice.addText(text_to_play);
-            //    }
-            //};
         },
 
         renderSystemMessage: function(message) {
@@ -118,6 +110,17 @@ jQuery(function($) {
                     timeout: 4000
                 });
             }
+        },
+
+        soundMessage: function(message) {
+            var soundText;
+            if (message.type !== this.SYSTEM_TYPE) {
+                soundText = message.author + ' написал ' + message.plain_message;
+            } else {
+                soundText = message.message;
+            }
+            VoiceKit.addQueueItem(soundText);
+
         }
     };
 

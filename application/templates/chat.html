@@ -9,8 +9,6 @@
 {% endblock %}
 
 {% block content %}
-<audio src="" id="audio"></audio>
-<audio src="" id="sys_audio"></audio>
 <div class="container-fluid">
     <div class="row">
         <h3 class="text-center" style="margin-top: -20px;">
@@ -52,11 +50,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="voice col-md-2">
+                    <audio class="voice__audio"></audio>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" id="voice-check">
-                            <img src="{{ url_for('static', filename='img/sound.png') }}" id="voice-img" />
+                            <input type="checkbox" class="voice__switcher">
+                            <img class="voice__icon"
+                                 src="{{ url_for('static', filename='img/sound.png') }}" />
                         </label>
                     </div>
                 </div>

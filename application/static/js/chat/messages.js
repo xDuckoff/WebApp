@@ -117,7 +117,7 @@ jQuery(function($) {
             if (message.type !== this.SYSTEM_TYPE) {
                 soundText = message.author + ' написал ' + message.plain_message;
             } else {
-                soundText = message.message;
+                soundText = message.plain_message;
             }
             VoiceKit.addQueueItem(soundText);
 

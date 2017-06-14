@@ -76,7 +76,8 @@
                 </div>
                 <div class="col-md-6">
                     <div class="btn btn-default btn-block"
-                         id="compare-btn">
+                         data-toggle="modal"
+                         data-target="#code-compare">
                         Сравнить с исходным кодом
                     </div>
                 </div>
@@ -87,28 +88,28 @@
         </div>
     </div>
 
-    <div class="modal modal-wide fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal modal-wide fade" id="code-compare" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="main-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myLabel" align=center>Сравнить с исходным кодом</h4>
+                    <h4 class="modal-title text-center">Сравнить с исходным кодом</h4>
                 </div>
                 <div class="modal-body">
-                    <div id="comp"></div>
+                    <div class="code-compare__field"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-default" id="close-btn">Закрыть</button>
+                    <div class="btn btn-default" data-dismiss="modal">Закрыть</div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="code-sender" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="code-sender" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" >
             <div class="main-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <p class="modal-title" id="myLabel">Отправка кода</p>
+                    <p class="modal-title">Отправка кода</p>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -139,12 +140,6 @@
         CHAT_ID = "{{ chat_id }}",
         CODE_TYPE = "{{ chat_info['code_type'] }}",
         CODE_START_COMMIT = {{ chat_info.start_code.id }};
-
-    var chat_index = "{{ chat_id }}",
-        chat_code_type = "{{ chat_info['code_type'] }}",
-        startCommit = {{ chat_info.start_code.id }},
-        chosen_commit = 0;
-    var parent_index = startCommit;
     $.ajaxSetup({
         headers: {
             'X-Csrf-Token': "{{ csrf_token() }}"
@@ -168,15 +163,8 @@
             type: "GET",
             url: "/join_chat",
             data: {
-                chat: chat_index
+                chat: CHAT_ID
             }
-        });
-
-        $("#login-btn").click(function() {
-            if (chat_id == '')
-                window.location = "/login";
-            else
-                window.location = "/login?chat=" + chat_id;
         });
     });
 </script>

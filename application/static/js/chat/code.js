@@ -5,7 +5,7 @@ jQuery(function($) {
 
         init: function() {
             this.setCodeMirrorToField();
-            this.getCode(this.currentCommit);
+            this.setCode(this.currentCommit);
         },
 
         setCodeMirrorToField: function() {
@@ -23,7 +23,11 @@ jQuery(function($) {
             });
         },
 
-        getCode: function(codeId) {
+        getCode: function() {
+            return this.field.getValue();
+        },
+
+        setCode: function(codeId) {
             $.ajax({
                 url: "/get_code",
                 type: "GET",
@@ -35,7 +39,6 @@ jQuery(function($) {
                 success: function(data){
                     CodeEditor.currentCommit = codeId;
                     CodeEditor.field
-                        .getDoc()
                         .setValue(data.code);
                 }
             });
@@ -47,7 +50,7 @@ jQuery(function($) {
                 type:"GET",
                 data: {
                     chat: CHAT_ID,
-                    code: CodeEditor.field.getValue(),
+                    code: CodeEditor.getCode(),
                     parent: this.currentCommit,
                     message: message
                 },
@@ -81,7 +84,7 @@ jQuery(function($) {
             this.canvas.on("click", ".commit_node", function(){
                 var codeId = $(this).data('id');
                 CodeTree.highlightNode(codeId);
-                CodeEditor.getCode(codeId);
+                CodeEditor.setCode(codeId);
             });
             this.watch();
         },
@@ -141,11 +144,19 @@ jQuery(function($) {
         },
 
         _bindEvents: function() {
+            this.element.on('shown.bs.modal', function () {
+                CodeSender.message.focus();
+            });
             this.element.on('hidden.bs.modal', function () {
                 CodeSender.clear();
             });
             this.toSend.on('click', function() {
                 CodeSender.send();
+            });
+            this.message.on('keypress', function(e) {
+                if ( e.which === 13 ) {
+                    CodeSender.send();
+                }
             });
         },
 

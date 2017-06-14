@@ -1,4 +1,9 @@
 flask db migrate
-flask db upgrade
-echo Documentation on http://127.0.0.1:5000/documentation/index.html
+cd docs/ 
+make html
+cd ..
 flask run
+#import os
+
+#os.system('chmod +x start_app.sh')
+#os.system('sh start_app.sh')

@@ -4,8 +4,7 @@
 
 import os
 from flask import render_template, redirect, send_from_directory
-from flask_recaptcha import ReCaptcha
-from application import app
+from application import app, recaptcha
 from forms import LoginForm, CreateChatForm, FindChatForm
 from application.models import Chat, User
 
@@ -29,6 +28,7 @@ def submit():
     else:
         # FAILED
         pass
+
 @app.route('/help')
 def help_page():
     """Функция переходан на страницу обратной связи

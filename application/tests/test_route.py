@@ -17,8 +17,8 @@ CHAT_GET_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'
 CHAT_JOIN_PAGE_URL = '/join_chat?chat={chat_id}'
 CODE_SEND_PAGE_URL = '/send_code?chat={chat_id}&code={code}&parent={parent}&cname={cname}'
 CODE_GET_PAGE_URL = '/get_code?index={code_id}'
-MESSAGES_GET_PAGE_URL = '/get_messages?chat={chat_id}'
-MESSAGES_NEW_GET_PAGE_URL = '/get_new_messages?chat_id={chat_id}&last_message_id={last_message_id}'
+MESSAGES_GET_PAGE_URL = '/get_messages?chat_id={chat_id}'
+MESSAGES_GET_LAST_PAGE_URL = '/get_messages?chat_id={chat_id}&last_message_id={last_message_id}'
 MESSAGE_SEND_PAGE_URL = '/send_message?chat={chat_id}&message={message}'
 
 
@@ -82,14 +82,14 @@ class TestMessagePage(BaseTestPages):
     def test_get_last_messages(self):
         chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         last_message = Message.send(chat_id, MESSAGE, MESSAGE_TYPE)
-        url = MESSAGES_NEW_GET_PAGE_URL.format(chat_id=chat_id, last_message_id=last_message.id)
+        url = MESSAGES_GET_LAST_PAGE_URL.format(chat_id=chat_id, last_message_id=last_message.id)
         response = self.app.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_deny_get_last_messages_without_login(self):
         chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         last_message = Message.send(chat_id, MESSAGE, MESSAGE_TYPE)
-        url = MESSAGES_NEW_GET_PAGE_URL.format(chat_id=chat_id, last_message_id=last_message.id)
+        url = MESSAGES_GET_LAST_PAGE_URL.format(chat_id=chat_id, last_message_id=last_message.id)
         self.real.is_logined.return_value = False
         response = self.app.get(url)
         self.assertEqual(response.status_code, 302)

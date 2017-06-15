@@ -86,27 +86,12 @@ def send_message():
 @login_required
 @csrf_required
 def get_messages():
-    """Функция принятия сообщений
-
-    :return: Принято ли сообщение
-    """
-    chat_id = request.args.get('chat', '')
-    if not Chat.was_created(chat_id):
-        return 'Bad chat', 400
-    chat = Chat.get(chat_id)
-    return dumps(chat.get_messages())
-
-
-@app.route('/get_new_messages', methods=['GET'])
-@login_required
-@csrf_required
-def get_new_messages():
     """Запрос получения новых сообщений в чате
 
     :return: Принято ли сообщение
     """
     chat_id = request.args.get('chat_id', '')
-    last_message_id = int(request.args.get('last_message_id', ''))
+    last_message_id = int(request.args.get('last_message_id', 0))
     if not Chat.was_created(chat_id):
         return 'Bad chat', 400
     chat = Chat.get(chat_id)

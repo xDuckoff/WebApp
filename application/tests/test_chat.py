@@ -27,14 +27,14 @@ class TestChatModel(BaseTestModel):
         self.assertEquals(chat_info.get('name'), CHAT_NAME)
         self.assertEquals(chat_info.get('code_type'), CODE_TYPE)
 
-    def test_get_messages(self):
-        Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
+    def test_get_all_messages(self):
+        second_message = Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
+        third_message = Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
         chat = Chat.get(self.chat_id)
-        received_message = chat.get_messages()[-1]
-        self.assertEquals(received_message.get('message'), CORRECT_MESSAGE)
-        self.assertEquals(received_message.get('plain_message'), PLAIN_MESSAGE)
-        self.assertEquals(received_message.get('type'), 'mine')
-        self.assertEquals(received_message.get('author'), USERNAME)
+        got_messages = chat.get_last_messages()
+        self.assertEqual(len(got_messages), 3)
+        self.assertEqual(got_messages[1].get('id'), second_message.id)
+        self.assertEqual(got_messages[2].get('id'), third_message.id)
 
     def test_was_chat_created(self):
         self.assertTrue(Chat.was_created(str(self.chat_id)))
@@ -74,8 +74,7 @@ class TestChatModel(BaseTestModel):
         self.assertGreaterEqual(len(Chat.find('')), 1)
         self.assertLessEqual(len(Chat.find('')), 10)
 
-    def test_get_new_messages(self):
-        Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
+    def test_get_last_messages(self):
         chat = Chat.get(self.chat_id)
         old_message = Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
         new_message = Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)

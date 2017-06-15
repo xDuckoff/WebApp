@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """Запуск проекта"""
+
 import os
 import flask_migrate
 from application import app

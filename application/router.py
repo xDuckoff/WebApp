@@ -4,6 +4,7 @@
 
 import os
 from flask import render_template, redirect, send_from_directory
+from flask_recaptcha import ReCaptcha
 from application import app
 from forms import LoginForm, CreateChatForm, FindChatForm
 from application.models import Chat, User
@@ -18,7 +19,16 @@ def logout():
     User.logout()
     return redirect('/')
 
-
+@app.route("/submit", methods=["POST"])
+def submit():
+    """Функция проверки капчи
+    """
+    if recaptcha.verify():
+        # SUCCESS
+        pass
+    else:
+        # FAILED
+        pass
 @app.route('/help')
 def help_page():
     """Функция переходан на страницу обратной связи

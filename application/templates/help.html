@@ -5,12 +5,13 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 <script src="{{ url_for('static', filename='js/jquery.min.js') }}" type="text/javascript"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" type="text/javascript"></script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 {% endblock %}
 
 {% block content %}
  <div id="help_platform">
     <h1>Заполните форму.</h1>
-    <form id="contactform" name="contact" method="post" action="#">
+    <form id="contactform" name="contact" method="post">
       <p class="note"><span class="req">*</span> Поля со звездочкой обязательны для заполнения!!!</p>
       <div class="row">
         <label for="name">Ваше имя <span class="req">*</span></label>
@@ -26,10 +27,32 @@
         <label for="message">Ваш вопрос <span class="req">*</span></label>
         <textarea name="message" id="message" class="txtarea" tabindex="3" required></textarea>
       </div>
+
+      <div>
+      	<div class="g-recaptcha" data-sitekey="6Lf1eCUUAAAAANoxJbNS7FJMKrFiuQdpKsjzbTQP"></div>
+      </div>
       
       <div class="center">
         <input type="submit" id="submitbtn" name="submitbtn" tabindex="4" value="Отправить вопрос">
       </div>
     </form>
   </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    if ($.post['submitbtn']){
+
+    	if (!$.post['g-recaptcha-response']){
+    		alert('Заполните reCAPTCHA');
+    	}
+
+    	var url = 'https://www.google.com/recaptcha/api/siteverify';
+    	var key = '6Lf1eCUUAAAAAOe7N9op8i9KvY2zCYbgVHNZGNBX';
+    	var query = url + '?secret=' + key + '&response='+$.post['g-recaptcha-response']+'&remoteip='+;
+
+    	var data  = file_get_contents(query);
+
+    }
+</script>
 {% endblock %}

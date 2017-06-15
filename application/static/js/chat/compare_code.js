@@ -45,6 +45,9 @@ jQuery(function ($) {
             this.element.on('shown.bs.modal', function() {
                 CodeCompare._setCodeMirrorToField();
             });
+            this.element.on('hidden.bs.modal', function() {
+                CodeCompare.field.empty();
+            });
         }
     };
     CodeCompare.init();

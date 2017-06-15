@@ -10,9 +10,9 @@ jQuery(function($){
         init: function() {
             this.audio = this.element.find('.voice__audio')[0];
             this.switcher = this.element.find('.voice__switcher');
-            var storedVoiceSwitchState = localStorage.getItem('chat-voice-switcher') === 'true';
-            this.switcher.prop('checked', storedVoiceSwitchState);
+            this.icon = this.element.find('.voice__icon');
             this._bindEvents();
+            this._setSwitchStateByStorage();
         },
 
         _bindEvents: function() {
@@ -23,9 +23,15 @@ jQuery(function($){
                 VoiceKit.endSoundHandler();
             };
             this.switcher.on('change', function() {
-                localStorage.setItem('chat-voice-switcher', VoiceKit.isSwitchOn());
-                VoiceKit.checkPlay();
+                VoiceKit.toggleSwitch();
             });
+        },
+
+        _setSwitchStateByStorage: function() {
+            var storedVoiceSwitchState = localStorage.getItem('chat-voice-switcher') === 'true';
+            this.switcher
+                .prop('checked', storedVoiceSwitchState)
+                .change();
         },
 
         play: function(){
@@ -58,6 +64,22 @@ jQuery(function($){
 
         isSwitchOn: function() {
             return this.switcher.is(':checked');
+        },
+
+        toggleSwitch: function() {
+            this.updateView();
+            localStorage.setItem('chat-voice-switcher', VoiceKit.isSwitchOn());
+            this.checkPlay();
+        },
+
+        updateView: function() {
+            if (this.isSwitchOn()) {
+                this.icon.addClass('glyphicon-volume-up')
+                    .removeClass('voice__icon_switch-off glyphicon-volume-off');
+            } else {
+                this.icon.addClass('voice__icon_switch-off glyphicon-volume-off')
+                    .removeClass('glyphicon-volume-up');
+            }
         },
 
         isQueueEnded: function(){

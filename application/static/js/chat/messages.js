@@ -11,10 +11,12 @@ jQuery(function($) {
         SYSTEM_TYPE: 'sys',
         element: $('.chat-panel'),
         area: null,
+        content: null,
         lastMessageId: null,
         _watchTimer: null,
 
         init: function() {
+            this.content = this.element.find('.chat-panel__content');
             this.area = this.element.find('.chat-panel__messages');
             this.getExistMessages();
             this.watch();
@@ -85,7 +87,7 @@ jQuery(function($) {
 
         scrollToEnd: function() {
             var areaHeight = this.area.outerHeight(true);
-            this.element.scrollTop(areaHeight);
+            this.content.scrollTop(areaHeight);
         },
 
         checkNewMessages: function() {

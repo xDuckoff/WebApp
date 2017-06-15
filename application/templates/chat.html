@@ -9,61 +9,52 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <h3 class="text-center" style="margin-top: -20px;">
-             {{ chat_info["name"] }}
-        </h3>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-default">
-                        <div class="panel-body chat-panel">
-                            <div class="chat-panel__messages"></div>
+<div class="container-fluid fill-height fill-cover">
+    <h2 class="text-center">{{ chat_info["name"] }}</h2>
+    <div class="fill-height__content fill-width row">
+        <div class="fill-height fill-width__content col-sm-6">
+            <div class="panel panel-default fill-height fill-height__content">
+                <div class="chat-panel panel-body fill-height fill-height__content">
+                    <div class="chat-panel__content fill-height__content">
+                        <div class="chat-panel__messages"></div>
+                    </div>
+                    <div class="voice chat-panel__options well well-sm">
+                        <audio class="voice__audio"></audio>
+                        <div class="voice__checkbox checkbox">
+                            <label>
+                                <input type="checkbox" class="voice__switcher hidden">
+                                <span class="voice__icon voice__icon_switch-off glyphicon glyphicon-volume-off"></span>
+                            </label>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="message-sender col-md-10">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <textarea class="message-sender__content form-control"
-                                      placeholder="Сообщение"
-                                      rows="3"></textarea>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="message-sender__hint col-md-9">
-                            <strong>**жирный**</strong>&nbsp;
-                            <em>_курсив_</em>&nbsp;
-                            <code>`код`</code>&nbsp;
-                            <code>```форматированный```</code>
-                        </div>
-                        <div class="col-md-3">
-                            <button type="button"
-                                    class="message-sender__to-send btn btn-primary btn-block">
-                                Отправить
-                            </button>
-                        </div>
+            <div class="message-sender" style="min-height: 0;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <textarea class="message-sender__content form-control"
+                                  placeholder="Сообщение"
+                                  rows="3"></textarea>
                     </div>
                 </div>
-                <div class="voice col-md-2">
-                    <audio class="voice__audio"></audio>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" class="voice__switcher">
-                            <img class="voice__icon"
-                                 src="{{ url_for('static', filename='img/sound.png') }}" />
-                        </label>
+                <div class="row">
+                    <div class="message-sender__hint col-md-9">
+                        <strong>**жирный**</strong>&nbsp;
+                        <em>_курсив_</em>&nbsp;
+                        <code>`код`</code>&nbsp;
+                        <code>```форматированный```</code>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button"
+                                class="message-sender__to-send btn btn-primary btn-block">
+                            Отправить
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div>
+        <div class="fill-height fill-width__content col-sm-6">
+            <div class="fill-height fill-height__content">
                 <textarea class="code-editor"></textarea>
             </div>
             <div class="row" style="margin-top: 10px;">
@@ -82,50 +73,49 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="code-tree col-md-12"></div>
-            </div>
+            <div class="code-tree fill-height__content"></div>
         </div>
     </div>
 
-    <div class="modal modal-wide fade" id="code-compare" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="main-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title text-center">Сравнить с исходным кодом</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="code-compare__field"></div>
-                </div>
-                <div class="modal-footer">
-                    <div class="btn btn-default" data-dismiss="modal">Закрыть</div>
-                </div>
+</div>
+<div class="modal modal-wide fade" id="code-compare" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="main-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title text-center">Сравнить с исходным кодом</h4>
             </div>
-        </div>
-    </div>
-    <div class="modal fade" id="code-sender" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" >
-            <div class="main-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <p class="modal-title">Отправка кода</p>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <input type="text"
-                               class="code-sender__message form-control"
-                               placeholder="Название коммита">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="code-sender__to-send btn btn-primary">Отправить</div>
-                    <div class="btn btn-default" data-dismiss="modal">Отмена</div>
-                </div>
+            <div class="modal-body">
+                <div class="code-compare__field"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn btn-default" data-dismiss="modal">Закрыть</div>
             </div>
         </div>
     </div>
 </div>
+<div class="modal fade" id="code-sender" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="main-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <p class="modal-title">Отправка кода</p>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text"
+                           class="code-sender__message form-control"
+                           placeholder="Название коммита">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="code-sender__to-send btn btn-primary">Отправить</div>
+                <div class="btn btn-default" data-dismiss="modal">Отмена</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}

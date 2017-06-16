@@ -6,7 +6,7 @@ import os
 from flask import render_template, redirect, send_from_directory
 from application import app, recaptcha
 from forms import LoginForm, CreateChatForm, FindChatForm
-from application.models import Chat, User
+from application.models import Chat, User, flask_recaptcha
 
 
 @app.route('/logout')

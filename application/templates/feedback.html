@@ -15,15 +15,15 @@
       <p class="note"><span class="req">*</span> Поля со звездочкой обязательны для заполнения!!!</p>
       <div class="row">
         <label for="name">Ваше имя <span class="req">*</span></label>
-        <input type="text" class="txt" tabindex="1" placeholder="Иван Иванов" required>
+        <input type="text" class="txt" id="name_for_feedback" tabindex="1" placeholder="Иван Иванов" required>
       </div>
       <div class="row">
         <label for="email">E-mail адрес <span class="req">*</span></label>
-        <input type="email" class="txt" tabindex="2" placeholder="ivan.ivanov@mail.ru" required>
+        <input type="email" class="txt" id="email_for_feedback" tabindex="2" placeholder="ivan.ivanov@mail.ru" required>
       </div>
       <div class="row">
         <label for="message">Ваш вопрос <span class="req">*</span></label>
-        <textarea class="txtarea" tabindex="3" required></textarea>
+        <textarea class="txtarea" id="text_for_feedback" tabindex="3" required></textarea>
       </div>
       <div class="row">{{ recaptcha }}</div>
       <div class="center">
@@ -34,4 +34,26 @@
 {% endblock %}
 
 {% block scripts %}
+<script type="text/javascript" charset="utf-8">
+    function send_feedbacks(){
+        $.ajax({
+            url: "/submit",
+            type: "POST",
+            data:{
+                name: $('#name_for_feedback').val(),
+                email: $('#email_for_feedback').val(),
+                text: $('#text_for_feedback').val()
+            },
+            dataType: 'json',
+            success: function() {
+                console.log('easy');
+            },
+            error: function(){
+                console.log('nooo');
+                console.log($('#name_for_feedback'));
+                console.log($('#name_for_feedback').val());
+            }
+        });
+    }
+</script>
 {% endblock %}

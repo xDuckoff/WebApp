@@ -3,7 +3,7 @@
 """Основные веб-страницы проекта"""
 
 import os
-from flask import render_template, redirect, send_from_directory
+from flask import render_template, redirect, send_from_directory, request
 from application import app, recaptcha
 from forms import LoginForm, CreateChatForm, FindChatForm
 from application.models import Chat, User, Feedback, flask_recaptcha
@@ -22,20 +22,24 @@ def logout():
 def submit():
     """Функция проверки капчи
     """
+    name = request.args.get('name', '')
+    email = request.args.get('email', '')
+    text = request.args.get('text', '')
+
     if recaptcha.verify():
         # SUCCESS
-        pass
+        data_feedback = Feedback.create(name, email, text)
     else:
         # FAILED
         pass
 
-@app.route('/help')
-def help_page():
+@app.route('/feedback')
+def feedback_page():
     """Функция переходан на страницу обратной связи
 
     :return: Переход на страницу обратной связи
     """
-    return render_template('help.html')
+    return render_template('feedback.html')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

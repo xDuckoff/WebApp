@@ -3,468 +3,159 @@
 {% block title %}{{ chat_info["name"] }}{% endblock %}
 
 {% block includes %}
-<!--Treant-->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/Treant.css') }}" type="text/css"/>
-<script src="{{ url_for('static', filename='js/vendor/raphael.js') }}"></script>
-<script src="{{ url_for('static', filename='js/Treant.js') }}"></script>
-<script type="text/javascript" charset="utf-8">
-    var INTERVAL = 1000;
-    var chat_index = {{ chat_id }},
-        chat_code_type = "{{ chat_info['code_type'] }}",
-        startCommit = {{ chat_info.start_code.id }},
-        chosen_commit = 0;
+    {%- include "libs/treant/links.html" -%}
+    {%- include "libs/codemirror/links.html" -%}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid fill-height fill-cover">
+    <h2 class="text-center">{{ chat_info["name"] }}</h2>
+    <div class="fill-height__content fill-width row">
+        <div class="fill-height fill-width__content col-sm-6">
+            <div class="panel panel-default fill-height fill-height__content">
+                <div class="chat-panel panel-body fill-height fill-height__content">
+                    <div class="chat-panel__content fill-height__content">
+                        <div class="chat-panel__messages"></div>
+                    </div>
+                    <div class="voice chat-panel__options well well-sm">
+                        <audio class="voice__audio"></audio>
+                        <div class="voice__checkbox checkbox">
+                            <label>
+                                <input type="checkbox" class="voice__switcher hidden">
+                                <span class="voice__icon voice__icon_switch-off glyphicon glyphicon-volume-off"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="message-sender" style="min-height: 0;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <textarea class="message-sender__content form-control"
+                                  placeholder="Сообщение"
+                                  rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="message-sender__hint col-md-9">
+                        <strong>**жирный**</strong>&nbsp;
+                        <em>_курсив_</em>&nbsp;
+                        <code>`код`</code>&nbsp;
+                        <code>```форматированный```</code>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button"
+                                class="message-sender__to-send btn btn-primary btn-block">
+                            Отправить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fill-height fill-width__content col-sm-6">
+            <div class="fill-height fill-height__content">
+                <textarea class="code-editor"></textarea>
+            </div>
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-md-6">
+                    <div class="btn btn-default btn-block"
+                         data-toggle="modal"
+                         data-target="#code-sender">
+                        Сохранить изменения
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="btn btn-default btn-block"
+                         data-toggle="modal"
+                         data-target="#code-compare">
+                        Сравнить с исходным кодом
+                    </div>
+                </div>
+            </div>
+            <div class="code-tree fill-height__content"></div>
+        </div>
+    </div>
+
+</div>
+<div class="modal modal-wide fade" id="code-compare" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="main-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title text-center">Сравнить с исходным кодом</h4>
+            </div>
+            <div class="modal-body">
+                <div class="code-compare__field"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn btn-default" data-dismiss="modal">Закрыть</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="code-sender" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="main-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <p class="modal-title">Отправка кода</p>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text"
+                           class="code-sender__message form-control"
+                           placeholder="Название коммита">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="code-sender__to-send btn btn-primary">Отправить</div>
+                <div class="btn btn-default" data-dismiss="modal">Отмена</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    {%- include "libs/push.html" -%}
+    {%- include "libs/treant/scripts.html" -%}
+    {%- include "libs/codemirror/scripts.html" -%}
+
+<script type="text/javascript">
+    var INTERVAL = 1000,
+        IS_USE_SOCKET = {{ socket_mode | tojson }},
+        MAIN_ICON_URL = "{{ url_for('static', filename='img/logo-x32.png') }}",
+        CHAT_ID = "{{ chat_id }}",
+        CODE_TYPE = "{{ chat_info['code_type'] }}",
+        CODE_START_COMMIT = {{ chat_info.start_code.id }};
     $.ajaxSetup({
         headers: {
             'X-Csrf-Token': "{{ csrf_token() }}"
         }
     });
 </script>
-<!-- CODEMIRROR -->
-<script src="{{ url_for('static', filename='js/codemirror/lib/codemirror.js') }}"></script>
-<script src="{{ url_for('static', filename='js/diff_match_patch.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/addon/merge/merge.js') }}"></script>
-<link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/lib/codemirror.css') }}">
-<script src="{{ url_for('static', filename='js/codemirror/mode/xml/xml.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/mode/javascript/javascript.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/mode/python/python.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/mode/htmlmixed/htmlmixed.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/mode/css/css.js') }}"></script>
-<script src="{{ url_for('static', filename='js/codemirror/mode/clike/clike.js') }}"></script>
-<link rel="stylesheet" href="{{ url_for('static', filename='js/codemirror/addon/merge/merge.css') }}">
 
-{% if socket_mode %}
-<!--socketIO-->
-<script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
-{% endif %}
+    {% if socket_mode %}
+        {%- include "libs/socket.io.html" -%}
+<script src="{{ url_for('static', filename='js/chat/socket_events.js') }}"></script>
+    {% endif %}
 
-{% endblock %}
-
-{% block scripts %}
-
-{% if socket_mode %}
-<script type="text/javascript" charset="utf-8">
-    var parent_index = startCommit;
-    jQuery(function ($) {
-        joinToChat();
-        get_messages(false);
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-        socket.on('connect', function() {
-            socket.emit('join', chat_index);
-        });
-        socket.on('disconnect', function() {
-            socket.emit('leave', chat_index);
-        });
-
-        socket.on('message', function(data) {
-            add_message(data, last_index);
-            notific(data);
-        });
-
-        socket.on('commit', function() {
-            get_tree("tree");
-        });
-        $("#send-btn").click(function() {
-            socket.emit('message', {'message':$("#message-input").val(), 'room':chat_index, 'type':'usr'});
-            $("#message-input").val('');
-        });
-    });
-</script>
-{% endif %}
-
+<script src="{{ url_for('static', filename='js/chat/voice.kit.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat/messages.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat/code.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat/compare_code.js') }}"></script>
 <script type="text/javascript">
-    var last_index = 0;
-    
-    function append_to_textarea(message, message_id) {
-        if (message.type == "sys"){
-            var text =  '<div class="well well-sm text-center system_message" data-index="' + message_id + '">' + "<b>" + message.author + '</b><br />'+ message.message +"</div>";
-        }else{
-            var text =  '<div class="well well-sm user_message" data-index="' + message_id + '">' +"<b>" + message.author + '</b><br>'+ message.message + "</div>";
-        }
-        $("#chat-panel").append(text);
-        if ($("#voice-check").prop("checked")){
-            if (message.type != 'sys') {
-                var text_to_play = message.author + ' сказал ' + message.plain_message;
-                voice.addText(text_to_play);
-            } else {
-                var text_to_play = message.message;
-                voice.addText(text_to_play);
-            }
-        };
-    };
-    var voice = {
-        stack: [],
-        currentIndex: -1,
-        isBusy:false,
-        play: function(){
-            voice.isBusy = true;
-            this.currentIndex += 1;
-            var url = 'https://tts.voicetech.yandex.net/generate?'+
-            'key=2308bf65-4316-45e9-bcec-0f9d86a7ab63'+
-            '&text='+encodeURI(this.stack[this.currentIndex])+
-            '&fornat=wav'+
-            '&lang=ru-RU'+
-            '&speaker=jane';
-
-            this.audio.src = url;
-            this.audio.load();
-        },
-        init: function() {
-            this.audio = document.getElementById('audio');
-
-            this.audio.onloadeddata = function(){
-                voice.audio.play();
-            };
-
-            this.audio.onended = function(){
-                voice.checkEnd();
-            };
-
-        },
-        checkEnd: function(){
-            this.isBusy = false;
-            voice.checkPlay();
-        },
-        checkPlay: function (){
-            if (!this.isBusy &&  this.stack.length != (this.currentIndex + 1) ){
-                voice.play();
-            }
-        },
-        addText: function(text){
-            this.stack.push(text);
-            this.checkPlay();
-
-        }
-    };
-
-    function get_scrollHeight(element) {
-        var pr = element.scrollTop();
-        element.scrollTop(element.get(0).scrollHeight);
-        var res = element.scrollTop();
-        element.scrollTop(pr);
-        return res;
-    }
-
-    function notific(message){
-        if (("Notification" in window) && (Notification.permission === "granted") && (message.type != "usr")) {
-            var notification = new Notification(message.author, {body:message.plain_message});
-            Notification.sound; 
-        }
-        else if (Notification.permission !== 'denied') {
-            Notification.requestPermission(function (permission) {
-                if (permission === "granted") {
-                    var notification = new Notification(message.author, {body:message.plain_message});
-                    Notification.sound;
-                }   
-            });
-            
-        }
-    }
-
-    function add_message(message, message_id) {
-        last_index += 1;
-
-        var t = false;
-
-        if (get_scrollHeight($('#chat-panel')) == $('#chat-panel').scrollTop())
-            t = true;
-        append_to_textarea(message, message_id);
-        if (t)
-            $('#chat-panel').scrollTop($('#chat-panel').get(0).scrollHeight);
-    }
-
-    function get_messages(noti) {
-        $.ajax({
-            url: "/get_messages",
-            data: {
-                "chat": chat_index
-            },
-            dataType: "json",
-            success: function(messages) {
-                for (var i = last_index; i < messages.length; i++){
-                    add_message(messages[i], i);
-                    if (noti) notific(messages[i]);
-                }
-                last_index=messages.length;
-            }
-        });
-    }
-    function send_code() {
-        $.ajax({
-            url:"/send_code",
-            type:"GET", 
-            data:{ 
-                chat: chat_index, 
-                code: editor.getValue(),
-                parent: parent_index,
-                cname: $('#to_send').val()
-            },
-            dataType:'json',
-            success: function(data){
-                $('#to_send').val('');
-                chosen_commit = data.commit;
-            },
-            error: function() {
-                alert('Извините, произошла ошибка при загрузке кода!');
-            }
-        });
-    }
     jQuery(function ($) {
-        voice.init();
-        code_types = {
-            "C": "text/x-csrc",
-            "C#": "text/x-csharp",
-            "C++": "text/x-c++src",
-            "CSS": "text/css",
-            "HTML": "text/html",
-            "Java": "text/x-java",
-            "JavaScript": "text/javascript",
-            "Python": "text/x-python"
-        };
-        chat_code_type = code_types[chat_code_type];
-        {% if not socket_mode %}
-        joinToChat();
-        get_messages(false);
-        var timerId = setInterval(function (){
-                    get_messages(true);
-                    get_tree("tree");
-                }, INTERVAL);
-        {% endif %}
-        chat_index =  location.pathname.substr(location.pathname.lastIndexOf("/") + 1);
-        $("#message-input").keypress(function(e) {
-            if(e.which == 13) {
-                $("#send-btn").click();
-            }
-        });
-        editor = CodeMirror.fromTextArea($('#code-editor').get(0), {
-            mode: {
-                name: chat_code_type,
-                version: 2,
-                singleLineStringErrors: false
-            },
-            lineNumbers: true,
-            indentUnit: 4,
-            matchBrackets: true,
-            value: "print('Hello World!')"
-        });
-        get_tree('tree');
-        get_code(0);
-        {% if not socket_mode %}
-        $("#send-btn").click(function() {
-            if ($("#message-input").val() == '')
-                return;
-            $.ajax({
-                url: "/send_message",
-                data: {
-                    "chat": chat_index,
-                    "message" : $("#message-input").val()
-                }
-            });
-            $("#message-input").val('');
-        });
-        {% endif %}
-        $("#login-btn").click(function() {
-        if (chat_id == '') window.location = "/login";
-        else window.location = "/login?chat=" + chat_id;
-        });
-
-        $('#tree').on("click", ".commit_node", function(){
-            var commitId = $(this).data('id');
-            draw_node(commitId);
-            get_code(commitId);
-        });
-    });
-
-    function get_tree(objectId) {
-        $.ajax({
-            url: "/tree",
-            type: "GET",
-            data: {
-                chat: chat_index
-            },
-            dataType: "json",
-            success: function( nodeStructure ) {
-                var config = {
-                        container: "#" + objectId,
-                        levelSeparation: 70,
-                        siblingSeparation: 70,
-                        rootOrientation: "WEST",
-                        connectors: {
-                            style:{
-                                stroke: 'white'
-                            }
-                        }
-                    };
-
-                var simple_chart_config = {
-                        chart: config,
-                        nodeStructure: nodeStructure
-                    };
-                var tree = new Treant(simple_chart_config, function(){}, $);
-                draw_node(chosen_commit);
-            }
-        });
-    }
-
-    function get_code(codeId){
-        codeId = codeId || startCommit;
-        chosen_commit = codeId;
-        $.ajax({
-            url: "/get_code",
-            type: "GET",
-            data: {
-                chat: chat_index,
-                index: codeId
-            },
-            dataType: "json",
-            success: function(data){
-                parent_index = codeId;
-                editor.getDoc().setValue(data.code);
-            }
-        });
-    }
-    function draw_node(commitIndex){
-        var nodes = $('.commit_node');
-        nodes.removeClass('chosen')
-                .filter('[data-id=' + commitIndex + ']')
-                .addClass('chosen');
-    }
-
-    function joinToChat(){
+        // joinToChat
         $.ajax({
             type: "GET",
             url: "/join_chat",
             data: {
-                chat: chat_index
+                chat: CHAT_ID
             }
         });
-    }
+    });
 </script>
-
-{% endblock %}
-
-{% block content %}
-<audio src="" id="audio">
-</audio>
-<audio src="" id="sys_audio">
-</audio>
-<div class="container-fluid">
-    <div class="row">
-        <h3 class="text-center" style="margin-top: -20px;">
-             {{ chat_info["name"] }}
-        </h3>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-body" id="chat-panel">
-
-                </div>
-            </div>
-            <label for="message-input" class="sr-only">Сообщение</label>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="message-input" placeholder="Пиши здесь" maxlength="1000">
-                        <div class="input-group-btn"> 
-                                <button type="button" class="btn btn-primary btn-block" style="border-radius: 0px" id="send-btn">Отправить</button>
-                        </div>
-                        <span class="input-group-addon">
-                            <input type="checkbox"  id="voice-check"> <image src="{{ url_for('static', filename='img/sound.png') }}" id="voice-img"></image>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <strong>**жирный**</strong> <em>_курсив_</em> <code>`встроенный код`</code> <code>```форматированный```</code>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6" id="column">
-            <textarea class="form-control" id="code-editor" rows="3"></textarea>
-            <button type="submit" class="btn btn-default btn-block chat-control-btn" id="go-btn" data-toggle="modal" data-target="#send">Сохранить изменения</button>
-            <div class="row">
-                <div class="col-sm-12" id="column">
-                    <div type="submit" class="btn btn-default btn-block chat-control-btn" id="compare-btn">Сравнить с исходным кодом</div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12" id="tree"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal modal-wide fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="main-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myLabel" align=center>Сравнить с исходным кодом</h4>
-                </div>
-                <div class="modal-body">
-                    <div rows="3" id="comp"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-default" id="close-btn">Закрыть</button> 
-                </div>
-            </div>
-        </div>
-    </div>
-    <script type="text/javascript">
-        jQuery(function ($) {
-            $('#compare').on('shown.bs.modal', function () {
-                $.ajax({
-                    url:"/get_code",
-                    type:"GET",
-                    data:{
-                        chat: chat_index,
-                        index: startCommit
-                    },
-                    dataType: "json",
-                    success: function(data){
-                        var target = $("#comp");
-                        target.empty();
-                        dv = CodeMirror.MergeView(target[0], {
-                            value: editor.getValue(),
-                            origLeft: data.code,
-                            mode: {
-                                name: chat_code_type,
-                                version: 2,
-                                singleLineStringErrors: false
-                            },
-                            lineNumbers: true,
-                            highlightDifferences: true,
-                            readOnly: true,
-                            revertButtons: false
-                        });
-                    }
-                });
-            });
-            $('#compare-btn').click(function () {
-                $('#compare').modal("show");
-            });
-            $('#close-btn').click(function () {
-                $('#compare').modal("hide");
-            });
-            
-        });
-    </script>
-    <div class="modal fade" id="send" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" >
-            <div class="main-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <p class="modal-title" id="myLabel">Отправка кода</p>
-                </div>
-                <div class="modal-body">
-                        <input type="text" class="form-control" placeholder="Название коммита" id="to_send">
-                </div>
-                <div class="modal-footer">
-                    <button type="s" class="btn btn-default" id="send-btn" data-dismiss="modal" onclick="send_code()">Отправить</button> 
-                    <button type="s" class="btn btn-default" id="send-btn" data-dismiss="modal" onclick="$('#to_send').val('');">Отмена</button> 
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}

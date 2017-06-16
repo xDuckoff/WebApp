@@ -35,9 +35,13 @@ def index():
         name = chat_create_form.name.data
         code_type = chat_create_form.code_type.data
         code = chat_create_form.code.data
+        access_key = ""
+        is_private = chat_create_form.IsPrivate
+        if is_private:
+            access_key = chat_create_form.AccessKey.data
         if chat_create_form.is_file_valid():
             code = chat_create_form.file.data.read()
-        chat_id = Chat.create(name, code, code_type)
+        chat_id = Chat.create(name, code, code_type, is_private, access_key)
         return redirect('/chat/' + str(chat_id))
     return render_template('index.html',
                            chats=Chat.find(find_chat_form.chat_title.data),

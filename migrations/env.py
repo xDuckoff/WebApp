@@ -54,8 +54,6 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
-    if current_app.config.get('TEST_MODE'):
-        logging.getLogger('alembic').setLevel(logging.WARNING)
 
     # this callback is used to prevent an auto-migration from being generated
     # when there are no changes to the schema

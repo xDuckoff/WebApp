@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""Функции работы с кодом и деревом коммитов"""
+
 from application import app, db, socketio
-from application.models import Message
+from application.models import Message, User
 
 
 class Code(db.Model):
@@ -24,41 +26,47 @@ class Code(db.Model):
     chat = db.relationship('Chat', backref=db.backref('codes'))
     children = db.relationship('Code')
 
-    def __init__(self, content, author, chat_link, parent_link, message=u'Начальная версия'):
-        self.content = content
-        self.author = author
-        self.chat_link = chat_link
-        self.parent_link = parent_link
-        self.message = message
+    def __init__(self, **params):
+        self.content = params.get('content', "")
+        self.author = User.get_login()
+        self.chat_link = params.get('chat_link')
+        self.parent_link = params.get('parent_link')
+        self.message = params.get('message')
 
     @staticmethod
-    def send(chat_id, text, username, parent=None, message=u'Начальная версия'):
+    def send(chat_id, text, parent, message):
         """Отправление кода на сервер
 
         :param chat_id: Номер чата
         :param text: Код
-        :param username: Имя пользователя
         :param parent: Место в дереве коммитов
         :param message: Комметарий к коду
         :return: Сообщение о коммите и номере кода
         """
-        code_to_send = Code(text, username, chat_id, parent, message)
+        code_params = {
+            "content": text,
+            "message": message,
+            "chat_link": chat_id,
+            "parent_link": parent
+        }
+        code_to_send = Code(**code_params)
         db.session.add(code_to_send)
         db.session.commit()
         code_id_in_chat = u"undefined"
-        Message.send(chat_id, u"Изменение кода " + code_id_in_chat + u" : '" + message + u"'", 'sys')
+        text = u'Новое изменение {id} : {message}'
+        Message.send(chat_id, text.format(id=code_id_in_chat, message=message), 'sys')
         if app.config['SOCKET_MODE'] == 'True':
             socketio.emit('commit', room=str(chat_id), broadcast=True)
         return code_to_send.id
 
     @staticmethod
-    def get(id):
+    def get(uid):
         """Возвращает форматированный код по ``id`` в виде словаря
 
-        :param id: идентификатор исходного кода
+        :param uid: идентификатор исходного кода
         :return: Автор и код
         """
-        code = Code.query.get(id)
+        code = Code.query.get(uid)
         return {
             "author": code.author,
             "code": code.content

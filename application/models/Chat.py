@@ -19,9 +19,11 @@ class Chat(db.Model):
     is_private = db.Column(db.Boolean)
     access_key = db.Column(db.String(256))
 
-    def __init__(self, name, code_type):
+    def __init__(self, name, code_type, is_private, access_key):
         self.name = name
         self.code_type = code_type
+        self.access_key = access_key
+        self.is_private = is_private
 
     @staticmethod
     def create(chat_name, code, code_type, is_private, access_key):

@@ -241,6 +241,12 @@
         $("[data-toggle='tooltip']").tooltip();
     })
     jQuery(function(){
+        var div = $('#pass_div');
+        if ( $("select[name='chat_type']").val() == 'public' ) {
+            div.hide();
+        } else if ( $("select[name='chat_type']").val() == 'private' ) {
+            div.show();
+        }
         $("select[name='chat_type']").change(function(){
             var div = $('#pass_div');
             if ( $(this).val() == 'public' ) {

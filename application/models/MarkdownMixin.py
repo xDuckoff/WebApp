@@ -25,7 +25,7 @@ class MarkdownMixin(object):
         return '`'.join(parts)
 
     @classmethod
-    def markdown_decode(cls, text):
+    def decode(cls, text):
         """Преобразование текста в HTML в соответствии с синтаксисом Markdown
 
         :param text: исходный текст

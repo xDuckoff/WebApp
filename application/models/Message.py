@@ -22,7 +22,7 @@ class Message(db.Model):
     chat = db.relationship('Chat', backref=db.backref('messages', lazy='dynamic'))
 
     def __init__(self, content, chat_link, message_type):
-        self.content = MarkdownMixin.markdown_mixin.decode(content)
+        self.content = MarkdownMixin.decode(content)
         self.author = User.get_login()
         self.chat_link = chat_link
         self.type = message_type

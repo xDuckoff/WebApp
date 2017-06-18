@@ -5,6 +5,7 @@
 import cgi
 from flask import session, request
 from flask_wtf import csrf
+from application.models import MarkdownMixin
 
 
 class User(object):
@@ -17,7 +18,7 @@ class User(object):
 
         :param username: Имя пользователя
         """
-        session['login'] = cgi.escape(username)
+        session['login'] = MarkdownMixin.decode(username)
 
     @staticmethod
     def logout():

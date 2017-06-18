@@ -18,7 +18,7 @@ class Chat(db.Model):
     code_type = db.Column(db.String(256))
 
     def __init__(self, name, code_type):
-        self.name = MarkdownMixin.markdown_decode(name)
+        self.name = MarkdownMixin.decode(name)
         self.code_type = code_type
 
     @staticmethod

@@ -4,6 +4,7 @@
 
 import re
 import cgi
+import time
 from markdown import markdown
 from application.models import User
 from application import app, db, socketio
@@ -22,12 +23,14 @@ class Message(db.Model):
     type = db.Column(db.String(3))
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages', lazy='dynamic'))
+    message_create_time = db.Column(db.Integer)
 
-    def __init__(self, content, chat_link, message_type):
+    def __init__(self, content, chat_link, message_type, message_create_time):
         self.content = Message.markdown_decode(content)
         self.author = User.get_login()
         self.chat_link = chat_link
         self.type = message_type
+        self.message_create_time = message_create_time
 
     @staticmethod
     def send(chat_id, text, message_type):
@@ -40,7 +43,8 @@ class Message(db.Model):
         """
         if len(text) > 1000 or not text:
             raise OverflowError
-        message = Message(text, chat_id, message_type)
+        message_create_time = int(time.time())
+        message = Message(text, chat_id, message_type, message_create_time)
         db.session.add(message)
         db.session.commit()
         if app.config['SOCKET_MODE'] == 'True':

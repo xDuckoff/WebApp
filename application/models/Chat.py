@@ -17,12 +17,12 @@ class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(256))
     code_type = db.Column(db.String(256))
-    start_time = db.Column(db.Integer)
+    create_time = db.Column(db.Integer)
 
-    def __init__(self, name, code_type, start_time):
+    def __init__(self, name, code_type, create_time):
         self.name = name
         self.code_type = code_type
-        self.start_time = start_time
+        self.create_time = create_time
 
     @staticmethod
     def create(chat_name, code, code_type):
@@ -33,9 +33,8 @@ class Chat(db.Model):
         :param code_type: Язык программирования
         :return: Номер чата
         """
-        start_time = int(time.time())
-        print start_time
-        chat_to_create = Chat(chat_name, code_type, start_time)
+        create_time = int(time.time())
+        chat_to_create = Chat(chat_name, code_type, create_time)
         db.session.add(chat_to_create)
         db.session.commit()
         chat_id = chat_to_create.id

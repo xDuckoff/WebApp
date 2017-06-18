@@ -18,11 +18,13 @@ class Chat(db.Model):
     name = db.Column(db.String(256))
     code_type = db.Column(db.String(256))
     create_time = db.Column(db.Integer)
+    remove_time = db.Column(db.Integer)
 
     def __init__(self, name, code_type, create_time):
         self.name = name
         self.code_type = code_type
         self.create_time = create_time
+        self.remove_time = None
 
     @staticmethod
     def create(chat_name, code, code_type):

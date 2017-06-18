@@ -24,6 +24,7 @@ class Message(db.Model):
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages', lazy='dynamic'))
     message_create_time = db.Column(db.Integer)
+    message_remove_time = db.Column(db.Integer)
 
     def __init__(self, content, chat_link, message_type, message_create_time):
         self.content = Message.markdown_decode(content)
@@ -31,6 +32,7 @@ class Message(db.Model):
         self.chat_link = chat_link
         self.type = message_type
         self.message_create_time = message_create_time
+        self.message_remove_time = None
 
     @staticmethod
     def send(chat_id, text, message_type):

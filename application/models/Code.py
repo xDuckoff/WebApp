@@ -24,6 +24,7 @@ class Code(db.Model):
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     parent_link = db.Column(db.Integer, db.ForeignKey('code.id'), nullable=True)
     code_create_time = db.Column(db.Integer)
+    code_remove_time = db.Column(db.Integer)
 
     chat = db.relationship('Chat', backref=db.backref('codes'))
     children = db.relationship('Code')
@@ -35,6 +36,7 @@ class Code(db.Model):
         self.parent_link = params.get('parent_link')
         self.message = params.get('message')
         self.code_create_time = params.get('code_create_time')
+        self.code_remove_time = None
 
     @staticmethod
     def send(chat_id, text, parent, message):

@@ -16,11 +16,12 @@ class LoginForm(FlaskForm):
 class CreateChatForm(FlaskForm):
     """Создаёт чат"""
     name = StringField('name', validators=[DataRequired()])
-    code_type = StringField('codetype', validators=[DataRequired()])
+    code_type = StringField('codetype')
     file = FileField('file')
     code = StringField('code', default='')
-    is_private = StringField('chat_type', validators=[DataRequired()])
+    chat_type = StringField('chat_type')
     access_key = StringField('pass', validators=[DataRequired()])
+    #TODO коректо обработать поле "пароль" для публичных чатов
 
     def is_file_valid(self):
         """Проверка на валидный файл для создания чата"""

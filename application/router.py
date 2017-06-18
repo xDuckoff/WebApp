@@ -32,15 +32,8 @@ def index():
     if login_form.validate_on_submit():
         User.login(login_form.login.data)
     if chat_create_form.validate_on_submit():
-        name = chat_create_form.name.data
-        code_type = chat_create_form.code_type.data
-        code = chat_create_form.code.data
-        is_private = chat_create_form.is_private.data == "private"
-        access_key = chat_create_form.access_key.data
-        if chat_create_form.is_file_valid():
-            code = chat_create_form.file.data.read()
-        chat_id = Chat.create(name, code, code_type, is_private, access_key)
-        return redirect('/chat/' + str(chat_id))
+        return redirect('/chat_create')
+
     return render_template('index.html',
                            chats=Chat.find(find_chat_form.chat_title.data),
                            in_session=User.is_logined(),
@@ -52,6 +45,20 @@ def index():
                            allowed_langs=app.config["ALLOWED_LANGUAGES"]
                           )
 
+
+@app.route('/chat_create', methods=['GET', 'POST'])
+def chat_create():
+    chat_create_form = CreateChatForm()
+    if chat_create_form.validate_on_submit():
+        name = chat_create_form.name.data
+        code_type = chat_create_form.code_type.data
+        code = chat_create_form.code.data
+        is_private = chat_create_form.chat_type.data == "private"
+        access_key = chat_create_form.access_key.data
+        if chat_create_form.is_file_valid():
+            code = chat_create_form.file.data.read()
+        chat_id = Chat.create(name, code, code_type, is_private, access_key)
+        return redirect('/chat/' + str(chat_id))
 
 @app.route('/documentation/<path:filename>')
 def docs_page(filename):

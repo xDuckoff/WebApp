@@ -46,7 +46,9 @@ def index():
 
 @app.route('/chat_create', methods=['GET', 'POST'])
 def chat_create():
+    find_chat_form = FindChatForm()
     chat_create_form = CreateChatForm()
+    login_form = LoginForm()
     if chat_create_form.is_access_key_valid() and chat_create_form.validate_on_submit():
         name = chat_create_form.name.data
         code_type = chat_create_form.code_type.data
@@ -57,6 +59,16 @@ def chat_create():
             code = chat_create_form.file.data.read()
         chat_id = Chat.create(name, code, code_type, is_private, access_key)
         return redirect('/chat/' + str(chat_id))
+    return render_template('index.html',
+                           chats=Chat.find(find_chat_form.chat_title.data),
+                           in_session=User.is_logined(),
+                           login_form=login_form,
+                           chat_create_form=chat_create_form,
+                           find_chat_form=find_chat_form,
+                           login=User.get_login(),
+                           allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
+                           allowed_langs=app.config["ALLOWED_LANGUAGES"]
+                           )
 
 @app.route('/documentation/<path:filename>')
 def docs_page(filename):

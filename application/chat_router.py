@@ -70,8 +70,6 @@ def send_message():
 
     :return: Отправилось ли сообщение
     """
-    if app.config['SOCKET_MODE'] == 'True':
-        return dumps({"success": False, "error": "Bad mode"}), 400
     chat_id = request.args.get('chat', '')
     message = request.args.get('message', '')
     if not Chat.was_created(chat_id):
@@ -88,15 +86,16 @@ def send_message():
 @login_required
 @csrf_required
 def get_messages():
-    """Функция принятия сообщений
+    """Запрос получения новых сообщений в чате
 
     :return: Принято ли сообщение
     """
-    chat_id = request.args.get('chat', '')
+    chat_id = request.args.get('chat_id', '')
+    last_message_id = int(request.args.get('last_message_id', 0))
     if not Chat.was_created(chat_id):
         return 'Bad chat', 400
     chat = Chat.get(chat_id)
-    return dumps(chat.get_messages())
+    return dumps(chat.get_last_messages(last_message_id))
 
 
 @app.route('/send_code', methods=['GET', 'POST'])
@@ -110,10 +109,10 @@ def send_code():
     chat_id = request.args.get('chat', '')
     code = request.args.get('code', '')
     parent = request.args.get('parent', '')
-    cname = request.args.get('cname', '')
+    message = request.args.get('message', '')
     if not Chat.was_created(chat_id):
         return dumps({"success": False, "error": "Bad chat"}), 400
-    code_id = Code.send(chat_id, code, parent, cname)
+    code_id = Code.send(chat_id, code, parent, message)
     return dumps({"success": True, "error": "", "commit": code_id})
 
 
@@ -145,21 +144,6 @@ def api_create_chat():
 
 
 if app.config['SOCKET_MODE'] == 'True':
-
-    @socketio.on('message')
-    def handle_message(json):
-        """Данная функция принимает сообщения от пользователя через сокеты
-
-        :param json: json запрос
-        :return: Сообщение
-        """
-        chat_id = json.get('room', '')
-        if not Chat.was_created(chat_id):
-            return
-        try:
-            Message.send(chat_id, json.get('message', ''), 'usr')
-        except OverflowError:
-            return
 
     @socketio.on('join')
     def on_join(room):

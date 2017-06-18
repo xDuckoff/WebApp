@@ -47,7 +47,7 @@ def index():
 @app.route('/chat_create', methods=['GET', 'POST'])
 def chat_create():
     chat_create_form = CreateChatForm()
-    if chat_create_form.validate_on_submit():
+    if chat_create_form.is_access_key_valid() and chat_create_form.validate_on_submit():
         name = chat_create_form.name.data
         code_type = chat_create_form.code_type.data
         code = chat_create_form.code.data

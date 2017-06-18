@@ -2,9 +2,9 @@
 
 """Функции работы с чатами и их поиска"""
 
+import time
 from application import db
 from application.models import Code, Message
-import time
 
 
 class Chat(db.Model):

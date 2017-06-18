@@ -31,8 +31,6 @@ def index():
     login_form = LoginForm()
     if login_form.validate_on_submit():
         User.login(login_form.login.data)
-    if chat_create_form.validate_on_submit():
-        return redirect('/chat_create')
 
     return render_template('index.html',
                            chats=Chat.find(find_chat_form.chat_title.data),

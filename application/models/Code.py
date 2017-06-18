@@ -2,6 +2,7 @@
 
 """Функции работы с кодом и деревом коммитов"""
 
+import time
 from application import app, db, socketio
 from application.models import Message, User
 
@@ -22,6 +23,7 @@ class Code(db.Model):
     message = db.Column(db.String(256))
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     parent_link = db.Column(db.Integer, db.ForeignKey('code.id'), nullable=True)
+    code_create_time = db.Column(db.Integer)
 
     chat = db.relationship('Chat', backref=db.backref('codes'))
     children = db.relationship('Code')
@@ -32,6 +34,7 @@ class Code(db.Model):
         self.chat_link = params.get('chat_link')
         self.parent_link = params.get('parent_link')
         self.message = params.get('message')
+        self.code_create_time = params.get('code_create_time')
 
     @staticmethod
     def send(chat_id, text, parent, message):
@@ -43,11 +46,13 @@ class Code(db.Model):
         :param message: Комметарий к коду
         :return: Сообщение о коммите и номере кода
         """
+        code_create_time = int(time.time())
         code_params = {
             "content": text,
             "message": message,
             "chat_link": chat_id,
-            "parent_link": parent
+            "parent_link": parent,
+            "code_create_time": code_create_time
         }
         code_to_send = Code(**code_params)
         db.session.add(code_to_send)

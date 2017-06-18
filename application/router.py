@@ -18,7 +18,7 @@ def logout():
     User.logout()
     return redirect('/')
 
-@app.route("/submit", methods=["POST"])
+@app.route("/send_feedbacks", methods=["POST"])
 def submit():
     """Функция проверки капчи
     """

@@ -29,3 +29,10 @@ class CreateChatForm(FlaskForm):
 class FindChatForm(FlaskForm):
     """Поиск чата"""
     chat_title = StringField('chat_title', default='')
+
+
+class FeedbackForm(FlaskForm):
+    """данные для Feedback"""
+    name = StringField('name', validators=[DataRequired()])
+    email = StringField('cemail', validators=[DataRequired()])
+    text = StringField('text', default='')

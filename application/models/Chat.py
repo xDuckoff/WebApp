@@ -3,7 +3,7 @@
 """Функции работы с чатами и их поиска"""
 
 from application import db
-from application.models import Code, Message
+from application.models import Code, Message, MarkdownMixin
 
 
 class Chat(db.Model):
@@ -18,7 +18,7 @@ class Chat(db.Model):
     code_type = db.Column(db.String(256))
 
     def __init__(self, name, code_type):
-        self.name = name
+        self.name = MarkdownMixin.markdown_decode(name)
         self.code_type = code_type
 
     @staticmethod

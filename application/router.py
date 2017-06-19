@@ -19,7 +19,7 @@ def logout():
     return redirect('/')
 
 @app.route("/send_feedbacks", methods=["POST"])
-def submit():
+def send_feedbacks():
     """Функция проверки капчи
     :return: Переход на страницу обратной связи вслучае не заполнения капчи \
     и переход на главную страницу при правильном заполнении
@@ -29,17 +29,10 @@ def submit():
     email = request.args.get('email', '')
     text = request.args.get('text', '')
 
-    feedback_form = FeedbackForm()
-    if feedback_form.validate_on_submit():
-        name = feedback_form.name.data
-        email = feedback_form.email.data
-        text = feedback_form.text.data
-
-        if recaptcha.verify():
-            # SUCCESS
-            Feedback.send(name, email, text)
-            return redirect('/')
-        return redirect('/feedback')
+    if recaptcha.verify():
+        Feedback.send(name, email, text)
+        return redirect('/')
+    return redirect('/feedback')
 
 @app.route('/feedback')
 def feedback_page():
@@ -47,7 +40,13 @@ def feedback_page():
 
     :return: Переход на страницу обратной связи
     """
-    return render_template('feedback.html')
+    feedback_form = FeedbackForm()
+    if feedback_form.validate_on_submit():
+        name = feedback_form.name.data
+        email = feedback_form.email.data
+        text = feedback_form.text.data
+
+    return render_template('feedback.html', feedback_form=feedback_form)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

@@ -13,23 +13,24 @@
  <div id="help_platform">
     <h1>Заполните форму.</h1>
     <form method="post" action="/send_feedbacks">
-      <p class="note"><span class="req">*</span> Поля со звездочкой обязательны для заполнения!!!</p>
-      <div class="row">
-        <label for="name">Ваше имя <span class="req">*</span></label>
-        <input type="text" class="txt" id="name_for_feedback" tabindex="1" placeholder="Иван Иванов" required>
-      </div>
-      <div class="row">
-        <label for="email">E-mail адрес <span class="req">*</span></label>
-        <input type="email" class="txt" id="email_for_feedback" tabindex="2" placeholder="ivan.ivanov@mail.ru" required>
-      </div>
-      <div class="row">
-        <label for="message">Ваш вопрос <span class="req">*</span></label>
-        <textarea class="txtarea" id="text_for_feedback" tabindex="3" required></textarea>
-      </div>
-      <div id="RecaptchaField"> </div>
-      <div class="center">
-        <input type="submit" id="submitbtn" tabindex="4" value="Отправьте запрос" onclick="send_feedbacks()">
-      </div>
+        {{ feedback_form.hidden_tag() }}
+        <p class="note"><span class="req">*</span> Поля со звездочкой обязательны для заполнения!!!</p>
+        <div class="row">
+            <label for="name">Ваше имя <span class="req">*</span></label>
+            <input type="text" class="txt" id="name_for_feedback" tabindex="1" placeholder="Иван Иванов" required>
+        </div>
+        <div class="row">
+            <label for="email">E-mail адрес <span class="req">*</span></label>
+            <input type="email" class="txt" id="email_for_feedback" tabindex="2" placeholder="ivan.ivanov@mail.ru" required>
+        </div>
+        <div class="row">
+            <label for="message">Ваш вопрос <span class="req">*</span></label>
+            <textarea class="txtarea" id="text_for_feedback" tabindex="3" required></textarea>
+        </div>
+        <div id="RecaptchaField"> </div>
+        <div class="center">
+            <input type="submit" id="submitbtn" tabindex="4" value="Отправьте запрос" onclick="send_feedbacks()">
+        </div>
     </form>
   </div>
 {% endblock %}

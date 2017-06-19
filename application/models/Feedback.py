@@ -43,11 +43,10 @@ class Feedback(db.Model):
         :param text: вопрос пользователя
         :return: Объект созданных данных
         """
-        if len(text) > 1000 or not text:
-            raise OverflowError
+        #if len(text) > 1000 or not text:
+        #    raise OverflowError
         feedback = Feedback(name, email, text)
         db.session.add(feedback)
         db.session.commit()
 #        if app.config['SOCKET_MODE'] == 'True':
 #            socketio.emit('feedback', feedback.get_info(), room='feedback', broadcast=True)
-        return feedback

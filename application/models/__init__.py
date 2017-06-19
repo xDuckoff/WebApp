@@ -6,3 +6,4 @@ from User import User
 from Message import Message
 from Code import Code
 from Chat import Chat
+from Feedback import Feedback

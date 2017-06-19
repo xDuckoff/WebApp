@@ -26,18 +26,23 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if in_session %}
                 <li>
+                    <a href="/feedback">
+                        Помощь
+                    </a>
+                </li>
+                <li>
                     <a href="/logout">Выход</a>
                 </li>
                 {% endif %}
-		<li>
-	            <a href="/feedback">
-	                Помощь
-	            </a>
-                </li>
                 {% if not in_session %}
                 <li>
                     <a href="#" data-toggle="modal" data-target="#myModalLogin">
                         Вход
+                    </a>
+                </li>
+                <li>
+                    <a href="/feedback">
+                        Помощь
                     </a>
                 </li>
                 {% endif %}

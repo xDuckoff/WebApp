@@ -5,7 +5,7 @@
 import os
 from flask import render_template, redirect, send_from_directory, request
 from application import app, recaptcha
-from forms import LoginForm, CreateChatForm, FindChatForm
+from forms import LoginForm, CreateChatForm, FindChatForm, FeedbackForm
 from application.models import Chat, User, Feedback, flask_recaptcha
 
 
@@ -21,17 +21,25 @@ def logout():
 @app.route("/send_feedbacks", methods=["POST"])
 def submit():
     """Функция проверки капчи
+    :return: Переход на страницу обратной связи вслучае не заполнения капчи \
+    и переход на главную страницу при правильном заполнении
     """
+
     name = request.args.get('name', '')
     email = request.args.get('email', '')
     text = request.args.get('text', '')
 
-    if recaptcha.verify():
-        # SUCCESS
-        data_feedback = Feedback.create(name, email, text)
-    else:
-        # FAILED
-        pass
+    feedback_form = FeedbackForm()
+    if feedback_form.validate_on_submit():
+        name = feedback_form.name.data
+        email = feedback_form.email.data
+        text = feedback_form.text.data
+
+        if recaptcha.verify():
+            # SUCCESS
+            Feedback.send(name, email, text)
+            return redirect('/')
+        return redirect('/feedback')
 
 @app.route('/feedback')
 def feedback_page():

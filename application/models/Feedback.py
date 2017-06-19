@@ -23,7 +23,7 @@ class Feedback(db.Model):
 
     @staticmethod
     def create(name, email, text):
-        """Создаёт массив данных
+        """Создаёт массив данных ввиде словаря
 
         :param feedback: данные
         :return: массив данных
@@ -32,4 +32,22 @@ class Feedback(db.Model):
                     'Почта пользователя': email,
                     'Вопрос пользователя': text}
 
+        return feedback
+
+    @staticmethod
+    def send(name, email, text):
+        """Отправляет данные в базу для сохранения
+
+        :param name: имя пользователя
+        :param email: почта пользователя
+        :param text: вопрос пользователя
+        :return: Объект созданных данных
+        """
+        if len(text) > 1000 or not text:
+            raise OverflowError
+        feedback = Feedback(name, email, text)
+        db.session.add(feedback)
+        db.session.commit()
+#        if app.config['SOCKET_MODE'] == 'True':
+#            socketio.emit('feedback', feedback.get_info(), room='feedback', broadcast=True)
         return feedback

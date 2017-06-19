@@ -5,7 +5,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 <script src="{{ url_for('static', filename='js/jquery.min.js') }}" type="text/javascript"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" type="text/javascript"></script>
-<script src="https://www.google.com/recaptcha/api.js"></script>
+<script type="text/javascript" src="angular-recaptcha.js"></script>
+<script src='https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit' async defer></script>
 {% endblock %}
 
 {% block content %}
@@ -25,16 +26,23 @@
         <label for="message">Ваш вопрос <span class="req">*</span></label>
         <textarea class="txtarea" id="text_for_feedback" tabindex="3" required></textarea>
       </div>
-      <div class="row">{{ recaptcha }}</div>
+      <div id="RecaptchaField"> </div>
       <div class="center">
-        <input type="submit" id="submitbtn" tabindex="4" value="Отправьте запрос">
+        <input type="submit" id="submitbtn" tabindex="4" value="Отправьте запрос" onclick="send_feedbacks()">
       </div>
     </form>
   </div>
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
+    var CaptchaCallback = function() {
+        if ( $('#RecaptchaField').length ) {
+            grecaptcha.render('RecaptchaField', {'sitekey' : '6Lf1eCUUAAAAANoxJbNS7FJMKrFiuQdpKsjzbTQP'});
+        }
+    }
+</script>
+<script type="text/javascript">
     function send_feedbacks(){
         $.ajax({
             url: "/send_feedbacks",
@@ -50,8 +58,6 @@
             },
             error: function(){
                 console.log('nooo');
-                console.log($('#name_for_feedback'));
-                console.log($('#name_for_feedback').val());
             }
         });
     }

@@ -6,7 +6,6 @@ import cgi
 from flask import session, request
 from flask_wtf import csrf
 
-
 class User(object):
     """Модель пользователя
     """

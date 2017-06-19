@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ chat_info["name"] }}{% endblock %}
+{% block title %}{{ chat_info["name"] | safe }}{% endblock %}
 
 {% block includes %}
     {%- include "libs/treant/links.html" -%}
@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="container-fluid fill-height fill-cover">
-    <h2 class="text-center">{{ chat_info["name"] }}</h2>
+    <h2 class="text-center">{{ chat_info["name"] | safe }}</h2>
     <div class="fill-height__content fill-width row">
         <div class="fill-height fill-width__content col-sm-6">
             <div class="panel panel-default fill-height fill-height__content">

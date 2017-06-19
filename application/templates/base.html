@@ -38,7 +38,7 @@
                 {% endif %}
             </ul>
             {% if in_session %}
-                <p class="navbar-text navbar-right">Вы вошли как <strong>{{login}}</strong></p>
+                <p class="navbar-text navbar-right">Вы вошли как <strong>{{login | safe}}</strong></p>
             {% endif %}
         </div>
     </nav>

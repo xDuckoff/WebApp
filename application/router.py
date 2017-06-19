@@ -49,7 +49,7 @@ def chat_create():
     find_chat_form = FindChatForm()
     chat_create_form = CreateChatForm()
     login_form = LoginForm()
-    if not(chat_create_form.is_access_key_valid()):
+    if not chat_create_form.is_access_key_valid():
         flash('The password must be longer than 5 characters')
     if chat_create_form.is_access_key_valid() and chat_create_form.validate_on_submit():
         name = chat_create_form.name.data
@@ -70,7 +70,7 @@ def chat_create():
                            login=User.get_login(),
                            allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
                            allowed_langs=app.config["ALLOWED_LANGUAGES"],
-                           )
+                          )
 
 @app.route('/documentation/<path:filename>')
 def docs_page(filename):

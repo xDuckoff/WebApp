@@ -4,7 +4,7 @@
 
 from base_test_model import *
 from application import db
-from application.models import Message, Chat, Code
+from application.models import Message, Chat, Code, MarkdownMixin
 
 
 class TestChatModel(BaseTestModel):
@@ -24,7 +24,7 @@ class TestChatModel(BaseTestModel):
     def test_create_chat(self):
         chat = Chat.get(self.chat_id)
         chat_info = chat.get_info()
-        self.assertEquals(chat_info.get('name'), CHAT_NAME)
+        self.assertEquals(chat_info.get('name'), MarkdownMixin.decode(CHAT_NAME))
         self.assertEquals(chat_info.get('code_type'), CODE_TYPE)
 
     def test_get_all_messages(self):
@@ -56,7 +56,7 @@ class TestChatModel(BaseTestModel):
         search_name = CHAT_NAME
         found_chat_list = Chat.find(search_name)
         self.assertGreaterEqual(len(found_chat_list), 1)
-        self.assertEqual(found_chat_list[0].name, CHAT_NAME)
+        self.assertEqual(found_chat_list[0].name, MarkdownMixin.decode(CHAT_NAME))
 
     def test_find_chat_by_name(self):
         search_name = CHAT_NAME[2:-2]

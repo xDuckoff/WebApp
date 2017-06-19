@@ -29,7 +29,7 @@
         </div>
         <div id="RecaptchaField"> </div>
         <div class="center">
-            <input type="submit" id="submitbtn" tabindex="4" value="Отправьте запрос" onclick="send_feedbacks()">
+            <input type="submit" id="submitbtn" tabindex="4" value="Отправьте запрос">
         </div>
     </form>
   </div>
@@ -41,26 +41,6 @@
         if ( $('#RecaptchaField').length ) {
             grecaptcha.render('RecaptchaField', {'sitekey' : '6Lf1eCUUAAAAANoxJbNS7FJMKrFiuQdpKsjzbTQP'});
         }
-    }
-</script>
-<script type="text/javascript">
-    function send_feedbacks(){
-        $.ajax({
-            url: "/send_feedbacks",
-            type: "POST",
-            data:{
-                name: $('#name_for_feedback').val(),
-                email: $('#email_for_feedback').val(),
-                text: $('#text_for_feedback').val()
-            },
-            dataType: 'json',
-            success: function() {
-                console.log('easy');
-            },
-            error: function(){
-                console.log('nooo');
-            }
-        });
     }
 </script>
 {% endblock %}

@@ -24,10 +24,10 @@ def send_feedbacks():
     :return: Переход на страницу обратной связи вслучае не заполнения капчи \
     и переход на главную страницу при правильном заполнении
     """
-
-    name = request.args.get('name', '')
-    email = request.args.get('email', '')
-    text = request.args.get('text', '')
+    feedback_form = FeedbackForm()
+    name = feedback_form.name.data
+    email = feedback_form.email.data
+    text = feedback_form.text.data
 
     if recaptcha.verify():
         Feedback.send(name, email, text)
@@ -41,10 +41,6 @@ def feedback_page():
     :return: Переход на страницу обратной связи
     """
     feedback_form = FeedbackForm()
-    if feedback_form.validate_on_submit():
-        name = feedback_form.name.data
-        email = feedback_form.email.data
-        text = feedback_form.text.data
 
     return render_template('feedback.html', feedback_form=feedback_form)
 

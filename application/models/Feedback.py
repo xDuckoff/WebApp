@@ -16,10 +16,10 @@ class Feedback(db.Model):
     email = db.Column(db.String(256))
     text = db.Column(db.String(256))
 
-    def __init__(self, name, email, text):
-        self.name = name
-        self.email = email
-        self.text = text
+    def __init__(self, options):
+        self.name = options['name']
+        self.email = options['email']
+        self.text = options['text']
 
     @staticmethod
     def create(name, email, text):
@@ -28,9 +28,9 @@ class Feedback(db.Model):
         :param feedback: данные
         :return: массив данных
         """
-        feedback = {'Имя пользователя': name,
-                    'Почта пользователя': email,
-                    'Вопрос пользователя': text}
+        feedback = {'name': name,
+                    'email': email,
+                    'text': text}
 
         return feedback
 
@@ -45,8 +45,9 @@ class Feedback(db.Model):
         """
         #if len(text) > 1000 or not text:
         #    raise OverflowError
-        feedback = Feedback(name, email, text)
-        db.session.add(feedback)
+        feedback = Feedback.create(name, email, text)
+        feedback_data = Feedback(feedback)
+        db.session.add(feedback_data)
         db.session.commit()
 #        if app.config['SOCKET_MODE'] == 'True':
 #            socketio.emit('feedback', feedback.get_info(), room='feedback', broadcast=True)

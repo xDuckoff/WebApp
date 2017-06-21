@@ -6,21 +6,19 @@ body{
 }
 
 h1 {
-  font-family: 'Skranji', 'Times New Roman', sans-serif;
+  font-family: 'Oxygen', Arial, sans-serif;
   font-weight: bold;
   font-size: 3.75em;
   line-height: 1.7em;
   margin-bottom: 7px;
-  color: #5b5463;
-  text-shadow: 0 2px white, 1px 3px #666; 
+  color: #000;
   text-transform: uppercase;
   text-align: center;
-  border-bottom: 1px solid #bbb;
 }
 
 #help_platform{ 
-  display: block;
   width: 660px;
+  height: 100%;
   margin: 0 auto;
   margin-top: 25px;
   padding: 35px 15px;
@@ -56,74 +54,6 @@ label {
   margin-bottom: 10px;
 }
 
-.txt {
-  display: inline-block;
-  padding: 8px 9px;
-  padding-right: 30px;
-  width: 240px;
-  font-family: 'Oxygen', sans-serif;
-  font-size: 1.35em;
-  font-weight: normal;
-  color: #898989;
-  background-color: #f0f0f0;
-  background-image: url('images/checkmark.png');
-  background-position: 110% center;
-  background-repeat: no-repeat;
-  border: 1px solid #ccc;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.75);
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-shadow: 0 1px 2px rgba(25, 25, 25, 0.25) inset, -1px 1px #fff;
-  -moz-box-shadow: 0 1px 2px rgba(25, 25, 25, 0.25) inset, -1px 1px #fff;
-  box-shadow: 0 1px 2px rgba(25, 25, 25, 0.25) inset, -1px 1px #fff;
-  -webkit-transition: all 0.3s linear;
-  -moz-transition: all 0.3s linear;
-  transition: all 0.3s linear;
-}
-
-.txtarea {
-  display: inline-block;
-  padding: 8px 11px;
-  padding-right: 30px;
-  width: 320px;
-  height: 120px;
-  font-family: 'Oxygen', sans-serif;
-  font-size: 1.35em;
-  font-weight: normal;
-  color: #898989;
-  background-color: #f0f0f0;
-  background-position: 110% 4%;
-  border: 1px solid #ccc;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.75);
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-shadow: 0 1px 4px -1px #a8a8a8 inset;
-  -moz-box-shadow: 0 1px 4px -1px #a8a8a8 inset;
-  box-shadow: 0 1px 4px -1px #a8a8a8 inset;
-  -webkit-transition: all 0.3s linear;
-  -moz-transition: all 0.3s linear;
-  transition: all 0.3s linear;
-}
-
-.txt:focus:valid, .txtarea:focus:valid {
-  -webkit-box-shadow: 0 1px 4px -1px #a8a8a8 inset, 0 1px rgba(255, 255, 255, 0.6), 0 0 11px rgba(120, 200, 70, 0.7);
-  -moz-box-shadow: 0 1px 4px -1px #a8a8a8 inset, 0 1px rgba(255, 255, 255, 0.6), 0 0 11px rgba(120, 200, 70, 0.7); 
-  box-shadow: 0 1px 4px -1px #a8a8a8 inset, 0 1px rgba(255, 255, 255, 0.6), 0 0 11px rgba(120, 200, 70, 0.7);  
-}
-
-.center {
-  margin-top: 25px;
-  text-align: center;
-}
-
 #submitbtn {
   height: 70px;
   width: 275px;
@@ -139,24 +69,12 @@ label {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  background-color: #4581e5;
   -moz-box-shadow: 1px 1px 3px rgba(0,0,0,0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   -webkit-box-shadow: 1px 1px 3px rgba(0,0,0,0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   box-shadow: 1px 1px 3px rgba(0,0,0,0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   -webkit-transition: all 0.3s linear;
   -moz-transition: all 0.3s linear;
   transition: all 0.3s linear; 
-}
-#submitbtn:hover, #submitbtn:focus {
-  -webkit-box-shadow: 0 0 15px rgba(70, 100, 200, 0.9);
-  -moz-box-shadow: 0 0 15px rgba(70, 100, 200, 0.9);
-  box-shadow: 0 0 15px rgba(70, 100, 200, 0.9);
-}
-
-#submitbtn:active {
-  -webkit-box-shadow: 0 0 15px rgba(70, 100, 200, 0.9), 0 1px 3px rgba(0,0,0,0.4) inset;
-  -moz-box-shadow: 0 0 15px rgba(70, 100, 200, 0.9), 0 1px 3px rgba(0,0,0,0.4) inset;
-  box-shadow: 0 0 15px rgba(70, 100, 200, 0.9), 0 1px 3px rgba(0,0,0,0.4) inset;
 }
 
 .main-content{

@@ -18,7 +18,8 @@ class TestCodeModel(BaseTestModel):
             "content": "content",
             "author": "author",
             "chat_link": 1,
-            "parent_link": None
+            "parent_link": None,
+            "code_create_time": 123
         }
         code = Code(**code_params)
         self.assertTrue(hasattr(code, "id"))
@@ -27,6 +28,8 @@ class TestCodeModel(BaseTestModel):
         self.assertTrue(hasattr(code, "message"))
         self.assertTrue(hasattr(code, "chat_link"))
         self.assertTrue(hasattr(code, "parent_link"))
+        self.assertTrue(hasattr(code, "code_create_time"))
+        self.assertTrue(hasattr(code, "code_remove_time"))
 
     def test_type_model_code(self):
         self.assertIsInstance(Code.id.type, db.Integer)
@@ -35,6 +38,8 @@ class TestCodeModel(BaseTestModel):
         self.assertIsInstance(Code.message.type, db.String)
         self.assertIsInstance(Code.chat_link.type, db.Integer)
         self.assertIsInstance(Code.parent_link.type, db.Integer)
+        self.assertIsInstance(Code.code_remove_time.type, db.Integer)
+        self.assertIsInstance(Code.code_create_time.type, db.Integer)
 
     def test_code_sending(self):
         send_code_id = Code.send(self.chat_id, CODE, PARENT_CODE_ID, COMMIT_MESSAGE)

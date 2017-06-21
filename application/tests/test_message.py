@@ -21,6 +21,8 @@ class TestMessageModel(BaseTestModel):
         self.assertTrue(hasattr(Message, "author"))
         self.assertTrue(hasattr(Message, "chat_link"))
         self.assertTrue(hasattr(Message, "type"))
+        self.assertTrue(hasattr(Message, "message_create_time"))
+        self.assertTrue(hasattr(Message, "message_remove_time"))
 
     def test_type_model_message(self):
         self.assertIsInstance(Message.id.type, db.Integer)
@@ -28,6 +30,8 @@ class TestMessageModel(BaseTestModel):
         self.assertIsInstance(Message.author.type, db.String)
         self.assertIsInstance(Message.chat_link.type, db.Integer)
         self.assertIsInstance(Message.type.type, db.String)
+        self.assertIsInstance(Message.message_remove_time.type, db.Integer)
+        self.assertIsInstance(Message.message_create_time.type, db.Integer)
 
     def test_message_sending(self):
         message = Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)

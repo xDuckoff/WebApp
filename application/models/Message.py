@@ -26,12 +26,12 @@ class Message(db.Model):
     message_create_time = db.Column(db.Integer)
     message_remove_time = db.Column(db.Integer)
 
-    def __init__(self, content, chat_link, message_type, message_create_time):
+    def __init__(self, content, chat_link, message_type):
         self.content = Message.markdown_decode(content)
         self.author = User.get_login()
         self.chat_link = chat_link
         self.type = message_type
-        self.message_create_time = message_create_time
+        self.message_create_time = int(time.time())
         self.message_remove_time = None
 
     @staticmethod
@@ -45,8 +45,7 @@ class Message(db.Model):
         """
         if len(text) > 1000 or not text:
             raise OverflowError
-        message_create_time = int(time.time())
-        message = Message(text, chat_id, message_type, message_create_time)
+        message = Message(text, chat_id, message_type)
         db.session.add(message)
         db.session.commit()
         if app.config['SOCKET_MODE'] == 'True':

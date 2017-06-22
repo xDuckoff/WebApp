@@ -20,10 +20,10 @@ class Chat(db.Model):
     create_time = db.Column(db.Integer)
     remove_time = db.Column(db.Integer)
 
-    def __init__(self, name, code_type, create_time):
+    def __init__(self, name, code_type):
         self.name = name
         self.code_type = code_type
-        self.create_time = create_time
+        self.create_time = int(time.time())
         self.remove_time = None
 
     @staticmethod
@@ -35,8 +35,7 @@ class Chat(db.Model):
         :param code_type: Язык программирования
         :return: Номер чата
         """
-        create_time = int(time.time())
-        chat_to_create = Chat(chat_name, code_type, create_time)
+        chat_to_create = Chat(chat_name, code_type)
         db.session.add(chat_to_create)
         db.session.commit()
         chat_id = chat_to_create.id

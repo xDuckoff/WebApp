@@ -35,7 +35,7 @@ class Code(db.Model):
         self.chat_link = params.get('chat_link')
         self.parent_link = params.get('parent_link')
         self.message = params.get('message')
-        self.code_create_time = params.get('code_create_time')
+        self.code_create_time = int(time.time())
         self.code_remove_time = None
 
     @staticmethod
@@ -48,13 +48,11 @@ class Code(db.Model):
         :param message: Комметарий к коду
         :return: Сообщение о коммите и номере кода
         """
-        code_create_time = int(time.time())
         code_params = {
             "content": text,
             "message": message,
             "chat_link": chat_id,
-            "parent_link": parent,
-            "code_create_time": code_create_time
+            "parent_link": parent
         }
         code_to_send = Code(**code_params)
         db.session.add(code_to_send)

@@ -46,6 +46,11 @@ def index():
 
 @app.route('/chat_create', methods=['GET', 'POST'])
 def chat_create():
+    """
+    Данная функия создает чат и перенаправлеет на страницу /chat, если все поля заполнены верно.
+    Если что-то заполнено неверно, происходит redirect на главную страницу с сообщением об ошибке.
+    :return: редирект на страницу созданного чата
+    """
     find_chat_form = FindChatForm()
     chat_create_form = CreateChatForm()
     login_form = LoginForm()

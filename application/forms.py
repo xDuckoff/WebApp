@@ -23,6 +23,7 @@ class CreateChatForm(FlaskForm):
     access_key = StringField('access_key')
 
     def is_access_key_valid(self):
+        """Проверка корректности пароля"""
         return self.chat_type.data == "public" or len(self.access_key.data) > 5
 
     def is_file_valid(self):

@@ -5,6 +5,7 @@
 import os
 from flask import render_template, redirect, send_from_directory, request
 from application import app, recaptcha
+from config import RECAPTCHA_SITE_KEY
 from forms import LoginForm, CreateChatForm, FindChatForm, FeedbackForm
 from application.models import Chat, User, Feedback, flask_recaptcha
 
@@ -42,7 +43,9 @@ def feedback_page():
     """
     feedback_form = FeedbackForm()
 
-    return render_template('feedback.html', feedback_form=feedback_form)
+    return render_template('feedback.html',
+                           feedback_form=feedback_form,
+                           RECAPTCHA_SITE_KEY=RECAPTCHA_SITE_KEY)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

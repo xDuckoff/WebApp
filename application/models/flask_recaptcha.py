@@ -8,13 +8,6 @@ from jinja2 import Markup
 import requests
 
 
-#class DEFAULTS(object):
-#    IS_ENABLED = True
-#    THEME = "light"
-#    TYPE = "image"
-#    SIZE = "normal"
-#    TABINDEX = 0
-
 class ReCaptcha(object):
     """Модель Капчи
 
@@ -25,44 +18,6 @@ class ReCaptcha(object):
     site_key = None
     secret_key = None
     is_enabled = False
-
-#    def __init__(self, app=None, site_key=None, secret_key=None, is_enabled=True, **kwargs):
-#        """__init__
-#
-#        :return:
-#        """
-#        if site_key:
-#            self.site_key = site_key
-#            self.secret_key = secret_key
-#            self.is_enabled = is_enabled
-#            self.theme = kwargs.get('theme', DEFAULTS.THEME)
-#            self.type = kwargs.get('type', DEFAULTS.TYPE)
-#            self.size = kwargs.get('size', DEFAULTS.SIZE)
-#            self.tabindex = kwargs.get('tabindex', DEFAULTS.TABINDEX)
-#
-#        elif app:
-#            self.init_app(app=app)
-#
-#    def init_app(self, app=None):
-#        """init_app
-#
-#        :return:
-#        """
-#        self.__init__(site_key=app.config.get("RECAPTCHA_SITE_KEY"),
-#                      secret_key=app.config.get("RECAPTCHA_SECRET_KEY"),
-#                      is_enabled=app.config.get("RECAPTCHA_ENABLED", DEFAULTS.IS_ENABLED),
-#                      theme=app.config.get("RECAPTCHA_THEME", DEFAULTS.THEME),
-#                      type=app.config.get("RECAPTCHA_TYPE", DEFAULTS.TYPE),
-#                      size=app.config.get("RECAPTCHA_SIZE", DEFAULTS.SIZE),
-#                      tabindex=app.config.get("RECAPTCHA_TABINDEX", DEFAULTS.TABINDEX))
-#
-#        @app.context_processor
-#        def get_code():
-#            """Получение данных
-#
-#            :return: словарь данных
-#            """
-#            return dict(recaptcha=Markup(self.get_code()))
 
     def get_code(self):
         """Возвращает новый код ReCaptcha

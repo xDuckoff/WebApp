@@ -1,7 +1,8 @@
+from base_test_model import *
+from application import app
 from flask import Flask
 from flask_recaptcha import ReCaptcha
 
-app = Flask(__name__)
 app.config.update({
     "debug": True,
     "RECAPTCHA_SITE_KEY": "SITE_KEY",
@@ -9,34 +10,36 @@ app.config.update({
     "RECAPTCHA_ENABLED": True
 })
 
-def test_recaptcha_enabled():
-    recaptcha = ReCaptcha(site_key="SITE_KEY", secret_key="SECRET_KEY")
-    assert isinstance(recaptcha, ReCaptcha)
-    assert recaptcha.is_enabled == True
-    assert "script" in recaptcha.get_code()
-    assert recaptcha.verify(response="None", remote_ip="0.0.0.0") == False
+class TestReCaptchaForm(BaseTestModel):
 
-def test_recaptcha_enabled_flask():
-    app.config.update({
-        "RECAPTCHA_ENABLED": True
-    })
-    recaptcha = ReCaptcha(app=app)
-    assert isinstance(recaptcha, ReCaptcha)
-    assert recaptcha.is_enabled == True
-    assert "script" in recaptcha.get_code()
-    assert recaptcha.verify(response="None", remote_ip="0.0.0.0") == False
+    def test_recaptcha_enabled(self):
+        recaptcha = ReCaptcha(site_key="SITE_KEY", secret_key="SECRET_KEY")
+        self.assertIsInstance(recaptcha, ReCaptcha)
+        self.assertTrue(recaptcha.is_enabled)
+        self.assertIn("script", recaptcha.get_code())
+        self.assertFalse(recaptcha.verify(response="None", remote_ip="0.0.0.0"))
 
-def test_recaptcha_disabled():
-    recaptcha = ReCaptcha(site_key="SITE_KEY", secret_key="SECRET_KEY", is_enabled=False)
-    assert recaptcha.is_enabled == False
-    assert recaptcha.get_code() == ""
-    assert recaptcha.verify(response="None", remote_ip="0.0.0.0") == True
+    def test_recaptcha_enabled_flask(self):
+        app.config.update({
+            "RECAPTCHA_ENABLED": True
+        })
+        recaptcha = ReCaptcha(app=app)
+        self.assertIsInstance(recaptcha, ReCaptcha)
+        self.assertTrue(recaptcha.is_enabled)
+        self.assertIn("script", recaptcha.get_code())
+        self.assertFalse(recaptcha.verify(response="None", remote_ip="0.0.0.0"))
 
-def test_recaptcha_disabled_flask():
-    app.config.update({
-        "RECAPTCHA_ENABLED": False
-    })
-    recaptcha = ReCaptcha(app=app)
-    assert recaptcha.is_enabled == False
-    assert recaptcha.get_code() == ""
-    assert recaptcha.verify(response="None", remote_ip="0.0.0.0") == True
+    def test_recaptcha_disabled(self):
+        recaptcha = ReCaptcha(site_key="SITE_KEY", secret_key="SECRET_KEY", is_enabled=False)
+        self.assertFalse(recaptcha.is_enabled)
+        self.assertEqual(recaptcha.get_code(), "")
+        self.assertTrue(recaptcha.verify(response="None", remote_ip="0.0.0.0"))
+
+    def test_recaptcha_disabled_flask(self):
+        app.config.update({
+            "RECAPTCHA_ENABLED": False
+        })
+        recaptcha = ReCaptcha(app=app)
+        self.assertFalse(recaptcha.is_enabled)
+        self.assertEqual(recaptcha.get_code(), "")
+        self.assertTrue(recaptcha.verify(response="None", remote_ip="0.0.0.0"))

@@ -33,6 +33,6 @@ class FindChatForm(FlaskForm):
 
 class FeedbackForm(FlaskForm):
     """данные для Feedback"""
-    name = StringField('name', validators=[DataRequired()])
-    email = StringField('email', validators=[DataRequired()])
-    text = StringField('text', default='')
+    name = StringField('name')
+    email = StringField('email')
+    text = StringField('text')

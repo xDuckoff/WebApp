@@ -3,11 +3,12 @@
 """Основные веб-страницы проекта"""
 
 import os
-from flask import render_template, redirect, send_from_directory, request
+import application.chat_router
 from application import app, recaptcha
-from config import RECAPTCHA_SITE_KEY
-from forms import LoginForm, CreateChatForm, FindChatForm, FeedbackForm
+from application.forms import CreateChatForm, FeedbackForm, FindChatForm, LoginForm
 from application.models import Chat, User, Feedback, flask_recaptcha
+from config import RECAPTCHA_SITE_KEY
+from flask import render_template, redirect, send_from_directory, request
 
 
 @app.route('/logout')
@@ -22,6 +23,7 @@ def logout():
 @app.route("/send_feedbacks", methods=["POST"])
 def send_feedbacks():
     """Функция проверки капчи
+
     :return: Переход на страницу обратной связи вслучае не заполнения капчи \
     и переход на главную страницу при правильном заполнении
     """
@@ -89,5 +91,3 @@ def docs_page(filename):
     rootdir = os.getcwd()
     path = rootdir + '/docs/_build/html/'
     return send_from_directory(path, filename)
-
-import application.chat_router

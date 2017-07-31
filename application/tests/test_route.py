@@ -9,7 +9,6 @@ from mock import Mock
 
 MAIN_PAGE_URL = "/"
 LOGOUT_PAGE_URL = "/logout"
-DOCS_PAGE_URL = '/documentation/index.html'
 TREE_PAGE_URL = '/tree?chat={chat_id}'
 CHAT_PAGE_URL = "/chat/{chat_id}"
 CHAT_GET_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'

@@ -6,7 +6,6 @@ from base_test_model import *
 from application import app
 from application.models import Chat, Message, Code
 from mock import Mock
-from os import system
 
 MAIN_PAGE_URL = "/"
 LOGOUT_PAGE_URL = "/logout"

@@ -146,16 +146,4 @@
 <script src="{{ url_for('static', filename='js/chat/messages.js') }}"></script>
 <script src="{{ url_for('static', filename='js/chat/code.js') }}"></script>
 <script src="{{ url_for('static', filename='js/chat/compare_code.js') }}"></script>
-<script type="text/javascript">
-    jQuery(function ($) {
-        // joinToChat
-        $.ajax({
-            type: "GET",
-            url: "/join_chat",
-            data: {
-                chat: CHAT_ID
-            }
-        });
-    });
-</script>
 {% endblock %}

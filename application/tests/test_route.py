@@ -40,11 +40,6 @@ class TestMainPages(BaseTestPages):
         response = self.app.get(MAIN_PAGE_URL)
         self.assertEqual(response.status_code, 200)
 
-    def test_make_docs(self):
-        system("cd docs; make html>/dev/null")
-        response = self.app.get(DOCS_PAGE_URL)
-        self.assertEqual(response.status_code, 200)
-
 
 class TestChatPage(BaseTestPages):
 

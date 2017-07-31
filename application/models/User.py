@@ -6,6 +6,7 @@ import cgi
 from flask import session, request
 from flask_wtf import csrf
 
+
 class User(object):
     """Модель пользователя
     """
@@ -39,21 +40,6 @@ class User(object):
         :return: True, если пользователь авторизован, False в противном случае.
         """
         return 'login' in session
-
-    @staticmethod
-    def join_chat(chat_id):
-        """Присоединяет пользователя к чату
-
-        :param chat_id: Id чата
-        :return: True, если пользователь присоединился к чату, False, если он уже был присоединён
-        """
-        if 'joined_chats' not in session:
-            session['joined_chats'] = []
-        if chat_id not in session['joined_chats']:
-            session['joined_chats'].append(chat_id)
-            session.modified = True
-            return True
-        return False
 
     @staticmethod
     def check_csrf():

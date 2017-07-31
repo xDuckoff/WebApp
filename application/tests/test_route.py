@@ -12,7 +12,6 @@ LOGOUT_PAGE_URL = "/logout"
 TREE_PAGE_URL = '/tree?chat={chat_id}'
 CHAT_PAGE_URL = "/chat/{chat_id}"
 CHAT_GET_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'
-CHAT_JOIN_PAGE_URL = '/join_chat?chat={chat_id}'
 CODE_SEND_PAGE_URL = '/send_code?chat={chat_id}&code={code}&parent={parent}&cname={cname}'
 CODE_GET_PAGE_URL = '/get_code?index={code_id}'
 MESSAGES_GET_PAGE_URL = '/get_messages?chat_id={chat_id}'
@@ -58,11 +57,6 @@ class TestChatPage(BaseTestPages):
         chat_page_url = CHAT_PAGE_URL.format(chat_id=1)
         response = self.app.get(chat_page_url)
         self.assertEqual(response.status_code, 302)
-
-    def test_join_in_correct_chat(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
-        response = self.app.get(CHAT_JOIN_PAGE_URL.format(chat_id=chat_id))
-        self.assertEqual(response.status_code, 200)
 
 
 class TestMessagePage(BaseTestPages):

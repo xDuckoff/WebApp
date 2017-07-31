@@ -12,22 +12,6 @@ from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
 
 
-@app.route('/join_chat', methods=['GET', 'POST'])
-@login_required
-@csrf_required
-def join_chat():
-    """Данная функция добавляет в сессию пользователя номер чата
-
-    :return: Добавлен ли пользователь в чат
-    """
-    chat_id = request.args.get('chat', '')
-    if not Chat.was_created(chat_id):
-        return dumps({"success": False, "error": "Bad chat"}), 400
-    if User.join_chat(int(chat_id)):
-        Message.send(chat_id, u"Присоединился к чату", 'sys')
-    return dumps({"success": True, "error": ""})
-
-
 @app.route('/tree', methods=['GET', 'POST'])
 @login_required
 @csrf_required

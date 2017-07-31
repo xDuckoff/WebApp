@@ -6,7 +6,6 @@ from base_test_model import *
 from application import app
 from application.models import Chat, Message, Code
 from mock import Mock
-from os import system
 
 MAIN_PAGE_URL = "/"
 LOGOUT_PAGE_URL = "/logout"
@@ -38,11 +37,6 @@ class TestMainPages(BaseTestPages):
 
     def test_index_page(self):
         response = self.app.get(MAIN_PAGE_URL)
-        self.assertEqual(response.status_code, 200)
-
-    def test_make_docs(self):
-        system("cd docs; make html>/dev/null")
-        response = self.app.get(DOCS_PAGE_URL)
         self.assertEqual(response.status_code, 200)
 
 

@@ -2,8 +2,7 @@
 
 """Основные веб-страницы проекта"""
 
-import os
-from flask import render_template, redirect, send_from_directory
+from flask import render_template, redirect
 from application import app
 from forms import LoginForm, CreateChatForm, FindChatForm
 from application.models import Chat, User
@@ -49,17 +48,5 @@ def index():
                            allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
                            allowed_languages=app.config["ALLOWED_LANGUAGES"]
                           )
-
-
-@app.route('/documentation/<path:filename>')
-def docs_page(filename):
-    """Данная функция открывает пользователю страницу с документацией
-
-    :param filename: Имя файла
-    :return: Выбранный файл с документацией
-    """
-    rootdir = os.getcwd()
-    path = rootdir + '/docs/_build/html/'
-    return send_from_directory(path, filename)
 
 import application.chat_router

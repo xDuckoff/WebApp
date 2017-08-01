@@ -3,7 +3,7 @@
 """Функции работы с чатами и их поиска"""
 
 from application import db
-from application.models import Code
+from application.models import Code, Message, MarkdownMixin
 
 
 class Chat(db.Model):
@@ -19,7 +19,7 @@ class Chat(db.Model):
     access_key = db.Column(db.Text)
 
     def __init__(self, name, code_type, access_key):
-        self.name = name
+        self.name = MarkdownMixin.decode(name)
         self.code_type = code_type
         self.access_key = access_key
 
@@ -75,12 +75,16 @@ class Chat(db.Model):
             return Chat.query.filter_by(id=chat_id).all()
         return Chat.query.filter(Chat.name.like('%' + name + '%')).all()[::-1]
 
-    def get_messages(self):
-        """Получение всех сообщений в чате в форматированном виде
+    def get_last_messages(self, last_message_id=0):
+        """Получение последних сообщений в чате в форматированном виде, \
+        которые были сохранены после определенного сообщения. \
+        Если ``last_message_id`` не задано, то будут возвращены все сообщения в чате.
 
+        :param last_message_id: id сообщения, после которого надо получить последние сообщения
         :return: Сообщения пользователей
         """
-        return [message.get_info() for message in self.messages]
+        last_messages = self.messages.filter(Message.id > last_message_id)
+        return [message.get_info() for message in last_messages]
 
     @staticmethod
     def was_created(chat_id):
@@ -97,7 +101,7 @@ class Chat(db.Model):
         :param message_id: Id сообщения
         :return: True, если сообщение существует, False в противном случае
         """
-        return message_id.isdigit() and len(self.messages) > int(message_id)
+        return message_id.isdigit() and self.messages.count() > int(message_id)
 
     def has_code(self, code_id):
         """Проверка существования кода в чате

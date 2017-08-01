@@ -40,38 +40,12 @@ body{
     color:#ffffff;
 }
 
-.system_message{
-    color: #000000;
-    width: 50%;
-    word-wrap: break-word;
-    margin-left: auto;
-    margin-right: auto; 
-}
-
-.user_message{
-    color: #000000;
-    width: 70%;
-    word-wrap: break-word;
-    margin-right: auto; 
-}
-
-#chat-panel{
-    min-height: 500;
-    max-height: 500;
-    overflow-y: scroll; 
-}
-
 #code-editor{
     resize: vertical;
 }
 
 .chat-control-btn{
     margin-top: 10px;
-}
-
-.message{
-    word-wrap: break-word;
-    color: #000000;
 }
 
 .modal-wide .modal-dialog{
@@ -93,11 +67,6 @@ body{
     font-weight: 600;
 }
 
-#voice-img{
-    widows: 15px;
-    height: 15px;
-}
-
 p{
-    margin: 0px 0px 0px 0px;
+    margin: 0;
 }

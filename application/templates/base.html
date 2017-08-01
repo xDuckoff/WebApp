@@ -1,52 +1,44 @@
 <html>
-    <head>
-        <title>{% block title %}{% endblock %}</title>
-        <meta charset = "UTF-8">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-        <script src="{{ url_for('static', filename='js/jquery.min.js') }}" type="text/javascript"></script>
-        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" type="text/javascript"></script>
-        <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_flower_only.png') }}" type="image/x-icon">
-        <link rel="icon" href="{{ url_for('static', filename='img/logo_flower_only.png') }}" type="image/x-icon">
-        {% block includes %}{% endblock %}
-        {% block scripts %}{% endblock %}
-    </head>
-    <body>
-        <nav class="navbar navbar-inverse navbar-static-top">
-            <div class="container">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="/">
-                             <img src="/static/img/logo_word_only.png" width="90" height="20">
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/documentation/index.html">
-                            Документация
-                        </a>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    {% if in_session %}
-                    <li>
-                        <a href="/logout">
-                            Выход
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if not in_session %}
-                    <li>
-                        <a href="#" data-toggle="modal" data-target="#myModalLogin">
-                            Вход
-                        </a>
-                    </li>
-                    {% endif %}
-                 </ul>
-				 {% if in_session %}
-                    <p class="navbar-text navbar-right"> Вы вошли как <strong>{{login}}</strong></p>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset = "UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_flower_only.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_flower_only.png') }}" type="image/x-icon">
+    {%- include "libs/bootstrap/links.html" -%}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block includes %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-static-top1 navbar-fixed-top">
+        <div class="container">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="/">
+                         <img src="/static/img/logo_word_only.png" width="90" height="20">
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if in_session %}
+                <li>
+                    <a href="/logout">Выход</a>
+                </li>
                 {% endif %}
-            </div>
-        </nav>
-        {% block content %}{% endblock %}
-    </body>
+                {% if not in_session %}
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#myModalLogin">
+                        Вход
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+            {% if in_session %}
+                <p class="navbar-text navbar-right">Вы вошли как <strong>{{login | safe}}</strong></p>
+            {% endif %}
+        </div>
+    </nav>
+    {% block content %}{% endblock %}
+    {%- include "libs/bootstrap/scripts.html" -%}
+    {% block scripts %}{% endblock %}
+</body>
 </html>

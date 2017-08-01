@@ -57,9 +57,9 @@
                                 </div>
                                 <select class="form-control" id="Compile" name="code_type" required="required">
                                     <option value="" disabled selected>Язык программирования</option>
-                                    {% for lang in allowed_langs %}
-                                    <option>{{ lang }}</option>
-                                    {% endfor %}
+                                    {%- for lang in allowed_languages -%}
+                                    <option value="{{ lang.type }}">{{ lang.name }}</option>
+                                    {%- endfor -%}
                                 </select>
                                 <div class="form-group">
                                     <input type="file" name="file" accept="{{ allowed_ex }}">
@@ -78,7 +78,7 @@
     </div>
 </div>
 <div class = "container main-container">
-   <div class = "row">
+    <div class = "row">
         <div class="col-md-8 col-md-offset-2" >
             <img class="center-block" src="/static/img/logo.png" width="250" height="250">
         </div>
@@ -197,7 +197,7 @@
                     </tr>
                     {% for chat in chats %}
                         <tr>
-                        <td>{{chat.name}}</td>
+                        <td>{{chat.name | safe}}</td>
                         <td>{{chat.code_type}}</td>
                         <td>
                             {% if in_session %}
@@ -232,7 +232,7 @@
 <script type="text/javascript">
     $(document).ready(function(){
         $("[data-toggle='tooltip']").tooltip();
-    })
+    });
     jQuery(function(){
         var div = $('#pass_div');
         if ( $("select[name='chat_type']").val() == 'public' ) {
@@ -248,7 +248,7 @@
                 div.show();
             }
         })
-    })
+    });
 </script>
 
 <script type="text/javascript">
@@ -263,20 +263,11 @@
             },
             lineNumbers: true,
             indentUnit: 4,
-            matchBrackets: true,
+            matchBrackets: true
         });
     }
     function update_codemirror(){
-        choosen_type =  $("#Compile").val();
-        if (choosen_type == "C") choosen_type="text/x-csrc";
-        if (choosen_type == "C#") choosen_type="text/x-csharp";
-        if (choosen_type == "C++") choosen_type="text/x-c++src";
-        if (choosen_type == "CSS") choosen_type="text/css";
-        if (choosen_type == "HTML") choosen_type="text/html";
-        if (choosen_type == "Java") choosen_type="text/x-java";
-        if (choosen_type == "JavaScript") choosen_type="javascript";
-        if (choosen_type == "Python") choosen_type="text/x-python";
-        editor.setOption("mode", choosen_type);
+        editor.setOption("mode", $("#Compile").val());
     }
     jQuery(function ($) {
         $('#myModal').on('shown.bs.modal', function () {
@@ -284,7 +275,7 @@
                 init_codemirror();
                 openModalCount = true;
             }
-        });         
+        });
         $("#Compile").change(function () {
             update_codemirror();
         });

@@ -42,21 +42,6 @@ class User(object):
         return 'login' in session
 
     @staticmethod
-    def join_chat(chat_id):
-        """Присоединяет пользователя к чату
-
-        :param chat_id: Id чата
-        :return: True, если пользователь присоединился к чату, False, если он уже был присоединён
-        """
-        if 'joined_chats' not in session:
-            session['joined_chats'] = []
-        if chat_id not in session['joined_chats']:
-            session['joined_chats'].append(chat_id)
-            session.modified = True
-            return True
-        return False
-
-    @staticmethod
     def check_csrf():
         """Проверка на валидность csrf-ключа"""
         csrf.validate_csrf(request.headers['X-Csrf-Token'])

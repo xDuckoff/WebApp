@@ -6,7 +6,7 @@ from json import dumps
 from flask import render_template, redirect, request
 from application import app, socketio
 from application import csrf
-from application.forms import CreateChatForm
+from application.forms import CreateChatForm, AuthChatForm
 from application.handlers import login_required, csrf_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
@@ -37,12 +37,15 @@ def chat_page(chat_id):
     if not Chat.was_created(chat_id):
         return redirect('/')
     chat = Chat.get(int(chat_id))
+    auth_form = AuthChatForm()
     return render_template('chat.html',
                            chat_id=chat.id,
                            socket_mode=(app.config['SOCKET_MODE'] == 'True'),
                            chat_info=chat.get_info(),
                            login=User.get_login(),
-                           in_session=User.is_logined()
+                           in_session=User.is_logined(),
+                           have_access=(chat.access_key == '' or auth_form.password.data == chat.access_key),
+                           auth_form=auth_form
                           )
 
 

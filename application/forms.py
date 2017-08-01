@@ -30,3 +30,8 @@ class CreateChatForm(FlaskForm):
 class FindChatForm(FlaskForm):
     """Поиск чата"""
     chat_title = StringField('chat_title', default='')
+
+
+class AuthChatForm(FlaskForm):
+    """Форма авторизации в чате"""
+    password = StringField('password')

@@ -140,9 +140,8 @@ def api_create_chat():
     name = form.name.data
     code = form.code.data
     code_type = form.code_type.data
-    is_private = form.is_private
     access_key = form.access_key.data
-    chat_id = Chat.create(name, code, code_type, is_private, access_key)
+    chat_id = Chat.create(name, code, code_type, access_key)
     return '/chat/' + str(chat_id)
 
 

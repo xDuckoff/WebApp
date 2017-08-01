@@ -14,27 +14,26 @@ class Chat(db.Model):
     """
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(256))
-    code_type = db.Column(db.String(256))
-    is_private = db.Column(db.Boolean)
-    access_key = db.Column(db.String(256))
+    name = db.Column(db.Text)
+    code_type = db.Column(db.Text)
+    access_key = db.Column(db.Text)
 
-    def __init__(self, name, code_type, is_private, access_key):
+    def __init__(self, name, code_type, access_key):
         self.name = name
         self.code_type = code_type
         self.access_key = access_key
-        self.is_private = is_private
 
     @staticmethod
-    def create(chat_name, code, code_type, is_private, access_key):
+    def create(chat_name, code, code_type, access_key=''):
         """Создаёт чат
 
         :param chat_name: Имя чата
         :param code: Код чата
         :param code_type: Язык программирования
+        :param access_key: Ключ доступа
         :return: Номер чата
         """
-        chat_to_create = Chat(chat_name, code_type, is_private, access_key)
+        chat_to_create = Chat(chat_name, code_type, access_key)
         db.session.add(chat_to_create)
         db.session.commit()
         chat_id = chat_to_create.id

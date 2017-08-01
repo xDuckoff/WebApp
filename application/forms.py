@@ -19,12 +19,7 @@ class CreateChatForm(FlaskForm):
     code_type = StringField('codetype')
     file = FileField('file')
     code = StringField('code', default='')
-    chat_type = StringField('chat_type')
-    access_key = StringField('access_key')
-
-    def is_access_key_valid(self):
-        """Проверка корректности пароля"""
-        return self.chat_type.data == "public" or len(self.access_key.data) > 5
+    access_key = StringField('access_key', default='')
 
     def is_file_valid(self):
         """Проверка на валидный файл для создания чата"""

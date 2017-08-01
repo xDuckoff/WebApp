@@ -31,7 +31,15 @@ def index():
     login_form = LoginForm()
     if login_form.validate_on_submit():
         User.login(login_form.login.data)
-
+    if chat_create_form.validate_on_submit():
+        name = chat_create_form.name.data
+        code_type = chat_create_form.code_type.data
+        code = chat_create_form.code.data
+        access_key = chat_create_form.access_key.data
+        if chat_create_form.is_file_valid():
+            code = chat_create_form.file.data.read()
+        chat_id = Chat.create(name, code, code_type, access_key)
+        return redirect('/chat/' + str(chat_id))
     return render_template('index.html',
                            chats=Chat.find(find_chat_form.chat_title.data),
                            in_session=User.is_logined(),
@@ -43,39 +51,6 @@ def index():
                            allowed_langs=app.config["ALLOWED_LANGUAGES"]
                           )
 
-
-@app.route('/chat_create', methods=['GET', 'POST'])
-def chat_create():
-    """
-    Данная функия создает чат и перенаправлеет на страницу /chat, если все поля заполнены верно.
-    Если что-то заполнено неверно, происходит redirect на главную страницу с сообщением об ошибке.
-    :return: редирект на страницу созданного чата
-    """
-    find_chat_form = FindChatForm()
-    chat_create_form = CreateChatForm()
-    login_form = LoginForm()
-    if not chat_create_form.is_access_key_valid():
-        flash('The password must be longer than 5 characters')
-    if chat_create_form.is_access_key_valid() and chat_create_form.validate_on_submit():
-        name = chat_create_form.name.data
-        code_type = chat_create_form.code_type.data
-        code = chat_create_form.code.data
-        is_private = chat_create_form.chat_type.data == "private"
-        access_key = chat_create_form.access_key.data
-        if chat_create_form.is_file_valid():
-            code = chat_create_form.file.data.read()
-        chat_id = Chat.create(name, code, code_type, is_private, access_key)
-        return redirect('/chat/' + str(chat_id))
-    return render_template('index.html',
-                           chats=Chat.find(find_chat_form.chat_title.data),
-                           in_session=User.is_logined(),
-                           login_form=login_form,
-                           chat_create_form=chat_create_form,
-                           find_chat_form=find_chat_form,
-                           login=User.get_login(),
-                           allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
-                           allowed_langs=app.config["ALLOWED_LANGUAGES"],
-                          )
 
 @app.route('/documentation/<path:filename>')
 def docs_page(filename):

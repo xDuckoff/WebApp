@@ -7,3 +7,4 @@ venv/
 *.orig
 /docs/_build/
 .DS_Store
+*.swp

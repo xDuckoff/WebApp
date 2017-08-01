@@ -44,7 +44,7 @@ def chat_page(chat_id):
                            chat_info=chat.get_info(),
                            login=User.get_login(),
                            in_session=User.is_logined(),
-                           have_access=(chat.access_key == '' or auth_form.password.data == chat.access_key),
+                           have_access=chat.is_access_key_valid(auth_form.password.data),
                            auth_form=auth_form
                           )
 

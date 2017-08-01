@@ -110,3 +110,11 @@ class Chat(db.Model):
         :return: True, если код существует, False в противном случае
         """
         return code_id.isdigit() and len(self.codes) > int(code_id)
+
+    def is_access_key_valid(self, password):
+        """Проверка на валидность пароля
+
+        :param password: Пароль
+        :return: Является ли пароль валидным
+        """
+        return self.access_key == '' or self.access_key == password

@@ -3,7 +3,7 @@
 """Функции работы с кодом и деревом коммитов"""
 
 from application import app, db, socketio
-from application.models import Message, User
+from application.models import Message, User, MarkdownMixin
 
 
 class Code(db.Model):
@@ -18,8 +18,8 @@ class Code(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
-    author = db.Column(db.String(256))
-    message = db.Column(db.String(256))
+    author = db.Column(db.Text)
+    message = db.Column(db.Text)
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     parent_link = db.Column(db.Integer, db.ForeignKey('code.id'), nullable=True)
 
@@ -31,7 +31,7 @@ class Code(db.Model):
         self.author = User.get_login()
         self.chat_link = params.get('chat_link')
         self.parent_link = params.get('parent_link')
-        self.message = params.get('message')
+        self.message = MarkdownMixin.decode(params.get('message'))
 
     @staticmethod
     def send(chat_id, text, parent, message):

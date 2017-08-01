@@ -11,6 +11,8 @@ from application.models import User
 USERNAME = 'Bot'
 CHAT_NAME = 'Test Chat'
 CHAT_CODE = 'Test Code'
+CHAT_ACCESS_KEY = 'secret_password'
+CHAT_INCORRECT_ACCESS_KEY = 'password'
 MESSAGE = 'Hello, I am **Bot**!'
 CORRECT_MESSAGE = '<p>Hello, I am <strong>Bot</strong>!</p>'
 PLAIN_MESSAGE = 'Hello, I am Bot !'
@@ -35,8 +37,6 @@ class BaseTestModel(unittest.TestCase):
         self.real.check_csrf = Mock()
         self.real.get_login = Mock()
         self.real.get_login.return_value = USERNAME
-        self.real.is_logined = Mock()
-        self.real.is_logined.return_value = True
 
     def tearDown(self):
         db.session.remove()

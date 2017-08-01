@@ -3,9 +3,7 @@
 """Функции работы с сообщениями"""
 
 import re
-import cgi
-from markdown import markdown
-from application.models import User
+from application.models import User, MarkdownMixin
 from application import app, db, socketio
 
 
@@ -18,13 +16,13 @@ class Message(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
-    author = db.Column(db.String(256))
+    author = db.Column(db.Text)
     type = db.Column(db.String(3))
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages', lazy='dynamic'))
 
     def __init__(self, content, chat_link, message_type):
-        self.content = Message.markdown_decode(content)
+        self.content = MarkdownMixin.decode(content)
         self.author = User.get_login()
         self.chat_link = chat_link
         self.type = message_type
@@ -56,30 +54,6 @@ class Message(db.Model):
         text = re.sub(r'\<[^>]*>', ' ', text)
         text = re.sub(r'\s+', ' ', text)
         return text.strip()
-
-    @staticmethod
-    def escape(text):
-        """Экранирование текста
-
-        :param text: Исходный текст
-        :return: Экранированный текст
-        """
-        text = text.replace('```', '`')
-        parts = text.split('`')
-        for i in range(0, len(parts), 2):
-            parts[i] = cgi.escape(parts[i])
-        return '`'.join(parts)
-
-    @staticmethod
-    def markdown_decode(text):
-        """Преобразование текста в HTML в соответствии с синтаксисом Markdown
-
-        :param text: исходный текст
-        :return: преобразовнный в HTML текст
-        """
-        text = Message.escape(text)
-        text = markdown(text)
-        return text
 
     def get_info(self):
         """Получение форматированного сообщения в виде словаря

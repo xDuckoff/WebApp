@@ -2,23 +2,11 @@
 
 """Основные веб-страницы проекта"""
 
-import os
-import application.chat_router
 from application import app, recaptcha
 from application.forms import CreateChatForm, FeedbackForm, FindChatForm, LoginForm
 from application.models import Chat, User, Feedback, flask_recaptcha
 from config import RECAPTCHA_SITE_KEY
-from flask import render_template, redirect, send_from_directory, request
-
-
-@app.route('/logout')
-def logout():
-    """Функция выхода из сессии в проекте
-
-    :return: Переход на главную страницу
-    """
-    User.logout()
-    return redirect('/')
+from flask import render_template, redirect
 
 @app.route("/send_feedbacks", methods=["POST"])
 def send_feedbacks():
@@ -65,13 +53,13 @@ def index():
         name = chat_create_form.name.data
         code_type = chat_create_form.code_type.data
         code = chat_create_form.code.data
+        access_key = chat_create_form.access_key.data
         if chat_create_form.is_file_valid():
             code = chat_create_form.file.data.read()
-        chat_id = Chat.create(name, code, code_type)
+        chat_id = Chat.create(name, code, code_type, access_key)
         return redirect('/chat/' + str(chat_id))
     return render_template('index.html',
                            chats=Chat.find(find_chat_form.chat_title.data),
-                           in_session=User.is_logined(),
                            login_form=login_form,
                            chat_create_form=chat_create_form,
                            find_chat_form=find_chat_form,
@@ -80,14 +68,4 @@ def index():
                            allowed_languages=app.config["ALLOWED_LANGUAGES"]
                           )
 
-
-@app.route('/documentation/<path:filename>')
-def docs_page(filename):
-    """Данная функция открывает пользователю страницу с документацией
-
-    :param filename: Имя файла
-    :return: Выбранный файл с документацией
-    """
-    rootdir = os.getcwd()
-    path = rootdir + '/docs/_build/html/'
-    return send_from_directory(path, filename)
+import application.chat_router

@@ -4,7 +4,7 @@
 
 from base_test_model import *
 from application import db
-from application.models import Chat, Code
+from application.models import Chat, Code, MarkdownMixin
 
 
 class TestCodeModel(BaseTestModel):
@@ -54,7 +54,7 @@ class TestCodeModel(BaseTestModel):
         self.assertEquals(code.content, CHAT_CODE)
         self.assertEquals(code.chat_link, self.chat_id)
         self.assertEquals(code.parent_link, None)
-        self.assertEquals(code.message, START_COMMIT_MESSAGE)
+        self.assertEquals(code.message, MarkdownMixin.decode(START_COMMIT_MESSAGE))
 
     def test_get_root_in_chat_with_many_codes(self):
         parent_code = Code.get_root_in_chat(self.chat_id)
@@ -66,7 +66,7 @@ class TestCodeModel(BaseTestModel):
     def test_get_commits_tree_with_single_code(self):
         tree = Code.get_commits_tree(self.chat_id)
         self.assertEqual(tree.get('text').get('name'), 1)
-        self.assertEqual(tree.get('text').get('title'), START_COMMIT_MESSAGE)
+        self.assertEqual(tree.get('text').get('title'), MarkdownMixin.decode(START_COMMIT_MESSAGE))
         self.assertEqual(tree.get('children'), [])
         self.assertEqual(tree.get('innerHTML'), NODE_MARKUP.format(id=1))
 

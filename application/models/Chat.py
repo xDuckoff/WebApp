@@ -4,7 +4,7 @@
 
 import time
 from application import db
-from application.models import Code, Message
+from application.models import Code, Message, MarkdownMixin
 
 
 class Chat(db.Model):
@@ -15,27 +15,30 @@ class Chat(db.Model):
     """
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(256))
-    code_type = db.Column(db.String(256))
+    name = db.Column(db.Text)
+    code_type = db.Column(db.Text)
+    access_key = db.Column(db.Text)
     create_time = db.Column(db.Integer)
     remove_time = db.Column(db.Integer)
 
-    def __init__(self, name, code_type):
-        self.name = name
+    def __init__(self, name, code_type, access_key):
+        self.name = MarkdownMixin.decode(name)
         self.code_type = code_type
+	self.access_key = access_key
         self.create_time = int(time.time())
         self.remove_time = None
 
     @staticmethod
-    def create(chat_name, code, code_type):
+    def create(chat_name, code, code_type, access_key=''):
         """Создаёт чат
 
         :param chat_name: Имя чата
         :param code: Код чата
         :param code_type: Язык программирования
+        :param access_key: Ключ доступа
         :return: Номер чата
         """
-        chat_to_create = Chat(chat_name, code_type)
+        chat_to_create = Chat(chat_name, code_type, access_key)
         db.session.add(chat_to_create)
         db.session.commit()
         chat_id = chat_to_create.id
@@ -112,3 +115,11 @@ class Chat(db.Model):
         :return: True, если код существует, False в противном случае
         """
         return code_id.isdigit() and len(self.codes) > int(code_id)
+
+    def is_access_key_valid(self, password):
+        """Проверка на валидность пароля
+
+        :param password: Пароль
+        :return: Является ли пароль валидным
+        """
+        return self.access_key == '' or self.access_key == password

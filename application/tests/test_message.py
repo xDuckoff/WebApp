@@ -4,7 +4,7 @@
 
 from base_test_model import *
 from application import app, db, socketio
-from application.models import Message, Chat
+from application.models import Message, Chat, MarkdownMixin
 from mock import patch
 
 
@@ -36,7 +36,7 @@ class TestMessageModel(BaseTestModel):
     def test_message_sending(self):
         message = Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
         self.assertIsInstance(message, Message)
-        self.assertEqual(message.content, Message.markdown_decode(MESSAGE))
+        self.assertEqual(message.content, MarkdownMixin.decode(MESSAGE))
         self.assertEqual(message.author, USERNAME)
         self.assertEqual(message.chat_link, self.chat_id)
         self.assertEqual(message.type, MESSAGE_TYPE)
@@ -64,9 +64,6 @@ class TestMessageModel(BaseTestModel):
 
     def test_message_plain(self):
         self.assertEqual(self.message.plain(), PLAIN_MESSAGE)
-
-    def test_message_escape(self):
-        self.assertEqual(Message.escape(self.message.content), MESSAGE_ESCAPE)
 
     def test_get_info_format_output(self):
         message_info = self.message.get_info()

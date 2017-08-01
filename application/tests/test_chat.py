@@ -4,7 +4,7 @@
 
 from base_test_model import *
 from application import db
-from application.models import Message, Chat, Code
+from application.models import Message, Chat, Code, MarkdownMixin
 
 
 class TestChatModel(BaseTestModel):
@@ -28,7 +28,7 @@ class TestChatModel(BaseTestModel):
     def test_create_chat(self):
         chat = Chat.get(self.chat_id)
         chat_info = chat.get_info()
-        self.assertEquals(chat_info.get('name'), CHAT_NAME)
+        self.assertEquals(chat_info.get('name'), MarkdownMixin.decode(CHAT_NAME))
         self.assertEquals(chat_info.get('code_type'), CODE_TYPE)
 
     def test_get_all_messages(self):
@@ -60,7 +60,7 @@ class TestChatModel(BaseTestModel):
         search_name = CHAT_NAME
         found_chat_list = Chat.find(search_name)
         self.assertGreaterEqual(len(found_chat_list), 1)
-        self.assertEqual(found_chat_list[0].name, CHAT_NAME)
+        self.assertEqual(found_chat_list[0].name, MarkdownMixin.decode(CHAT_NAME))
 
     def test_find_chat_by_name(self):
         search_name = CHAT_NAME[2:-2]
@@ -85,3 +85,9 @@ class TestChatModel(BaseTestModel):
         got_last_messages = chat.get_last_messages(old_message.id)
         self.assertEqual(len(got_last_messages), 1)
         self.assertEqual(got_last_messages[0].get('id'), new_message.id)
+
+    def test_is_access_key_valid(self):
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, CHAT_ACCESS_KEY)
+        chat = Chat.get(chat_id)
+        self.assertTrue(chat.is_access_key_valid(CHAT_ACCESS_KEY))
+        self.assertFalse(chat.is_access_key_valid(CHAT_INCORRECT_ACCESS_KEY))

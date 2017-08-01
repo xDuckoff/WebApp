@@ -17,29 +17,15 @@
                          <img src="/static/img/logo_word_only.png" width="90" height="20">
                     </a>
                 </li>
-                <li>
-                    <a href="/documentation/index.html">
-                        Документация
-                    </a>
-                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                {% if in_session %}
-                <li>
-                    <a href="/logout">Выход</a>
-                </li>
-                {% endif %}
-                {% if not in_session %}
                 <li>
                     <a href="#" data-toggle="modal" data-target="#myModalLogin">
-                        Вход
+                        Сменить
                     </a>
                 </li>
-                {% endif %}
             </ul>
-            {% if in_session %}
-                <p class="navbar-text navbar-right">Вы вошли как <strong>{{login}}</strong></p>
-            {% endif %}
+                <p class="navbar-text navbar-right">Вы вошли как <strong>{{login | safe}}</strong></p>
         </div>
     </nav>
     {% block content %}{% endblock %}

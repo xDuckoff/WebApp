@@ -16,9 +16,10 @@ class LoginForm(FlaskForm):
 class CreateChatForm(FlaskForm):
     """Создаёт чат"""
     name = StringField('name', validators=[DataRequired()])
-    code_type = StringField('codetype', validators=[DataRequired()])
+    code_type = StringField('codetype')
     file = FileField('file')
     code = StringField('code', default='')
+    access_key = StringField('access_key', default='')
 
     def is_file_valid(self):
         """Проверка на валидный файл для создания чата"""
@@ -29,3 +30,8 @@ class CreateChatForm(FlaskForm):
 class FindChatForm(FlaskForm):
     """Поиск чата"""
     chat_title = StringField('chat_title', default='')
+
+
+class AuthChatForm(FlaskForm):
+    """Форма авторизации в чате"""
+    password = StringField('password')

@@ -50,20 +50,29 @@
                     <div class = "row">
                         <div class="col-md-6 col-md-offset-3">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Название чата</label>
-                                    <input type="text" class="form-control" id="chatname" placeholder="" name = "name" required="required">
+                                    <input type="text" class="form-control" id="chatname" placeholder="Название" name = "name" required="required">
                                 </div>
-                                <select class="form-control" id="Compile" name="code_type">
+                                <div class = "form-group">
+                                    <select class="form-control" name="chat_type">
+                                        <option value="public">Публичный</option>
+                                        <option value="private">Приватный</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="pass_div">
+                                    <input type="password" class="form-control" placeholder="Пароль" name = "access_key">
+                                </div>
+                                <select class="form-control" id="Compile" name="code_type" required="required">
+                                    <option value="" disabled selected>Язык программирования</option>
                                     {%- for lang in allowed_languages -%}
                                     <option value="{{ lang.type }}">{{ lang.name }}</option>
                                     {%- endfor -%}
                                 </select>
-                                <div class="form-group">
-                                    <input type="file" name="file" accept="{{ allowed_ex }}">
-                                </div>
                         </div>
                         <div class="col-md-10 col-md-offset-1">
                             <textarea name="code" id="codeField"></textarea>
+                            <div class="form-group">
+                                <input type="file" name="file" accept="{{ allowed_ex }}">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -158,19 +167,11 @@
     <div class = "row">
         <p><a name="start-working"></a></p>
         <h4 class = "text-center" style="font-size: 30; color:#ffffff; margin-top: 50px;">Начните кодить прямо сейчас!</h4>
-        {% if in_session %}
         <div class="col-md-8 col-md-offset-2 ">
             <button class="btn btn-lg btn-primary center-block btn-block " id="chat-create-btn" data-toggle="modal" data-target="#myModal">
                 Создать чат
             </button>
         </div>
-        {% else %}
-        <div class="col-md-8 col-md-offset-2 "  >
-            <button class="btn btn-lg btn-primary center-block btn-block disabled" id="chat-create-btn" data-toggle="modal" data-target="#myModalLogin" data-placement="right" data-toggle="tooltip" title="Необходимо войти">
-                Создать чат
-            </button>
-        </div>
-        {% endif %}
         <p><a name="find"></a></p>
         <div class="col-md-8 col-md-offset-2 main-content">
             <form action="#find" method="POST">
@@ -197,15 +198,9 @@
                         <td>{{chat.name | safe}}</td>
                         <td>{{chat.code_type}}</td>
                         <td>
-                            {% if in_session %}
                             <a href="/chat/{{ chat.id }}">
                                 <button class="btn btn-primary btn-xs">Перейти</button>
                             </a>
-                            {% else %}
-                            <a>
-                                <button class="btn btn-primary btn-xs disabled" data-toggle="modal" data-target="#myModalLogin" data-placement="right" data-toggle="tooltip" title="Необходимо войти">Перейти</button>
-                            </a>
-                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -217,20 +212,11 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript">
-    $(document).ready(function (){
-        {% with message = get_flashed_messages()[0] %}
-            if ("{{ message }}")
-                alert("{{ message }}");
-        {% endwith %}
-    });
-</script>
+
 <script type="text/javascript">
     $(document).ready(function(){
         $("[data-toggle='tooltip']").tooltip();
     });
-</script>
-<script type="text/javascript">
     var editor, openModalCount=false;
     function init_codemirror(){
         $('#codeField').empty();
@@ -258,6 +244,22 @@
         $("#Compile").change(function () {
             update_codemirror();
         });
+    });
+    jQuery(function(){
+        var div = $('#pass_div');
+        if ( $("select[name='chat_type']").val() == 'public' ) {
+            div.hide();
+        } else if ( $("select[name='chat_type']").val() == 'private' ) {
+            div.show();
+        }
+        $("select[name='chat_type']").change(function(){
+            var div = $('#pass_div');
+            if ( $(this).val() == 'public' ) {
+                div.hide();
+            } else if ( $(this).val() == 'private' ) {
+                div.show();
+            }
+        })
     });
 </script>
 {% endblock %}

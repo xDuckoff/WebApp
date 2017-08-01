@@ -18,8 +18,8 @@ class Code(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
-    author = db.Column(db.String(256))
-    message = db.Column(db.String(256))
+    author = db.Column(db.Text)
+    message = db.Column(db.Text)
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     parent_link = db.Column(db.Integer, db.ForeignKey('code.id'), nullable=True)
 

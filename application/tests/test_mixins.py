@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+"""Тесты Markdown"""
+
 import unittest
 from application.models import MarkdownMixin
 

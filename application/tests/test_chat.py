@@ -81,3 +81,9 @@ class TestChatModel(BaseTestModel):
         got_last_messages = chat.get_last_messages(old_message.id)
         self.assertEqual(len(got_last_messages), 1)
         self.assertEqual(got_last_messages[0].get('id'), new_message.id)
+
+    def test_is_access_key_valid(self):
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, CHAT_ACCESS_KEY)
+        chat = Chat.get(chat_id)
+        self.assertTrue(chat.is_access_key_valid(CHAT_ACCESS_KEY))
+        self.assertFalse(chat.is_access_key_valid(CHAT_INCORRECT_ACCESS_KEY))

@@ -9,6 +9,30 @@
 {% endblock %}
 
 {% block content %}
+{% if not have_access %}
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="main-content">
+            <form method="POST">
+                {{ auth_form.hidden_tag() }}
+                <div class="form-group">
+                    <div class="modal-header">
+                        <label class="center-block">Авторизация</label>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <input type="password" class="form-control" placeholder="Пароль" name="password" />
+                            <span class="input-group-btn">
+                                <input class="btn btn-primary" type="submit" value="Вход">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
 <div class="container-fluid fill-height fill-cover">
     <h2 class="text-center">{{ chat_info["name"] | safe }}</h2>
     <div class="fill-height__content fill-width row">
@@ -135,15 +159,20 @@
             'X-Csrf-Token': "{{ csrf_token() }}"
         }
     });
-</script>
-
-    {% if socket_mode %}
-        {%- include "libs/socket.io.html" -%}
-<script src="{{ url_for('static', filename='js/chat/socket_events.js') }}"></script>
+    {% if not have_access %}
+        $('#myModal').modal()
     {% endif %}
 
-<script src="{{ url_for('static', filename='js/chat/voice.kit.js') }}"></script>
-<script src="{{ url_for('static', filename='js/chat/messages.js') }}"></script>
-<script src="{{ url_for('static', filename='js/chat/code.js') }}"></script>
-<script src="{{ url_for('static', filename='js/chat/compare_code.js') }}"></script>
+</script>
+{% if have_access %}
+    {% if socket_mode %}
+        {%- include "libs/socket.io.html" -%}
+        <script src="{{ url_for('static', filename='js/chat/socket_events.js') }}"></script>
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='js/chat/voice.kit.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat/messages.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat/code.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat/compare_code.js') }}"></script>
+{% endif %}
 {% endblock %}

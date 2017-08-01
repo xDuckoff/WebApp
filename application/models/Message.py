@@ -16,7 +16,7 @@ class Message(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
-    author = db.Column(db.String(256))
+    author = db.Column(db.Text)
     type = db.Column(db.String(3))
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages', lazy='dynamic'))

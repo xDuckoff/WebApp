@@ -4,20 +4,8 @@
 
 from json import dumps
 from functools import wraps
-from flask import redirect
 from wtforms.validators import ValidationError
 from application.models import User
-
-
-def login_required(func):
-    """Проверка на регистрацию"""
-    @wraps(func)
-    def login_check(*args, **kwargs):
-        """Перенаправляет на главную страницу, если пользователь не авторизован"""
-        if not User.is_logined():
-            return redirect('/')
-        return func(*args, **kwargs)
-    return login_check
 
 
 def csrf_required(func):

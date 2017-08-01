@@ -28,11 +28,6 @@ class BaseTestPages(BaseTestModel):
 
 class TestMainPages(BaseTestPages):
 
-    def test_logout(self):
-        self.real.logout = Mock()
-        response = self.app.get(LOGOUT_PAGE_URL)
-        self.assertEqual(response.status_code, 302)
-
     def test_index_page(self):
         response = self.app.get(MAIN_PAGE_URL)
         self.assertEqual(response.status_code, 200)
@@ -40,18 +35,11 @@ class TestMainPages(BaseTestPages):
 
 class TestChatPage(BaseTestPages):
 
-    def test_access_chat_page_with_login(self):
+    def test_access_chat_page(self):
         chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         chat_page_url = CHAT_PAGE_URL.format(chat_id=chat_id)
         response = self.app.get(chat_page_url)
         self.assertEqual(response.status_code, 200)
-
-    def test_deny_chat_page_without_login(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
-        chat_page_url = CHAT_PAGE_URL.format(chat_id=chat_id)
-        self.real.is_logined.return_value = False
-        response = self.app.get(chat_page_url)
-        self.assertEqual(response.status_code, 302)
 
     def test_uncreated_chat_page_not_be_exist(self):
         chat_page_url = CHAT_PAGE_URL.format(chat_id=1)
@@ -72,14 +60,6 @@ class TestMessagePage(BaseTestPages):
         url = MESSAGES_GET_LAST_PAGE_URL.format(chat_id=chat_id, last_message_id=last_message.id)
         response = self.app.get(url)
         self.assertEqual(response.status_code, 200)
-
-    def test_deny_get_last_messages_without_login(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
-        last_message = Message.send(chat_id, MESSAGE, MESSAGE_TYPE)
-        url = MESSAGES_GET_LAST_PAGE_URL.format(chat_id=chat_id, last_message_id=last_message.id)
-        self.real.is_logined.return_value = False
-        response = self.app.get(url)
-        self.assertEqual(response.status_code, 302)
 
     def test_send_message_without_sockets(self):
         app.config['SOCKET_MODE'] = 'False'

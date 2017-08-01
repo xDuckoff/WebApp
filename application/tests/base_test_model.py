@@ -35,8 +35,6 @@ class BaseTestModel(unittest.TestCase):
         self.real.check_csrf = Mock()
         self.real.get_login = Mock()
         self.real.get_login.return_value = USERNAME
-        self.real.is_logined = Mock()
-        self.real.is_logined.return_value = True
 
     def tearDown(self):
         db.session.remove()

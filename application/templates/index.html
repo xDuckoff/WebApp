@@ -167,19 +167,11 @@
     <div class = "row">
         <p><a name="start-working"></a></p>
         <h4 class = "text-center" style="font-size: 30; color:#ffffff; margin-top: 50px;">Начните кодить прямо сейчас!</h4>
-        {% if in_session %}
         <div class="col-md-8 col-md-offset-2 ">
             <button class="btn btn-lg btn-primary center-block btn-block " id="chat-create-btn" data-toggle="modal" data-target="#myModal">
                 Создать чат
             </button>
         </div>
-        {% else %}
-        <div class="col-md-8 col-md-offset-2 "  >
-            <button class="btn btn-lg btn-primary center-block btn-block disabled" id="chat-create-btn" data-toggle="modal" data-target="#myModalLogin" data-placement="right" data-toggle="tooltip" title="Необходимо войти">
-                Создать чат
-            </button>
-        </div>
-        {% endif %}
         <p><a name="find"></a></p>
         <div class="col-md-8 col-md-offset-2 main-content">
             <form action="#find" method="POST">
@@ -206,15 +198,9 @@
                         <td>{{chat.name | safe}}</td>
                         <td>{{chat.code_type}}</td>
                         <td>
-                            {% if in_session %}
                             <a href="/chat/{{ chat.id }}">
                                 <button class="btn btn-primary btn-xs">Перейти</button>
                             </a>
-                            {% else %}
-                            <a>
-                                <button class="btn btn-primary btn-xs disabled" data-toggle="modal" data-target="#myModalLogin" data-placement="right" data-toggle="tooltip" title="Необходимо войти">Перейти</button>
-                            </a>
-                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

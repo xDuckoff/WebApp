@@ -20,26 +20,14 @@ class User(object):
         session['login'] = cgi.escape(username)
 
     @staticmethod
-    def logout():
-        """Деавторизация пользователя
-        """
-        session.clear()
-
-    @staticmethod
     def get_login():
         """Получение имени пользователя
 
-        :return: Имя пользователя или None, если оно отсутствует
+        :return: Имя пользователя
         """
-        return session.get('login')
-
-    @staticmethod
-    def is_logined():
-        """Авторизован ли пользователь
-
-        :return: True, если пользователь авторизован, False в противном случае.
-        """
-        return 'login' in session
+        if 'login' not in session:
+            User.login(u'Пользователь')
+        return session['login']
 
     @staticmethod
     def check_csrf():

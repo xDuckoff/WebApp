@@ -8,16 +8,6 @@ from forms import LoginForm, CreateChatForm, FindChatForm
 from application.models import Chat, User
 
 
-@app.route('/logout')
-def logout():
-    """Функция выхода из сессии в проекте
-
-    :return: Переход на главную страницу
-    """
-    User.logout()
-    return redirect('/')
-
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     """Данная функция генерирует главную страницу для пользователя
@@ -41,7 +31,6 @@ def index():
         return redirect('/chat/' + str(chat_id))
     return render_template('index.html',
                            chats=Chat.find(find_chat_form.chat_title.data),
-                           in_session=User.is_logined(),
                            login_form=login_form,
                            chat_create_form=chat_create_form,
                            find_chat_form=find_chat_form,

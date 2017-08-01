@@ -7,13 +7,12 @@ from flask import render_template, redirect, request
 from application import app, socketio
 from application import csrf
 from application.forms import CreateChatForm, AuthChatForm
-from application.handlers import login_required, csrf_required
+from application.handlers import csrf_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
 
 
 @app.route('/tree', methods=['GET', 'POST'])
-@login_required
 @csrf_required
 def tree():
     """Данная функция создаёт дерево коммитов чата
@@ -27,7 +26,6 @@ def tree():
 
 
 @app.route('/chat/<chat_id>', methods=['GET', 'POST'])
-@login_required
 def chat_page(chat_id):
     """Данная функция возвращает пользователю страницу чата по номеру
 
@@ -43,14 +41,12 @@ def chat_page(chat_id):
                            socket_mode=(app.config['SOCKET_MODE'] == 'True'),
                            chat_info=chat.get_info(),
                            login=User.get_login(),
-                           in_session=User.is_logined(),
                            have_access=chat.is_access_key_valid(auth_form.password.data),
                            auth_form=auth_form
                           )
 
 
 @app.route('/send_message', methods=['GET', 'POST'])
-@login_required
 @csrf_required
 def send_message():
     """Данная функция отправляет сообщение пользователю
@@ -70,7 +66,6 @@ def send_message():
 
 
 @app.route('/get_messages', methods=['GET', 'POST'])
-@login_required
 @csrf_required
 def get_messages():
     """Запрос получения новых сообщений в чате
@@ -86,7 +81,6 @@ def get_messages():
 
 
 @app.route('/send_code', methods=['GET', 'POST'])
-@login_required
 @csrf_required
 def send_code():
     """Данная функция отправляет код на сервер от клиента
@@ -104,7 +98,6 @@ def send_code():
 
 
 @app.route('/get_code', methods=['GET', 'POST'])
-@login_required
 @csrf_required
 def get_code():
     """Данная функция отправляет код с сервера к клиенту

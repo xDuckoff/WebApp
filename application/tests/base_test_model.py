@@ -35,6 +35,8 @@ class BaseTestModel(unittest.TestCase):
         app.config['SOCKET_MODE'] = 'True'
         self.real = User
         self.real.check_csrf = Mock()
+        self.real.get_access_key = Mock()
+        self.real.get_access_key.return_value = CHAT_ACCESS_KEY
         self.real.get_login = Mock()
         self.real.get_login.return_value = USERNAME
 

@@ -33,3 +33,24 @@ class User(object):
     def check_csrf():
         """Проверка на валидность csrf-ключа"""
         csrf.validate_csrf(request.headers['X-Csrf-Token'])
+
+    @staticmethod
+    def set_access_key(chat_id, access_key):
+        """Установка ключа доступа для чата
+        
+        :param chat_id: Чат
+        :param access_key: Ключ доступа
+        """
+        session["access_keys"][chat_id] = access_key
+        session.modified = True
+
+    @staticmethod
+    def get_access_key(chat_id):
+        """Получение ключа доступа для чата
+
+        :param chat_id: Чат
+        :return: Ключ доступа
+        """
+        if "access_keys" not in session:
+            session["access_keys"] = {}
+        return session["access_keys"].get(chat_id, '')

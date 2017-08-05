@@ -37,7 +37,7 @@ class User(object):
     @staticmethod
     def set_access_key(chat_id, access_key):
         """Установка ключа доступа для чата
-        
+
         :param chat_id: Чат
         :param access_key: Ключ доступа
         """

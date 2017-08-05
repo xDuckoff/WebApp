@@ -14,8 +14,8 @@ CHAT_PAGE_URL = "/chat/{chat_id}"
 CHAT_GET_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'
 CODE_SEND_PAGE_URL = '/send_code?chat={chat_id}&code={code}&parent={parent}&cname={cname}'
 CODE_GET_PAGE_URL = '/get_code?index={code_id}'
-MESSAGES_GET_PAGE_URL = '/get_messages?chat_id={chat_id}'
-MESSAGES_GET_LAST_PAGE_URL = '/get_messages?chat_id={chat_id}&last_message_id={last_message_id}'
+MESSAGES_GET_PAGE_URL = '/get_messages?chat={chat_id}'
+MESSAGES_GET_LAST_PAGE_URL = '/get_messages?chat={chat_id}&last_message_id={last_message_id}'
 MESSAGE_SEND_PAGE_URL = '/send_message?chat={chat_id}&message={message}'
 
 
@@ -91,4 +91,16 @@ class TestCodePage(BaseTestPages):
         chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         code_id = Code.send(chat_id, CODE, 1, COMMIT_MESSAGE)
         response = self.app.get(CODE_GET_PAGE_URL.format(code_id=code_id))
+        self.assertEqual(response.status_code, 200)
+
+
+class TestHandlers(BaseTestPages):
+
+    def test_access_required_handler(self):
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, CHAT_ACCESS_KEY)
+        self.real.get_access_key.return_value = CHAT_INCORRECT_ACCESS_KEY
+        response = self.app.get(MESSAGES_GET_PAGE_URL.format(chat_id=chat_id))
+        self.assertEqual(response.status_code, 403)
+        self.real.get_access_key.return_value = CHAT_ACCESS_KEY
+        response = self.app.get(MESSAGES_GET_PAGE_URL.format(chat_id=chat_id))
         self.assertEqual(response.status_code, 200)

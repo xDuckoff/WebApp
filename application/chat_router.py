@@ -105,7 +105,6 @@ def send_code():
 
 @app.route('/get_code', methods=['GET', 'POST'])
 @csrf_required
-@access_required
 def get_code():
     """Данная функция отправляет код с сервера к клиенту
 

@@ -132,8 +132,8 @@ def api_create_chat():
 
 if app.config['SOCKET_MODE'] == 'True':
 
-    @socketio.on('join')
     @access_required
+    @socketio.on('join')
     def on_join(room):
         """Данная функция сообщает о присоединение пользователя к чату
 
@@ -142,8 +142,8 @@ if app.config['SOCKET_MODE'] == 'True':
         """
         join_room(room)
 
-    @socketio.on('leave')
     @access_required
+    @socketio.on('leave')
     def on_leave(room):
         """Данная функция удаляет человека из чата
 

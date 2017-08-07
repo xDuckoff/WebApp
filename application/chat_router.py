@@ -12,7 +12,7 @@ from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
 
 
-@app.route('/tree', methods=['GET', 'POST'])
+@app.route('/tree', methods=['POST'])
 @csrf_required
 @access_required
 def tree():
@@ -49,7 +49,7 @@ def chat_page(chat_id):
                           )
 
 
-@app.route('/send_message', methods=['GET', 'POST'])
+@app.route('/send_message', methods=['POST'])
 @csrf_required
 @access_required
 def send_message():
@@ -69,7 +69,7 @@ def send_message():
         return dumps({"success": True, "error": ""})
 
 
-@app.route('/get_messages', methods=['GET', 'POST'])
+@app.route('/get_messages', methods=['POST'])
 @csrf_required
 @access_required
 def get_messages():
@@ -85,7 +85,7 @@ def get_messages():
     return dumps(chat.get_last_messages(last_message_id))
 
 
-@app.route('/send_code', methods=['GET', 'POST'])
+@app.route('/send_code', methods=['POST'])
 @csrf_required
 @access_required
 def send_code():
@@ -103,7 +103,7 @@ def send_code():
     return dumps({"success": True, "error": "", "commit": code_id})
 
 
-@app.route('/get_code', methods=['GET', 'POST'])
+@app.route('/get_code', methods=['POST'])
 @csrf_required
 def get_code():
     """Данная функция отправляет код с сервера к клиенту

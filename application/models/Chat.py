@@ -86,15 +86,6 @@ class Chat(db.Model):
         last_messages = self.messages.filter(Message.id > last_message_id)
         return [message.get_info() for message in last_messages]
 
-    @staticmethod
-    def was_created(chat_id):
-        """Проверка существования чата
-
-        :param chat_id: Id чата
-        :return: True, если чат существует, False в противном случае
-        """
-        return chat_id.isdigit() and Chat.get(int(chat_id))
-
     def has_message(self, message_id):
         """Проверка существования сообщения в чате
 
@@ -117,4 +108,4 @@ class Chat(db.Model):
         :param password: Пароль
         :return: Является ли пароль валидным
         """
-        return self.access_key == '' or self.access_key == password
+        return self.access_key == password

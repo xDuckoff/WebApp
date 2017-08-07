@@ -6,8 +6,8 @@ from json import dumps
 from flask import render_template, redirect, request
 from application import app, socketio
 from application import csrf
-from application.forms import CreateChatForm, AuthChatForm
-from application.handlers import csrf_required, access_required
+from application.forms import CreateChatForm, AuthChatForm, SendMessageForm
+from application.handlers import csrf_required, access_required, form_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
 
@@ -33,12 +33,8 @@ def chat_page(chat_id):
     :param chat_id: Номер чата
     :return: Страница чата
     """
-    if not Chat.was_created(chat_id):
-        return redirect('/')
     chat = Chat.get(int(chat_id))
     auth_form = AuthChatForm()
-    if auth_form.validate_on_submit():
-        User.set_access_key(chat_id, auth_form.password.data)
     return render_template('chat.html',
                            chat_id=chat.id,
                            socket_mode=(app.config['SOCKET_MODE'] == 'True'),
@@ -46,27 +42,37 @@ def chat_page(chat_id):
                            login=User.get_login(),
                            have_access=chat.is_access_key_valid(User.get_access_key(chat_id)),
                            auth_form=auth_form
-                          )
+                           )
+
+
+@app.route('/auth_chat', methods=['POST'])
+@form_required(AuthChatForm)
+def auth_chat():
+    """Авторизация пользователя в чате
+
+    :return: Успешность авторизации
+    """
+    auth_form = AuthChatForm()
+    chat_id = auth_form.chat.data
+    access_key = auth_form.password.data
+    User.set_access_key(chat_id, access_key)
+    return redirect('/chat/{}'.format(chat_id))
 
 
 @app.route('/send_message', methods=['POST'])
 @csrf_required
+@form_required(SendMessageForm)
 @access_required
 def send_message():
     """Данная функция отправляет сообщение пользователю
 
     :return: Отправилось ли сообщение
     """
-    chat_id = request.args.get('chat', '')
-    message = request.args.get('message', '')
-    if not Chat.was_created(chat_id):
-        return dumps({"success": False, "error": "Bad chat"}), 400
-    try:
-        Message.send(chat_id, message, 'usr')
-    except OverflowError:
-        return dumps({"success": False, "error": "Length Limit(1, 1000)"}), 400
-    else:
-        return dumps({"success": True, "error": ""})
+    send_message_form = SendMessageForm()
+    chat_id = send_message_form.chat.data
+    message = send_message_form.message.data
+    Message.send(chat_id, message, 'usr')
+    return dumps({"success": True, "error": ""})
 
 
 @app.route('/get_messages', methods=['POST'])
@@ -110,6 +116,7 @@ def get_code():
 
     :return: Код
     """
+    return ''
     index = int(request.args.get('index', ''))
     return dumps(Code.get(index))
 

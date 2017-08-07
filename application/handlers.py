@@ -6,14 +6,13 @@ from json import dumps
 from functools import wraps
 from wtforms.validators import ValidationError
 from application.models import User, Chat
-from flask import request
+from application.forms import ChatForm
 
 
 def csrf_required(func):
     """Проверка csrf-ключа"""
     @wraps(func)
     def csrf_check(*args, **kwargs):
-        """Выдаёт ошибку, если пользователь не имеет валидного csrf-ключа"""
         try:
             User.check_csrf()
         except ValidationError:
@@ -28,10 +27,23 @@ def access_required(func):
     """Проверка наличия доступа к чату"""
     @wraps(func)
     def access_check(*args, **kwargs):
-        """Выдаёт ошибку, если пользователь не имеет доступ к чату"""
-        chat_id = request.args.get('chat', '')
+        chat_form = ChatForm()
+        chat_id = chat_form.chat.data
         chat = Chat.get(chat_id)
         if chat.is_access_key_valid(User.get_access_key(chat_id)):
             return func(*args, **kwargs)
         return dumps({"success": False, "error": "Access error"}), 403
     return access_check
+
+
+def form_required(form_class):
+    """Проверка валидности формы"""
+    def decorator(func):
+        @wraps(func)
+        def chat_check(*args, **kwargs):
+            form = form_class()
+            if form.validate():
+                return func(*args, **kwargs)
+            return dumps({"success": False, "error": "Invalid arguments"}), 400
+        return chat_check
+    return decorator

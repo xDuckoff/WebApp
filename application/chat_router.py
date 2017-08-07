@@ -12,7 +12,7 @@ from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
 
 
-@app.route('/tree', methods=['POST'])
+@app.route('/tree', methods=['GET'])
 @csrf_required
 @access_required
 def tree():
@@ -45,7 +45,7 @@ def chat_page(chat_id):
                            )
 
 
-@app.route('/auth_chat', methods=['POST'])
+@app.route('/auth_chat', methods=['GET'])
 @form_required(AuthChatForm)
 def auth_chat():
     """Авторизация пользователя в чате
@@ -75,7 +75,7 @@ def send_message():
     return dumps({"success": True, "error": ""})
 
 
-@app.route('/get_messages', methods=['POST'])
+@app.route('/get_messages', methods=['GET'])
 @csrf_required
 @access_required
 def get_messages():
@@ -109,7 +109,7 @@ def send_code():
     return dumps({"success": True, "error": "", "commit": code_id})
 
 
-@app.route('/get_code', methods=['POST'])
+@app.route('/get_code', methods=['GET'])
 @csrf_required
 def get_code():
     """Данная функция отправляет код с сервера к клиенту

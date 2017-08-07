@@ -30,6 +30,13 @@
     </nav>
     {% block content %}{% endblock %}
     {%- include "libs/bootstrap/scripts.html" -%}
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-Csrf-Token': "{{ csrf_token() }}"
+            }
+        });
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

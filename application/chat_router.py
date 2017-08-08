@@ -6,7 +6,7 @@ from json import dumps
 from flask import render_template, request, redirect
 from application import app, socketio
 from application import csrf
-from application.forms import CreateChatForm, AuthChatForm, SendMessageForm
+from application.forms import CreateChatForm, AuthChatForm, SendMessageForm, GetTreeForm
 from application.handlers import csrf_required, access_required, form_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
@@ -14,14 +14,16 @@ from flask_socketio import join_room, leave_room
 
 @app.route('/tree', methods=['GET'])
 @csrf_required
-#@access_required
+@form_required(GetTreeForm)
+@access_required
 def tree():
     """Данная функция создаёт дерево коммитов чата
 
     :return: Страницу дерева коммитов
     """
-    chat_id = request.args.get('chat', '')
-    return dumps(Code.get_commits_tree(int(chat_id)))
+    get_tree_form = GetTreeForm(request.args)
+    chat_id = get_tree_form.chat.data
+    return dumps(Code.get_commits_tree(chat_id))
 
 
 @app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
@@ -50,7 +52,7 @@ def chat_page(chat_id):
 
 @app.route('/send_message', methods=['POST'])
 @csrf_required
-@form_required(SendMessageForm, post=True)
+@form_required(SendMessageForm)
 @access_required
 def send_message():
     """Данная функция отправляет сообщение пользователю

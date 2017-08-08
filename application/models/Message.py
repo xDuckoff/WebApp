@@ -36,8 +36,6 @@ class Message(db.Model):
         :param message_type: Тип сообщения
         :return: Объект созданного сообщения
         """
-        if len(text) > 1000 or not text:
-            raise OverflowError
         message = Message(text, chat_id, message_type)
         db.session.add(message)
         db.session.commit()

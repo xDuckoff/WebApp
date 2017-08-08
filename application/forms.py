@@ -49,4 +49,8 @@ class AuthChatForm(FlaskForm):
 
 class SendMessageForm(ChatForm):
     """Форма отправки сообщений"""
-    message = StringField('message', validators=[validators.DataRequired(), validators.Length(min=1, max=1000)])
+    message = StringField('message', validators=[validators.DataRequired(), validators.Length(min=1, max=10000)])
+
+
+class GetTreeForm(ChatForm):
+    pass

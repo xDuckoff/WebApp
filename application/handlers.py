@@ -28,7 +28,10 @@ def access_required(func):
     """Проверка наличия доступа к чату"""
     @wraps(func)
     def access_check(*args, **kwargs):
-        chat_form = ChatForm()
+        if request.method == "POST":
+            chat_form = ChatForm()
+        else:
+            chat_form = ChatForm(request.args)
         chat_id = chat_form.chat.data
         chat = Chat.get(chat_id)
         if chat.is_access_key_valid(User.get_access_key(chat_id)):
@@ -37,13 +40,13 @@ def access_required(func):
     return access_check
 
 
-def form_required(form_class, post=False):
+def form_required(form_class):
     """Проверка валидности формы"""
     def decorator(func):
         @wraps(func)
         def chat_check(*args, **kwargs):
-            if post:
-                form = form_class(request.form)
+            if request.method == "POST":
+                form = form_class()
             else:
                 form = form_class(request.args)
             if form.validate():

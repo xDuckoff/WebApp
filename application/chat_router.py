@@ -3,7 +3,7 @@
 """Web-Страницы чата"""
 
 from json import dumps
-from flask import render_template, redirect, request
+from flask import render_template, request
 from application import app, socketio
 from application import csrf
 from application.forms import CreateChatForm, AuthChatForm, SendMessageForm
@@ -14,27 +14,28 @@ from flask_socketio import join_room, leave_room
 
 @app.route('/tree', methods=['GET'])
 @csrf_required
-@access_required
+#@access_required
 def tree():
     """Данная функция создаёт дерево коммитов чата
 
     :return: Страницу дерева коммитов
     """
     chat_id = request.args.get('chat', '')
-    if not Chat.was_created(chat_id):
-        return 'Bad chat', 400
     return dumps(Code.get_commits_tree(int(chat_id)))
 
 
-@app.route('/chat/<chat_id>', methods=['GET', 'POST'])
+@app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
 def chat_page(chat_id):
     """Данная функция возвращает пользователю страницу чата по номеру
 
     :param chat_id: Номер чата
     :return: Страница чата
     """
-    chat = Chat.get(int(chat_id))
+    chat = Chat.get(chat_id)
     auth_form = AuthChatForm()
+    if auth_form.validate_on_submit():
+        access_key = auth_form.password.data
+        User.set_access_key(chat_id, access_key)
     return render_template('chat.html',
                            chat_id=chat.id,
                            socket_mode=(app.config['SOCKET_MODE'] == 'True'),
@@ -45,23 +46,9 @@ def chat_page(chat_id):
                            )
 
 
-@app.route('/auth_chat', methods=['GET'])
-@form_required(AuthChatForm)
-def auth_chat():
-    """Авторизация пользователя в чате
-
-    :return: Успешность авторизации
-    """
-    auth_form = AuthChatForm()
-    chat_id = auth_form.chat.data
-    access_key = auth_form.password.data
-    User.set_access_key(chat_id, access_key)
-    return redirect('/chat/{}'.format(chat_id))
-
-
 @app.route('/send_message', methods=['POST'])
 @csrf_required
-@form_required(SendMessageForm)
+@form_required(SendMessageForm, post=True)
 @access_required
 def send_message():
     """Данная функция отправляет сообщение пользователю
@@ -77,7 +64,7 @@ def send_message():
 
 @app.route('/get_messages', methods=['GET'])
 @csrf_required
-@access_required
+#@access_required
 def get_messages():
     """Запрос получения новых сообщений в чате
 
@@ -85,8 +72,6 @@ def get_messages():
     """
     chat_id = request.args.get('chat', '')
     last_message_id = int(request.args.get('last_message_id', 0))
-    if not Chat.was_created(chat_id):
-        return 'Bad chat', 400
     chat = Chat.get(chat_id)
     return dumps(chat.get_last_messages(last_message_id))
 
@@ -103,8 +88,6 @@ def send_code():
     code = request.args.get('code', '')
     parent = request.args.get('parent', '')
     message = request.args.get('message', '')
-    if not Chat.was_created(chat_id):
-        return dumps({"success": False, "error": "Bad chat"}), 400
     code_id = Code.send(chat_id, code, parent, message)
     return dumps({"success": True, "error": "", "commit": code_id})
 

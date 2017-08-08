@@ -7,6 +7,7 @@ from functools import wraps
 from wtforms.validators import ValidationError
 from application.models import User, Chat
 from application.forms import ChatForm
+from flask import request
 
 
 def csrf_required(func):
@@ -36,12 +37,15 @@ def access_required(func):
     return access_check
 
 
-def form_required(form_class):
+def form_required(form_class, post=False):
     """Проверка валидности формы"""
     def decorator(func):
         @wraps(func)
         def chat_check(*args, **kwargs):
-            form = form_class()
+            if post:
+                form = form_class(request.form)
+            else:
+                form = form_class(request.args)
             if form.validate():
                 return func(*args, **kwargs)
             return dumps({"success": False, "error": "Invalid arguments"}), 400

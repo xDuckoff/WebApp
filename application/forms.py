@@ -42,7 +42,7 @@ class ChatForm(FlaskForm):
     chat = IntegerField('chat', validators=[validators.DataRequired(), chat_required])
 
 
-class AuthChatForm(ChatForm):
+class AuthChatForm(FlaskForm):
     """Форма авторизации в чате"""
     password = StringField('password')
 

@@ -3,7 +3,7 @@
 """Web-Страницы чата"""
 
 from json import dumps
-from flask import render_template, request
+from flask import render_template, request, redirect
 from application import app, socketio
 from application import csrf
 from application.forms import CreateChatForm, AuthChatForm, SendMessageForm
@@ -32,6 +32,8 @@ def chat_page(chat_id):
     :return: Страница чата
     """
     chat = Chat.get(chat_id)
+    if not chat:
+        return redirect('/')
     auth_form = AuthChatForm()
     if auth_form.validate_on_submit():
         access_key = auth_form.password.data

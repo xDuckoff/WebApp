@@ -4,7 +4,7 @@
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 from flask_wtf.csrf import CSRFProtect
 from flask_socketio import SocketIO
 
@@ -15,5 +15,8 @@ migrate = Migrate(app, db)
 csrf = CSRFProtect()
 csrf.init_app(app)
 socketio = SocketIO(app)
+
+with app.app_context():
+    upgrade()
 
 import router

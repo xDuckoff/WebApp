@@ -38,7 +38,7 @@ jQuery(function($) {
             $.ajax({
                 url: "/get_messages",
                 data: {
-                    chat_id: CHAT_ID
+                    chat: CHAT_ID
                 },
                 dataType: "json",
                 success: function(messages) {
@@ -94,7 +94,7 @@ jQuery(function($) {
             $.ajax({
                 url: "/get_messages",
                 data: {
-                    chat_id: CHAT_ID,
+                    chat: CHAT_ID,
                     last_message_id: this.lastMessageId
                 },
                 dataType: "json",

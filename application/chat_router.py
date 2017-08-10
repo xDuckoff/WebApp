@@ -7,13 +7,14 @@ from flask import render_template, redirect, request
 from application import app, socketio
 from application import csrf
 from application.forms import CreateChatForm, AuthChatForm
-from application.handlers import csrf_required
+from application.handlers import csrf_required, access_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
 
 
 @app.route('/tree', methods=['GET', 'POST'])
 @csrf_required
+@access_required
 def tree():
     """Данная функция создаёт дерево коммитов чата
 
@@ -36,18 +37,21 @@ def chat_page(chat_id):
         return redirect('/')
     chat = Chat.get(int(chat_id))
     auth_form = AuthChatForm()
+    if auth_form.validate_on_submit():
+        User.set_access_key(chat_id, auth_form.password.data)
     return render_template('chat.html',
                            chat_id=chat.id,
                            socket_mode=(app.config['SOCKET_MODE'] == 'True'),
                            chat_info=chat.get_info(),
                            login=User.get_login(),
-                           have_access=chat.is_access_key_valid(auth_form.password.data),
+                           have_access=chat.is_access_key_valid(User.get_access_key(chat_id)),
                            auth_form=auth_form
                           )
 
 
 @app.route('/send_message', methods=['GET', 'POST'])
 @csrf_required
+@access_required
 def send_message():
     """Данная функция отправляет сообщение пользователю
 
@@ -67,12 +71,13 @@ def send_message():
 
 @app.route('/get_messages', methods=['GET', 'POST'])
 @csrf_required
+@access_required
 def get_messages():
     """Запрос получения новых сообщений в чате
 
     :return: Принято ли сообщение
     """
-    chat_id = request.args.get('chat_id', '')
+    chat_id = request.args.get('chat', '')
     last_message_id = int(request.args.get('last_message_id', 0))
     if not Chat.was_created(chat_id):
         return 'Bad chat', 400
@@ -82,6 +87,7 @@ def get_messages():
 
 @app.route('/send_code', methods=['GET', 'POST'])
 @csrf_required
+@access_required
 def send_code():
     """Данная функция отправляет код на сервер от клиента
 
@@ -126,6 +132,7 @@ def api_create_chat():
 
 if app.config['SOCKET_MODE'] == 'True':
 
+    @access_required
     @socketio.on('join')
     def on_join(room):
         """Данная функция сообщает о присоединение пользователя к чату
@@ -135,6 +142,7 @@ if app.config['SOCKET_MODE'] == 'True':
         """
         join_room(room)
 
+    @access_required
     @socketio.on('leave')
     def on_leave(room):
         """Данная функция удаляет человека из чата

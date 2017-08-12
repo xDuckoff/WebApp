@@ -11,12 +11,16 @@ class Chat(db.Model):
 
     :param name: наименование чата
     :param code_type: тип исходного кода в этом чате
+    :param create_time: время создания чата
+    :param remove_time: время удаления чата, если значение не равно null
     """
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text)
     code_type = db.Column(db.Text)
     access_key = db.Column(db.Text)
+    create_time = db.Column(db.DateTime, nullable=False, default=db.func.now())
+    remove_time = db.Column(db.DateTime)
 
     def __init__(self, name, code_type, access_key):
         self.name = MarkdownMixin.decode(name)

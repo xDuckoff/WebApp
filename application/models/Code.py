@@ -14,6 +14,8 @@ class Code(db.Model):
     :param message: сообщение-описание редакции исходного кода
     :param chat_link: ссылка на чат, к которому принадлежит данных код
     :param parent_link: ссылка на родителя, от которого образовался данных код
+    :param create_time: время создания кода
+    :param remove_time: время удаления кода, если значение не равно null
     """
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -22,7 +24,8 @@ class Code(db.Model):
     message = db.Column(db.Text)
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     parent_link = db.Column(db.Integer, db.ForeignKey('code.id'), nullable=True)
-
+    create_time = db.Column(db.DateTime, nullable=False, default=db.func.now())
+    remove_time = db.Column(db.DateTime)
     chat = db.relationship('Chat', backref=db.backref('codes'))
     children = db.relationship('Code')
 

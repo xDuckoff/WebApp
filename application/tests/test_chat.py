@@ -22,8 +22,8 @@ class TestChatModel(BaseTestModel):
     def test_type_model_chat(self):
         self.assertIsInstance(Chat.id.type, db.Integer)
         self.assertIsInstance(Chat.name.type, db.String)
-        self.assertIsInstance(Chat.create_time.type, db.Integer)
-        self.assertIsInstance(Chat.remove_time.type, db.Integer)
+        self.assertIsInstance(Chat.create_time.type, db.DateTime)
+        self.assertIsInstance(Chat.remove_time.type, db.DateTime)
 
     def test_create_chat(self):
         chat = Chat.get(self.chat_id)

@@ -3,7 +3,6 @@
 """Функции работы с сообщениями"""
 
 import re
-import time
 from application.models import User, MarkdownMixin
 from application import app, db, socketio
 
@@ -14,6 +13,8 @@ class Message(db.Model):
     :param content:  исходное содержание сообщения
     :param chat_link:  ссылка на чат, которому принадлежит сообщение
     :param message_type: тип сообщения: системное или пользовательское
+    :param create_time: время создания сообщения
+    :param remove_time: время удаления сообщения, если значение не равно null
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
@@ -21,16 +22,15 @@ class Message(db.Model):
     type = db.Column(db.String(3))
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages', lazy='dynamic'))
-    create_time = db.Column(db.Integer)
-    remove_time = db.Column(db.Integer)
+    create_time = db.Column(db.DateTime, nullable=False, default=db.func.now())
+    remove_time = db.Column(db.DateTime)
 
     def __init__(self, content, chat_link, message_type):
         self.content = MarkdownMixin.decode(content)
         self.author = User.get_login()
         self.chat_link = chat_link
         self.type = message_type
-        self.create_time = int(time.time())
-        self.remove_time = None
+
 
     @staticmethod
     def send(chat_id, text, message_type):

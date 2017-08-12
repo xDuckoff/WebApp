@@ -38,8 +38,8 @@ class TestCodeModel(BaseTestModel):
         self.assertIsInstance(Code.message.type, db.String)
         self.assertIsInstance(Code.chat_link.type, db.Integer)
         self.assertIsInstance(Code.parent_link.type, db.Integer)
-        self.assertIsInstance(Code.remove_time.type, db.Integer)
-        self.assertIsInstance(Code.create_time.type, db.Integer)
+        self.assertIsInstance(Code.remove_time.type, db.DateTime)
+        self.assertIsInstance(Code.create_time.type, db.DateTime)
 
     def test_code_sending(self):
         send_code_id = Code.send(self.chat_id, CODE, PARENT_CODE_ID, COMMIT_MESSAGE)

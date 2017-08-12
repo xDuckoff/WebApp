@@ -30,8 +30,8 @@ class TestMessageModel(BaseTestModel):
         self.assertIsInstance(Message.author.type, db.String)
         self.assertIsInstance(Message.chat_link.type, db.Integer)
         self.assertIsInstance(Message.type.type, db.String)
-        self.assertIsInstance(Message.remove_time.type, db.Integer)
-        self.assertIsInstance(Message.create_time.type, db.Integer)
+        self.assertIsInstance(Message.remove_time.type, db.DateTime)
+        self.assertIsInstance(Message.create_time.type, db.DateTime)
 
     def test_message_sending(self):
         message = Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)

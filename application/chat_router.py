@@ -6,7 +6,8 @@ from json import dumps
 from flask import render_template, request, redirect
 from application import app, socketio
 from application import csrf
-from application.forms import CreateChatForm, AuthChatForm, SendMessageForm, GetTreeForm, GetMessagesForm, SendCodeForm
+from application.forms import CreateChatForm, AuthChatForm, SendMessageForm, GetTreeForm, GetMessagesForm, \
+    SendCodeForm, GetCodeForm
 from application.handlers import csrf_required, access_required, form_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
@@ -84,6 +85,7 @@ def get_messages():
 
 @app.route('/send_code', methods=['POST'])
 @csrf_required
+@form_required(SendCodeForm)
 @access_required
 def send_code():
     """Данная функция отправляет код на сервер от клиента
@@ -101,13 +103,14 @@ def send_code():
 
 @app.route('/get_code', methods=['GET'])
 @csrf_required
+@form_required(GetCodeForm)
 def get_code():
     """Данная функция отправляет код с сервера к клиенту
 
     :return: Код
     """
-    return ''
-    index = int(request.args.get('index', ''))
+    get_code_form = GetCodeForm()
+    index = get_code_form.index.data
     return dumps(Code.get(index))
 
 

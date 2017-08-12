@@ -64,3 +64,7 @@ class SendCodeForm(ChatForm):
     code = StringField('code', validators=[validators.DataRequired(), validators.Length(min=1, max=10000)])
     parent = IntegerField('parent', default=None)
     message = StringField('message')
+
+
+class GetCodeForm(FlaskForm):
+    index = IntegerField('index', validators=[validators.DataRequired()])

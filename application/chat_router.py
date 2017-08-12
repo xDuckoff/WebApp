@@ -6,7 +6,7 @@ from json import dumps
 from flask import render_template, request, redirect
 from application import app, socketio
 from application import csrf
-from application.forms import CreateChatForm, AuthChatForm, SendMessageForm, GetTreeForm, GetMessagesForm
+from application.forms import CreateChatForm, AuthChatForm, SendMessageForm, GetTreeForm, GetMessagesForm, SendCodeForm
 from application.handlers import csrf_required, access_required, form_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
@@ -90,10 +90,11 @@ def send_code():
 
     :return: Отправлен ли код
     """
-    chat_id = request.args.get('chat', '')
-    code = request.args.get('code', '')
-    parent = request.args.get('parent', '')
-    message = request.args.get('message', '')
+    send_code_form = SendCodeForm()
+    chat_id = send_code_form.chat.data
+    code = send_code_form.code.data
+    parent = send_code_form.parent.data
+    message = send_code_form.message.data
     code_id = Code.send(chat_id, code, parent, message)
     return dumps({"success": True, "error": "", "commit": code_id})
 

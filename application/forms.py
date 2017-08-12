@@ -58,3 +58,9 @@ class GetTreeForm(ChatForm):
 
 class GetMessagesForm(ChatForm):
     last_message_id = IntegerField('last_message_id', default=0)
+
+
+class SendCodeForm(ChatForm):
+    code = StringField('code', validators=[validators.DataRequired(), validators.Length(min=1, max=10000)])
+    parent = IntegerField('parent', default=None)
+    message = StringField('message')

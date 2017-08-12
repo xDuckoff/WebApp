@@ -6,7 +6,7 @@ from json import dumps
 from flask import render_template, request, redirect
 from application import app, socketio
 from application import csrf
-from application.forms import CreateChatForm, AuthChatForm, SendMessageForm, GetTreeForm
+from application.forms import CreateChatForm, AuthChatForm, SendMessageForm, GetTreeForm, GetMessagesForm
 from application.handlers import csrf_required, access_required, form_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
@@ -68,14 +68,16 @@ def send_message():
 
 @app.route('/get_messages', methods=['GET'])
 @csrf_required
-#@access_required
+@form_required(GetMessagesForm)
+@access_required
 def get_messages():
     """Запрос получения новых сообщений в чате
 
     :return: Принято ли сообщение
     """
-    chat_id = request.args.get('chat', '')
-    last_message_id = int(request.args.get('last_message_id', 0))
+    get_messages_form = GetMessagesForm()
+    chat_id = get_messages_form.chat.data
+    last_message_id = get_messages_form.last_message_id.data
     chat = Chat.get(chat_id)
     return dumps(chat.get_last_messages(last_message_id))
 

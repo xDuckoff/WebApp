@@ -54,3 +54,7 @@ class SendMessageForm(ChatForm):
 
 class GetTreeForm(ChatForm):
     pass
+
+
+class GetMessagesForm(ChatForm):
+    last_message_id = IntegerField('last_message_id', default=0)

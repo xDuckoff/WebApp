@@ -76,7 +76,7 @@ def get_messages():
 
     :return: Принято ли сообщение
     """
-    get_messages_form = GetMessagesForm()
+    get_messages_form = GetMessagesForm(request.args)
     chat_id = get_messages_form.chat.data
     last_message_id = get_messages_form.last_message_id.data
     chat = Chat.get(chat_id)
@@ -109,7 +109,7 @@ def get_code():
 
     :return: Код
     """
-    get_code_form = GetCodeForm()
+    get_code_form = GetCodeForm(request.args)
     index = get_code_form.index.data
     return dumps(Code.get(index))
 

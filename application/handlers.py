@@ -14,6 +14,7 @@ def csrf_required(func):
     """Проверка csrf-ключа"""
     @wraps(func)
     def csrf_check(*args, **kwargs):
+        """Функция возвращает ошибку, если csrf-ключ невалиден"""
         try:
             User.check_csrf()
         except ValidationError:
@@ -28,6 +29,7 @@ def access_required(func):
     """Проверка наличия доступа к чату"""
     @wraps(func)
     def access_check(*args, **kwargs):
+        """Функция возвращает ошибку, если ключ доступа к чату невалиден"""
         if request.method == "POST":
             chat_form = ChatForm()
         else:
@@ -43,8 +45,10 @@ def access_required(func):
 def form_required(form_class):
     """Проверка валидности формы"""
     def decorator(func):
+        """Декоратор"""
         @wraps(func)
         def chat_check(*args, **kwargs):
+            """Функция возвращает ошибку, если форма невалидна"""
             if request.method == "POST":
                 form = form_class()
             else:

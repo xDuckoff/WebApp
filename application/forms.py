@@ -33,6 +33,7 @@ class FindChatForm(FlaskForm):
 
 
 def chat_required(form, field):
+    """Проверка чата на существование"""
     if not Chat.get(field.data):
         raise ValidationError
 
@@ -49,22 +50,30 @@ class AuthChatForm(FlaskForm):
 
 class SendMessageForm(ChatForm):
     """Форма отправки сообщений"""
-    message = StringField('message', validators=[validators.DataRequired(), validators.Length(min=1, max=10000)])
+    message = StringField('message', validators=[
+        validators.DataRequired(), validators.Length(min=1, max=10000)
+    ])
 
 
 class GetTreeForm(ChatForm):
+    """Форма получения дерева коммитов"""
     pass
 
 
 class GetMessagesForm(ChatForm):
+    """Форма получения сообщений"""
     last_message_id = IntegerField('last_message_id', default=0)
 
 
 class SendCodeForm(ChatForm):
-    code = StringField('code', validators=[validators.DataRequired(), validators.Length(min=1, max=10000)])
+    """Форма отправки кода"""
+    code = StringField('code', validators=[
+        validators.DataRequired(), validators.Length(min=1, max=10000)
+    ])
     parent = IntegerField('parent', default=None)
     message = StringField('message')
 
 
 class GetCodeForm(FlaskForm):
+    """Форма получения кода"""
     index = IntegerField('index', validators=[validators.DataRequired()])

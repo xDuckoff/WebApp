@@ -40,10 +40,6 @@ class TestChatModel(BaseTestModel):
         self.assertEqual(got_messages[1].get('id'), second_message.id)
         self.assertEqual(got_messages[2].get('id'), third_message.id)
 
-    def test_was_chat_created(self):
-        self.assertTrue(Chat.was_created(str(self.chat_id)))
-        self.assertFalse(Chat.was_created(str(self.chat_id + 1)))
-
     def test_chat_has_message(self):
         chat = Chat.get(self.chat_id)
         message_id = Message.send(self.chat_id, MESSAGE, 'usr').id - 1

@@ -53,7 +53,10 @@ def form_required(form_class):
                 form = form_class()
             else:
                 form = form_class(request.args)
-                form.csrf_token.process_data(request.headers['X-Csrf-Token'])
+                print form.data
+                if hasattr(form, 'csrf_token'):
+                    csrf_token = request.headers.get('X-Csrf-Token', u'')
+                    form.csrf_token.process_data(csrf_token)
             if form.validate():
                 return func(*args, **kwargs)
             return dumps({"success": False, "error": "Invalid arguments"}), 400

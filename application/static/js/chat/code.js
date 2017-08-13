@@ -30,6 +30,7 @@ jQuery(function($) {
         setCode: function(codeId) {
             $.ajax({
                 url: "/get_code",
+                type: 'GET',
                 data: {
                     chat: CHAT_ID,
                     index: codeId
@@ -103,6 +104,7 @@ jQuery(function($) {
         update: function() {
             $.ajax({
                 url: "/tree",
+                type: 'GET',
                 data: {
                     chat: CHAT_ID
                 },

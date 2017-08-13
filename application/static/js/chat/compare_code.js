@@ -13,6 +13,7 @@ jQuery(function ($) {
         _loadStartCode: function() {
             $.ajax({
                 url: "/get_code",
+                type: 'GET',
                 data: {
                     chat: CHAT_ID,
                     index: CODE_START_COMMIT

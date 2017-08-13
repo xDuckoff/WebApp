@@ -1,9 +1,35 @@
+@font-face {font-family: "PT Sans Narrow";
+  src: url("../font/PT_Sans_Narrow.eot"); /* IE9*/
+  src: url("../font/PT_Sans_Narrow.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+  url("../font/PT_Sans_Narrow.woff2") format("woff2"), /* chrome、firefox */
+  url("../font/PT_Sans_Narrow.woff") format("woff"), /* chrome、firefox */
+  url("../font/PT_Sans_Narrow.ttf") format("truetype"), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url("../font/PT_Sans_Narrow.svg#PT Sans Narrow") format("svg"); /* iOS 4.1- */
+}
+
 body{
+    font-family: "PT Sans Narrow";
     width: 100%;
     height: 100%;
     background-color: #2f3e4e;
     color: #dddddd;
-    
+
+}
+
+.light-sprite,
+.dark-sprite{
+    padding: 20px 0;
+}
+.light-sprite{
+    background: #F1F1F1;
+    color: #333;
+}
+.light-sprite table{
+    color: #333;
+}
+.dark-sprite{
+    background: #2F3E4E;
+    color: #DDD;
 }
 
 .main-content{

@@ -15,251 +15,87 @@
 {% endblock %}
 
 {% block content %}
-<div class="modal fade" id="myModalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-    <div class="modal-dialog">
-        <div class="main-content">
-            <form action="" method="POST">
-                {{ login_form.hidden_tag() }}
-                <div class="form-group">
-                    <div class="modal-header">
-                        <label class="center-block">Вход</label>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Логин" name="login" />
-                            <span class="input-group-btn">
-                                <input class="btn btn-primary" type="submit" value="Вход">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-    <div class="modal-dialog" >
-        <div class="main-content">
-            <form method="POST" enctype="multipart/form-data">
-                {{ chat_create_form.hidden_tag() }}
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Создание чата</h4>
-                </div>
-                <div class="modal-body">
-                    <div class = "row">
-                        <div class="col-md-6 col-md-offset-3">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" id="chatname" placeholder="Название" name = "name" required="required">
-                                </div>
-                                <div class = "form-group">
-                                    <select class="form-control" name="chat_type">
-                                        <option value="public">Публичный</option>
-                                        <option value="private">Приватный</option>
-                                    </select>
-                                </div>
-                                <div class="form-group" id="pass_div">
-                                    <input type="password" class="form-control" placeholder="Пароль" name = "access_key">
-                                </div>
-                                <select class="form-control" id="Compile" name="code_type" required="required">
-                                    <option value="" disabled selected>Язык программирования</option>
-                                    {%- for lang in allowed_languages -%}
-                                    <option value="{{ lang.type }}">{{ lang.name }}</option>
-                                    {%- endfor -%}
-                                </select>
-                        </div>
-                        <div class="col-md-10 col-md-offset-1">
-                            <textarea name="code" id="codeField"></textarea>
-                            <div class="form-group">
-                                <input type="file" name="file" accept="{{ allowed_ex }}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-lg btn-primary">Создать</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<div class = "container main-container">
-    <div class = "row">
-        <div class="col-md-8 col-md-offset-2" >
-            <img class="center-block" src="/static/img/logo.png" width="250" height="250">
-        </div>
-    </div>
-    <div class = "row">
-        <div class="col-md-8 col-md-offset-2">
-            <h2 class="text-center"><b>Бесплатное, удобное и наглядное приложение для коллективного решения проблем в коде</b></h2>
-            <p class = "text-center" style="font-size: 20;">С помощью данного приложения вы сможете получить помощь от других разработчиков или помочь кому-либо. ВасилЁк предоставляет вам удобную площадку для обмена кодом, сравнения версий, общения по поводу возникших проблем.</p>
-            <div class="col-md-8 col-md-offset-2 ">
-                <a href="#start-working">
-                    <button class="btn btn-lg btn-primary center-block btn-block">
-                        Начать работу
+<div class="light-sprite">
+    <div class = "container main-container">
+        <div class = "row">
+            <div class="col-md-4">
+                <img class="center-block" src="/static/img/logo.png" width="250" height="250" />
+            </div>
+            <div class="col-md-8">
+                <h1>Сервис для эффективного поиска ошибок в своем коде</h1>
+                <p style="font-size: 20;">С помощью данного приложения вы сможете получить помощь и консультации от других разработчиков или помочь найти ошибки в коде</p>
+                <div class="col-md-8 col-md-offset-2 ">
+                    <button class="btn btn-lg btn-primary center-block btn-block"
+                            id="chat-create-btn"
+                            data-toggle="modal" data-target="#chat-create">
+                        Начать проверку
                     </button>
-                </a>
-            </div>
-        </div>
-    </div>
-    </br>
-    <div class = "row">
-        <div class="col-md-4 col-md-offset-2">
-            <div class="thumbnail" id="thmbnl-trnsprnt">
-                <img src="/static/img/code_xmpl.jpeg"  width="200" height="200">
-                <div class="caption">
-                    <h4 class = "text-center" id="thmbnl-cptn">Редактор кода</h4>
-                    <p id="thmbnl-txt">Подсветка синтаксиса большинства популярных языков программирования и языков разметки</p>
                 </div>
             </div>
-         </div>
-        <div class="col-md-4">
-           <div class="thumbnail" id="thmbnl-trnsprnt">
-                <img class="center-block" src="/static/img/chat_xmpl.jpeg"  width="200" height="200">
-                <div class="caption">
-                    <h4 class = "text-center" id="thmbnl-cptn">Онлайн-чат</h4>
-                    <p id="thmbnl-txt">Можно оперативно задавать вопросы, комментарии и получать на них ответы, а также получать оповещения о новых решениях</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class = "row">
-        <div class="col-md-4 col-md-offset-2">
-            <div class="thumbnail" id="thmbnl-trnsprnt">
-                <img class="center-block" src="/static/img/st3_xmpl.jpg"  width="200" height="200">
-                <div class="caption">
-                    <h4 class = "text-center" id="thmbnl-cptn"> Плагин
-                    Sublime Text 3</h4>
-                    <p id="thmbnl-txt">Можно опубликовать код из любимого редактора</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="thumbnail" id="thmbnl-trnsprnt">
-                <img class="center-block" src="/static/img/tree_code_xmpl.jpeg"  width="200" height="200">
-                <div class="caption">
-                    <h4 class = "text-center" id="thmbnl-cptn"> "Дерево" изменений</h4>
-                    <p id="thmbnl-txt">Стадии предоставленных решений (изменения кода) отображаются в виде иерархической последовательности</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class = "row">
-        <div class="col-md-4 col-md-offset-2">
-            <div class="thumbnail" id="thmbnl-trnsprnt">
-                <img class="center-block" src="/static/img/code_compare_xmpl1.jpeg"  width="371" height="141">
-                <div class="caption">
-                    <h4 class = "text-center" id="thmbnl-cptn"> Сравнение кода</h4>
-                    <p id="thmbnl-txt">Сравнение выбранной из дерева версии с исходным кодом</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 ">
-            <div class="thumbnail" id="thmbnl-trnsprnt">
-                <img class="center-block" src="/static/img/search_xmpl.jpg"  width="250" height="141">
-                <div class="caption">
-                    <h4 class = "text-center" id="thmbnl-cptn">Без регистрации!</h4>
-                    <p id="thmbnl-txt">Чтобы открыть чат или присоединиться к нему, достаточно только ввести имя.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class = "row">
-        <p><a name="start-working"></a></p>
-        <h4 class = "text-center" style="font-size: 30; color:#ffffff; margin-top: 50px;">Начните кодить прямо сейчас!</h4>
-        <div class="col-md-8 col-md-offset-2 ">
-            <button class="btn btn-lg btn-primary center-block btn-block " id="chat-create-btn" data-toggle="modal" data-target="#myModal">
-                Создать чат
-            </button>
-        </div>
-        <p><a name="find"></a></p>
-        <div class="col-md-8 col-md-offset-2 main-content">
-            <form action="#find" method="POST">
-                {{ find_chat_form.hidden_tag() }}
-                <p class = "text-center" style="font-size: 20; margin-top: 10px">Поиск чата</p>
-                <div class="input-group" style="margin-top: 10px;">
-                    <input type="search" class="form-control" name="chat_title" placeholder="Введите название" value="{{find_chat_form.chat_title.data}}">
-                    <span class="input-group-btn">
-                        <input type="submit" class="btn btn-primary" value="Найти">
-                    </span>
-                </div>
-            </form>
-            {% if chats|length == 0 %}  
-                <p class="text-center">Чаты отсутствуют</p>      
-            {% else %}
-                <table class="table">  
-                    <tr>
-                        <th>Название</th>
-                        <th>Язык программирования</th>
-                        <th></th>
-                    </tr>
-                    {% for chat in chats %}
-                        <tr>
-                        <td>{{chat.name | safe}}</td>
-                        <td>{{chat.code_type}}</td>
-                        <td>
-                            <a href="/chat/{{ chat.id }}">
-                                <button class="btn btn-primary btn-xs">Перейти</button>
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                 </table>
-            {% endif %} 
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-
-<script type="text/javascript">
-    $(document).ready(function(){
-        $("[data-toggle='tooltip']").tooltip();
-    });
-    var editor, openModalCount=false;
-    function init_codemirror(){
-        $('#codeField').empty();
-        editor = CodeMirror.fromTextArea($('#codeField').get(0), {
-            mode: {
-                name: "text/x-c++src",
-                version: 2,
-                singleLineStringErrors: false
-            },
-            lineNumbers: true,
-            indentUnit: 4,
-            matchBrackets: true
-        });
-    }
-    function update_codemirror(){
-        editor.setOption("mode", $("#Compile").val());
-    }
-    jQuery(function ($) {
-        $('#myModal').on('shown.bs.modal', function () {
-            if(!openModalCount){
-                init_codemirror();
-                openModalCount = true;
-            }
-        });
-        $("#Compile").change(function () {
-            update_codemirror();
-        });
-    });
-    jQuery(function(){
-        var div = $('#pass_div');
-        if ( $("select[name='chat_type']").val() == 'public' ) {
-            div.hide();
-        } else if ( $("select[name='chat_type']").val() == 'private' ) {
-            div.show();
-        }
-        $("select[name='chat_type']").change(function(){
-            var div = $('#pass_div');
-            if ( $(this).val() == 'public' ) {
-                div.hide();
-            } else if ( $(this).val() == 'private' ) {
-                div.show();
-            }
-        })
-    });
-</script>
+<div class="dark-sprite">
+    <div class = "container">
+        <div class = "row">
+            <div class="col-md-8 col-md-offset-2">
+                <h2>Что получите?</h2>
+                <ul style="font-size: 20px;">
+                    <li>Удобный обмен кодом</li>
+                    <li>Каждое изменение кода сохраняется</li>
+                    <li>Возможность визуально видеть различия в коде между До и После</li>
+                    <li>Обсуждение и комментирование</li>
+                    <li>Приватность и анонимность</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class = "light-sprite">
+    <div class = "container">
+        <div class = "row">
+            <div class="col-md-8 col-md-offset-2">
+                <form action="#find" method="POST">
+                    {{ find_chat_form.hidden_tag() }}
+                    <h2 class="text-center">
+                        Помочь разрешить ошибки
+                    </h2>
+                    <div class="input-group" style="margin-top: 10px;">
+                        <input type="text"
+                               class="form-control"
+                               name="chat_title"
+                               placeholder="Введите название"
+                               value="{{find_chat_form.chat_title.data}}">
+                        <span class="input-group-btn">
+                            <input type="submit" class="btn btn-primary" value="Найти">
+                        </span>
+                    </div>
+                </form>
+                {% if chats|length == 0 %}
+                    <p class="text-center">Чаты отсутствуют</p>
+                {% else %}
+                    <table class="table">
+                        <tr>
+                            <th>Название</th>
+                            <th>Язык программирования</th>
+                            <th></th>
+                        </tr>
+                        {% for chat in chats %}
+                            <tr>
+                            <td>{{chat.name | safe}}</td>
+                            <td>{{chat.code_type}}</td>
+                            <td class="text-right">
+                                <a href="/chat/{{ chat.id }}"
+                                   class="btn btn-primary btn-xs">
+                                    Перейти
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                     </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -17,10 +17,19 @@
                          <img src="/static/img/logo_word_only.png" width="90" height="20">
                     </a>
                 </li>
+                <li>
+                    <a href="#"
+                       data-toggle="modal"
+                       data-target="#chat-create">
+                        Создать чат
+                    </a>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#" data-toggle="modal" data-target="#myModalLogin">
+                    <a href="#"
+                       data-toggle="modal"
+                       data-target="#login-form">
                         Сменить
                     </a>
                 </li>
@@ -29,7 +38,141 @@
         </div>
     </nav>
     {% block content %}{% endblock %}
+    <div class="modal fade"
+         id="login-form"
+         tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="/"
+                  class="main-content"
+                  method="POST">
+                {{ login_form.hidden_tag() }}
+                <div class="modal-header text-center">Вход</div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Логин"
+                               name="login" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary"
+                                    type="submit">
+                                Вход
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade"
+         id="chat-create"
+         tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog" >
+            <form action="/"
+                  method="POST"
+                  class="main-content"
+                  enctype="multipart/form-data">
+                {{ chat_create_form.hidden_tag() }}
+                <div class="modal-header">
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">Создание чата</h4>
+                </div>
+                <div class="modal-body">
+                    <div class = "row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="form-group">
+                                <input type="text"
+                                       class="form-control"
+                                       id="chatname"
+                                       placeholder="Название"
+                                       name="name"
+                                       required="required" />
+                            </div>
+                            <div class = "form-group">
+                                <select class="form-control" name="chat_type">
+                                    <option value="public">Публичный</option>
+                                    <option value="private">Приватный</option>
+                                </select>
+                            </div>
+                            <div class="form-group"
+                                 id="pass_div"
+                                 style="display:none;">
+                                <input type="password"
+                                       class="form-control"
+                                       placeholder="Пароль"
+                                       name="access_key" />
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control"
+                                        id="Compile"
+                                        name="code_type"
+                                        required="required" />
+                                    <option value="" disabled selected>Язык программирования</option>
+                                    {%- for lang in allowed_languages -%}
+                                    <option value="{{ lang.type }}">{{ lang.name }}</option>
+                                    {%- endfor -%}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <textarea name="code" id="codeField"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="file" name="file" accept="{{ allowed_ex }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                </div>
+            </form>
+        </div>
+    </div>
     {%- include "libs/bootstrap/scripts.html" -%}
+    <script type="text/javascript">
+        var editor,
+            openModalCount = false;
+        function init_codemirror() {
+            var codeField = $('#codeField');
+            codeField.empty();
+            editor = CodeMirror.fromTextArea(codeField.get(0), {
+                mode: {
+                    name: "text/x-c++src",
+                    version: 2,
+                    singleLineStringErrors: false
+                },
+                lineNumbers: true,
+                indentUnit: 4,
+                matchBrackets: true
+            });
+        }
+        jQuery(function($) {
+            $("[data-toggle='tooltip']").tooltip();
+
+            $('#chat-create').on('shown.bs.modal', function () {
+                if(!openModalCount){
+                    init_codemirror();
+                    openModalCount = true;
+                }
+            });
+            $("#Compile").change(function () {
+                editor.setOption("mode", $(this).val());
+                var passContainer = $('#pass_div');
+                if ( $(this).val() == 'public' ) {
+                    passContainer.hide();
+                } else if ( $(this).val() == 'private' ) {
+                    passContainer.show();
+                }
+            });
+        });
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

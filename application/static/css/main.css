@@ -11,9 +11,8 @@ body{
     font-family: "PT Sans Narrow";
     width: 100%;
     height: 100%;
-    background-color: #2f3e4e;
-    color: #dddddd;
-
+    background-color: #00598c;
+    color: #DDD;
 }
 
 .light-sprite,
@@ -28,13 +27,33 @@ body{
     color: #333;
 }
 .dark-sprite{
-    background: #2F3E4E;
+    background: #00598c;
     color: #DDD;
 }
 
+.text-size_medium{
+    font-size: 1.4em;
+}
+
+.navbar-inverse {
+    background-color: #004973;
+    border-color: #002840;
+    border-width: 0;
+    font-size: 1.2em;
+}
+
+.navbar-inverse .navbar-nav>li>a,
+.navbar-inverse .navbar-text{
+    color: #DDD;
+}
+.navbar-text{
+    margin-top: 14px;
+    margin-bottom: 14px;
+}
+
 .main-content{
-    border: 2px solid #424f5e;
-    background: #1b2c3e;
+    border: 2px solid #004973;
+    background: #00598c;
 }
 
 .nav-button{

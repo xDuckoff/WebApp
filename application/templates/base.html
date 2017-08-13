@@ -9,12 +9,13 @@
     {% block includes %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-static-top1 navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <ul class="nav navbar-nav">
                 <li>
                     <a href="/">
-                         <img src="/static/img/logo_word_only.png" width="90" height="20">
+                         <img src="/static/img/logo_word_only.png"
+                              style="height: 21px;" />
                     </a>
                 </li>
                 <li>
@@ -26,6 +27,9 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li class="navbar-text">
+                    Вы вошли как <strong>{{login | safe}}</strong>
+                </li>
                 <li>
                     <a href="#"
                        data-toggle="modal"
@@ -34,7 +38,6 @@
                     </a>
                 </li>
             </ul>
-                <p class="navbar-text navbar-right">Вы вошли как <strong>{{login | safe}}</strong></p>
         </div>
     </nav>
     {% block content %}{% endblock %}

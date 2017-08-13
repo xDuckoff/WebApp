@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ chat_info["name"] | safe }}{% endblock %}
+{% block title %}{{ chat_info["name"] | striptags }}{% endblock %}
 
 {% block includes %}
     {%- include "libs/treant/links.html" -%}

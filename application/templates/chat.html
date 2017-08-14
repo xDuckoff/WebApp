@@ -21,7 +21,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="input-group">
-                            <input type="password" class="form-control" placeholder="Пароль" name="password" />
+                            <input autofocus type="password" class="form-control" placeholder="Пароль" name="password" />
                             <span class="input-group-btn">
                                 <input class="btn btn-primary" type="submit" value="Вход">
                             </span>
@@ -154,11 +154,6 @@
         CHAT_ID = "{{ chat_id }}",
         CODE_TYPE = "{{ chat_info['code_type'] }}",
         CODE_START_COMMIT = {{ chat_info.start_code.id }};
-    $.ajaxSetup({
-        headers: {
-            'X-Csrf-Token': "{{ csrf_token() }}"
-        }
-    });
     {% if not have_access %}
         $('#myModal').modal()
     {% endif %}

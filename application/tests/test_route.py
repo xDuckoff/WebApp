@@ -12,11 +12,11 @@ LOGOUT_PAGE_URL = "/logout"
 TREE_PAGE_URL = '/tree?chat={chat_id}'
 CHAT_PAGE_URL = "/chat/{chat_id}"
 CHAT_GET_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'
-CODE_SEND_PAGE_URL = '/send_code?chat={chat_id}&code={code}&parent={parent}&cname={cname}'
+CODE_SEND_PAGE_URL = '/send_code'
 CODE_GET_PAGE_URL = '/get_code?index={code_id}'
 MESSAGES_GET_PAGE_URL = '/get_messages?chat={chat_id}'
 MESSAGES_GET_LAST_PAGE_URL = '/get_messages?chat={chat_id}&last_message_id={last_message_id}'
-MESSAGE_SEND_PAGE_URL = '/send_message?chat={chat_id}&message={message}'
+MESSAGE_SEND_PAGE_URL = '/send_message'
 
 
 class BaseTestPages(BaseTestModel):
@@ -61,10 +61,13 @@ class TestMessagePage(BaseTestPages):
         response = self.app.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_send_message_without_sockets(self):
-        app.config['SOCKET_MODE'] = 'False'
+    def test_send_message(self):
         chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
-        response = self.app.get(MESSAGE_SEND_PAGE_URL.format(chat_id=chat_id, message=MESSAGE))
+        params = {
+            "chat_id": chat_id,
+            "message": MESSAGE
+        }
+        response = self.app.post(MESSAGE_SEND_PAGE_URL, params)
         self.assertEqual(response.status_code, 200)
 
     def test_get_tree(self):
@@ -77,14 +80,13 @@ class TestCodePage(BaseTestPages):
 
     def test_send_code(self):
         chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
-        send_code_format_values = {
+        params = {
             "chat_id": chat_id,
             "code": CODE,
             "parent": 1,
             "cname": COMMIT_MESSAGE
         }
-        send_code_url = CODE_SEND_PAGE_URL.format(**send_code_format_values)
-        response = self.app.get(send_code_url)
+        response = self.app.post(CODE_SEND_PAGE_URL, data=params)
         self.assertEqual(response.status_code, 200)
 
     def test_get_code(self):

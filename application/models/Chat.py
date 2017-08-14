@@ -112,4 +112,4 @@ class Chat(db.Model):
         :param password: Пароль
         :return: Является ли пароль валидным
         """
-        return self.access_key == password
+        return not self.access_key or self.access_key == password

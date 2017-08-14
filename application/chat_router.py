@@ -14,7 +14,6 @@ from flask_socketio import join_room, leave_room
 
 
 @app.route('/tree', methods=['GET'])
-@csrf_required
 @form_required(GetTreeForm)
 @access_required
 def tree():
@@ -52,7 +51,6 @@ def chat_page(chat_id):
 
 
 @app.route('/send_message', methods=['POST'])
-@csrf_required
 @form_required(SendMessageForm)
 @access_required
 def send_message():
@@ -68,7 +66,6 @@ def send_message():
 
 
 @app.route('/get_messages', methods=['GET'])
-@csrf_required
 @form_required(GetMessagesForm)
 @access_required
 def get_messages():
@@ -84,7 +81,6 @@ def get_messages():
 
 
 @app.route('/send_code', methods=['POST'])
-@csrf_required
 @form_required(SendCodeForm)
 @access_required
 def send_code():
@@ -102,7 +98,6 @@ def send_code():
 
 
 @app.route('/get_code', methods=['GET'])
-@csrf_required
 @form_required(GetCodeForm)
 def get_code():
     """Данная функция отправляет код с сервера к клиенту

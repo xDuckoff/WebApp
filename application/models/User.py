@@ -30,11 +30,6 @@ class User(object):
         return session['login']
 
     @staticmethod
-    def check_csrf():
-        """Проверка на валидность csrf-ключа"""
-        csrf.validate_csrf(request.headers['X-Csrf-Token'])
-
-    @staticmethod
     def set_access_key(chat_id, access_key):
         """Установка ключа доступа для чата
 

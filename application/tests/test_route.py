@@ -64,10 +64,10 @@ class TestMessagePage(BaseTestPages):
     def test_send_message(self):
         chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         params = {
-            "chat_id": chat_id,
+            "chat": chat_id,
             "message": MESSAGE
         }
-        response = self.app.post(MESSAGE_SEND_PAGE_URL, params)
+        response = self.app.post(MESSAGE_SEND_PAGE_URL, data=params)
         self.assertEqual(response.status_code, 200)
 
     def test_get_tree(self):
@@ -81,7 +81,7 @@ class TestCodePage(BaseTestPages):
     def test_send_code(self):
         chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
         params = {
-            "chat_id": chat_id,
+            "chat": chat_id,
             "code": CODE,
             "parent": 1,
             "cname": COMMIT_MESSAGE

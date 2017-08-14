@@ -36,7 +36,7 @@ body{
 }
 
 .navbar-inverse {
-    background-color: #004973;
+    padding: 0px 20px 0px 20px;
     border-color: #002840;
     border-width: 0;
     font-size: 1.2em;
@@ -113,7 +113,7 @@ body{
     background: white;
 }
 .commit_node.chosen {
-    background: red;
+    background: #42aaff;
     font-weight: 600;
 }
 

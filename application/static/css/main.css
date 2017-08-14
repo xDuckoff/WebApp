@@ -1,85 +1,63 @@
+@font-face {font-family: "PT Sans Narrow";
+  src: url("../fonts/PT_Sans_Narrow.eot"); /* IE9*/
+  src: url("../fonts/PT_Sans_Narrow.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+  url("../fonts/PT_Sans_Narrow.woff2") format("woff2"), /* chrome、firefox */
+  url("../fonts/PT_Sans_Narrow.woff") format("woff"), /* chrome、firefox */
+  url("../fonts/PT_Sans_Narrow.ttf") format("truetype"), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url("../fonts/PT_Sans_Narrow.svg#PT Sans Narrow") format("svg"); /* iOS 4.1- */
+}
+
 body{
+    font-family: "PT Sans Narrow";
     width: 100%;
     height: 100%;
-    background-color: #2f3e4e;
-    color: #dddddd;
+    background-color: #003959;
+    color: #DDD;
 }
 
-h1 {
-  font-family: 'Oxygen', Arial, sans-serif;
-  font-weight: bold;
-  font-size: 3.75em;
-  line-height: 1.7em;
-  margin-bottom: 7px;
-  color: #000;
-  text-transform: uppercase;
-  text-align: center;
+.light-sprite,
+.dark-sprite{
+    padding: 20px 0;
+}
+.light-sprite{
+    background: #F1F1F1;
+    color: #333;
+}
+.light-sprite table{
+    color: #333;
+}
+.dark-sprite{
+    background: #003959;
+    color: #DDD;
 }
 
-#help_platform{ 
-  width: 660px;
-  height: 100%;
-  margin: 0 auto;
-  margin-top: 25px;
-  padding: 35px 15px;
-  background: #fff;
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 7px;
-  -webkit-box-shadow: 2px 3px 4px -2px rgba(0,0,0,0.55);
-  -moz-box-shadow: 2px 3px 4px -2px rgba(0,0,0,0.55);
-  box-shadow: 2px 3px 4px -2px rgba(0,0,0,0.55);
+.text-size_medium{
+    font-size: 1.4em;
 }
 
-label {
-  display: inline-block;
-  font-size: 1.2em;
-  font-weight: bold;
-  width: 120px;
-  padding: 6px 0;
-  color: #464646;
-  vertical-align: top;
-  margin-right: auto;
+.navbar-inverse {
+    border-color: #002840;
+    border-width: 0;
+    font-size: 1.2em;
 }
 
-.req { 
-    color: #ca5354; 
+.navbar-inverse .navbar-nav>li>a,
+.navbar-inverse .navbar-text{
+    color: #DDD;
 }
-
-.note { 
-  font-size: 1.2em;
-  line-height: 1.33em;
-  font-weight: normal;
-  padding: 2px 7px;
-  margin-bottom: 10px;
+.navbar-text{
+    margin-top: 14px;
+    margin-bottom: 14px;
 }
-
-#submitbtn {
-  height: 70px;
-  width: 275px;
-  padding: 0;
-  cursor: pointer;
-  font-family: 'Oxygen', Arial, sans-serif;
-  font-size: 2.0em;
-  color: #0a528f;
-  text-shadow: 1px 1px 0 rgba(255,255,255,0.65); 
-  border-width: 1px;
-  border-style: solid;
-  border-color: #317bd6 #3784e3 #2d74d5 #3774e3;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -moz-box-shadow: 1px 1px 3px rgba(0,0,0,0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -webkit-box-shadow: 1px 1px 3px rgba(0,0,0,0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  box-shadow: 1px 1px 3px rgba(0,0,0,0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -webkit-transition: all 0.3s linear;
-  -moz-transition: all 0.3s linear;
-  transition: all 0.3s linear; 
+.navbar-inverse .navbar-nav>.open>a,
+.navbar-inverse .navbar-nav>.open>a:focus,
+.navbar-inverse .navbar-nav>.open>a:hover{
+    background: #002840;
 }
 
 .main-content{
-    border: 2px solid #424f5e;
-    background: #1b2c3e;
+    border: 2px solid #004973;
+    background: #005382;
 }
 
 .nav-button{
@@ -134,10 +112,74 @@ label {
     background: white;
 }
 .commit_node.chosen {
-    background: red;
+    background: #42aaff;
     font-weight: 600;
 }
 
 p{
     margin: 0;
 }
+
+/* Help page */
+
+#help_platform{
+  width: 660px;
+  height: 100%;
+  margin: 0 auto;
+  margin-top: 25px;
+  padding: 35px 15px;
+  background: #fff;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  -webkit-box-shadow: 2px 3px 4px -2px rgba(0,0,0,0.55);
+  -moz-box-shadow: 2px 3px 4px -2px rgba(0,0,0,0.55);
+  box-shadow: 2px 3px 4px -2px rgba(0,0,0,0.55);
+}
+
+label {
+  display: inline-block;
+  font-size: 1.2em;
+  font-weight: bold;
+  width: 120px;
+  padding: 6px 0;
+  color: #464646;
+  vertical-align: top;
+  margin-right: auto;
+}
+
+.req {
+    color: #ca5354;
+}
+
+.note {
+  font-size: 1.2em;
+  line-height: 1.33em;
+  font-weight: normal;
+  padding: 2px 7px;
+  margin-bottom: 10px;
+}
+
+#submitbtn {
+  height: 70px;
+  width: 275px;
+  padding: 0;
+  cursor: pointer;
+  font-family: 'Oxygen', Arial, sans-serif;
+  font-size: 2.0em;
+  color: #0a528f;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.65);
+  border-width: 1px;
+  border-style: solid;
+  border-color: #317bd6 #3784e3 #2d74d5 #3774e3;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 1px 1px 3px rgba(0,0,0,0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -webkit-box-shadow: 1px 1px 3px rgba(0,0,0,0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+}
+

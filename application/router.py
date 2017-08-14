@@ -32,10 +32,17 @@ def feedback_page():
     :return: Переход на страницу обратной связи
     """
     feedback_form = FeedbackForm()
-
+    chat_create_form = CreateChatForm()
+    login_form = LoginForm()
     return render_template('feedback.html',
                            feedback_form=feedback_form,
-                           RECAPTCHA_SITE_KEY=RECAPTCHA_SITE_KEY)
+                           RECAPTCHA_SITE_KEY=RECAPTCHA_SITE_KEY,
+                           login_form=login_form,
+                           login=User.get_login(),
+                           chat_create_form=chat_create_form,
+                           allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
+                           allowed_languages=app.config["ALLOWED_LANGUAGES"]
+                          )
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

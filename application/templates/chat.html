@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ chat_info["name"] | safe }}{% endblock %}
+{% block title %}{{ chat_info["name"] | striptags }}{% endblock %}
 
 {% block includes %}
     {%- include "libs/treant/links.html" -%}
@@ -70,7 +70,7 @@
                     </div>
                     <div class="col-md-3">
                         <button type="button"
-                                class="message-sender__to-send btn btn-primary btn-block">
+                                class="message-sender__to-send btn btn-default btn-block">
                             Отправить
                         </button>
                     </div>
@@ -83,14 +83,14 @@
             </div>
             <div class="row" style="margin-top: 10px;">
                 <div class="col-md-6">
-                    <div class="btn btn-default btn-block"
+                    <div class="btn btn-default btn-block code-button"
                          data-toggle="modal"
                          data-target="#code-sender">
                         Сохранить изменения
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="btn btn-default btn-block"
+                    <div class="btn btn-default btn-block code-button"
                          data-toggle="modal"
                          data-target="#code-compare">
                         Сравнить с исходным кодом

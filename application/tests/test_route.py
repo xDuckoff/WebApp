@@ -105,3 +105,10 @@ class TestHandlers(BaseTestPages):
         self.real.get_access_key.return_value = CHAT_ACCESS_KEY
         response = self.app.get(MESSAGES_GET_PAGE_URL.format(chat_id=chat_id))
         self.assertEqual(response.status_code, 200)
+
+    def test_form_required_handler(self):
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        response = self.app.get(MESSAGES_GET_PAGE_URL.format(chat_id=chat_id))
+        self.assertEqual(response.status_code, 200)
+        response = self.app.get(MESSAGES_GET_PAGE_URL.format(chat_id=chat_id + 1))
+        self.assertEqual(response.status_code, 400)

@@ -8,7 +8,7 @@ from application import app, socketio
 from application import csrf
 from application.forms import CreateChatForm, AuthChatForm, SendMessageForm, GetTreeForm, \
     GetMessagesForm, SendCodeForm, GetCodeForm
-from application.handlers import csrf_required, access_required, form_required
+from application.handlers import access_required, form_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
 

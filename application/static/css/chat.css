@@ -25,10 +25,12 @@
     border-width: 0;
     border-radius: 20px;
     text-align: center;
+    font-size: 1.1em;
 }
 
 .system-message__author{
-    font-weight: 700;
+    font-weight: bold;
+    font-size: 1.1em;
 }
 
 .user-message{
@@ -36,19 +38,26 @@
     width: 70%;
     word-wrap: break-word;
     margin: 10px auto 10px 0;
+    font-size: 1.1em;
 }
 
 .user-message__author{
-    font-weight: 700;
+    font-weight: bold;
+    font-size: 1.1em;
 }
 
 .message-sender__content{
     resize: none;
+    font-size: 1.1em;
 }
 .message-sender__hint{
-    font-size: .9em;
+    font-size: 1.1em;
     opacity: .7;
     padding-top: 5px;
+}
+
+.message-sender__to-send{
+    font-size: 1.1em;
 }
 
 .code-editor + .CodeMirror{
@@ -110,4 +119,19 @@
     height: 100vh;
     padding: 40px;
     min-height: 600px;
+}
+
+.code-button{
+    font-size: 1.1em;
+}
+
+.Treant .node {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 1.1em;
+}
+
+.commit_node {
+    height: 100%;
 }

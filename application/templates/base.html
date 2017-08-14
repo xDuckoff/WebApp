@@ -41,7 +41,7 @@
                             <a href="#"
                                data-toggle="modal"
                                data-target="#login-form">
-                                Сменить
+                                Сменить ник
                             </a>
                         </li>
                     </ul>
@@ -59,17 +59,25 @@
                   class="main-content"
                   method="POST">
                 {{ login_form.hidden_tag() }}
-                <div class="modal-header text-center">Вход</div>
+                <div class="modal-header">
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title text-center">Сменить ник</h4>
+                </div>
                 <div class="modal-body">
                     <div class="input-group">
                         <input type="text"
                                class="form-control"
-                               placeholder="Логин"
+                               placeholder="Новый ник"
                                name="login" />
                         <span class="input-group-btn">
                             <button class="btn btn-primary"
                                     type="submit">
-                                Вход
+                                Сменить
                             </button>
                         </span>
                     </div>
@@ -94,7 +102,7 @@
                             aria-hidden="true">
                         &times;
                     </button>
-                    <h4 class="modal-title">Создание чата</h4>
+                    <h4 class="modal-title text-center">Новый чат</h4>
                 </div>
                 <div class="modal-body">
                     <div class = "row">
@@ -125,7 +133,7 @@
                                 <select class="form-control"
                                         id="Compile"
                                         name="code_type"
-                                        required="required" />
+                                        required="required">
                                     <option value="" disabled selected>Язык программирования</option>
                                     {%- for lang in allowed_languages -%}
                                     <option value="{{ lang.type }}">{{ lang.name }}</option>
@@ -179,15 +187,20 @@
                     openModalCount = true;
                 }
             });
-            $("#Compile").change(function () {
-                editor.setOption("mode", $(this).val());
-                var passContainer = $('#pass_div');
+            var div = $('#pass_div');
+            if ( $("select[name='chat_type']").val() == 'public' ) {
+                div.hide();
+            } else if ( $("select[name='chat_type']").val() == 'private' ) {
+                div.show();
+            }
+            $("select[name='chat_type']").change(function(){
+                var div = $('#pass_div');
                 if ( $(this).val() == 'public' ) {
-                    passContainer.hide();
+                    div.hide();
                 } else if ( $(this).val() == 'private' ) {
-                    passContainer.show();
+                    div.show();
                 }
-            });
+            })
         });
     </script>
     {% block scripts %}{% endblock %}

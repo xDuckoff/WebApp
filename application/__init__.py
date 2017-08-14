@@ -16,7 +16,4 @@ csrf = CSRFProtect()
 csrf.init_app(app)
 socketio = SocketIO(app)
 
-with app.app_context():
-    upgrade()
-
 import router

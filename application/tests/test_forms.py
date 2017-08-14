@@ -3,8 +3,9 @@
 """Тесты форм"""
 
 from base_test_model import *
-from application.forms import LoginForm, CreateChatForm, FindChatForm, AuthChatForm
-from wtforms import StringField, FileField
+from application.forms import LoginForm, CreateChatForm, FindChatForm, AuthChatForm, ChatForm, \
+    SendMessageForm, GetTreeForm, GetMessagesForm, SendCodeForm, GetCodeForm
+from wtforms import StringField, FileField, IntegerField
 
 
 class TestLoginForm(BaseTestModel):
@@ -47,3 +48,67 @@ class TestAuthChatForm(BaseTestModel):
 
     def test_type_find_chat_form(self):
         self.assertIs(AuthChatForm.password.field_class, StringField)
+
+
+class TestChatForm(BaseTestModel):
+
+    def test_available_chat_form(self):
+        self.assertTrue(hasattr(ChatForm, "chat"))
+
+    def test_type_chat_form(self):
+        self.assertIs(ChatForm.chat.field_class, IntegerField)
+
+
+class TestSendMessageForm(BaseTestModel):
+
+    def test_available_send_message_form(self):
+        self.assertTrue(hasattr(SendMessageForm, "chat"))
+        self.assertTrue(hasattr(SendMessageForm, "message"))
+
+    def test_type_send_message_form(self):
+        self.assertIs(SendMessageForm.chat.field_class, IntegerField)
+        self.assertIs(SendMessageForm.message.field_class, StringField)
+
+
+class TestGetTreeForm(BaseTestModel):
+
+    def test_available_get_tree_form(self):
+        self.assertTrue(hasattr(GetTreeForm, "chat"))
+
+    def test_type_get_tree_form(self):
+        self.assertIs(GetTreeForm.chat.field_class, IntegerField)
+
+
+class TestGetMessagesForm(BaseTestModel):
+
+    def test_available_get_messages_form(self):
+        self.assertTrue(hasattr(GetMessagesForm, "chat"))
+        self.assertTrue(hasattr(GetMessagesForm, "last_message_id"))
+
+    def test_type_get_messages_form(self):
+        self.assertIs(GetMessagesForm.chat.field_class, IntegerField)
+        self.assertIs(GetMessagesForm.last_message_id.field_class, IntegerField)
+
+
+class TestSendCodeForm(BaseTestModel):
+
+    def test_available_get_tree_form(self):
+        self.assertTrue(hasattr(SendCodeForm, "chat"))
+        self.assertTrue(hasattr(SendCodeForm, "code"))
+        self.assertTrue(hasattr(SendCodeForm, "parent"))
+        self.assertTrue(hasattr(SendCodeForm, "message"))
+
+    def test_type_get_tree_form(self):
+        self.assertIs(SendCodeForm.chat.field_class, IntegerField)
+        self.assertIs(SendCodeForm.code.field_class, StringField)
+        self.assertIs(SendCodeForm.parent.field_class, IntegerField)
+        self.assertIs(SendCodeForm.message.field_class, StringField)
+
+
+class TestGetCodeForm(BaseTestModel):
+
+    def test_available_get_tree_form(self):
+        self.assertTrue(hasattr(GetCodeForm, "index"))
+
+    def test_type_get_tree_form(self):
+        self.assertIs(GetCodeForm.index.field_class, IntegerField)

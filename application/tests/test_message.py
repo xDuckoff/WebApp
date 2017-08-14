@@ -41,16 +41,6 @@ class TestMessageModel(BaseTestModel):
         self.assertEqual(message.chat_link, self.chat_id)
         self.assertEqual(message.type, MESSAGE_TYPE)
 
-    def test_send_message_with_empty_content(self):
-        empty_content = ""
-        with self.assertRaises(OverflowError):
-            Message.send(self.chat_id, empty_content, MESSAGE_TYPE)
-
-    def test_send_message_with_long_content(self):
-        long_content = "*" * 1001
-        with self.assertRaises(OverflowError):
-            Message.send(self.chat_id, long_content, MESSAGE_TYPE)
-
     def test_socket_emit_when_message_sending(self):
         with patch.object(socketio, 'emit') as socketio_emit:
             Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)

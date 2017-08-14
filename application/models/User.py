@@ -32,9 +32,7 @@ class User(object):
     @staticmethod
     def check_csrf():
         """Проверка на валидность csrf-ключа"""
-        pass
-        # FIXME
-        # csrf.validate_csrf(request.headers['X-Csrf-Token'])
+        csrf.validate_csrf(request.headers['X-Csrf-Token'])
 
     @staticmethod
     def set_access_key(chat_id, access_key):

@@ -37,8 +37,9 @@ jQuery(function($) {
         getExistMessages: function() {
             $.ajax({
                 url: "/get_messages",
+                type: "GET",
                 data: {
-                    chat_id: CHAT_ID
+                    chat: CHAT_ID
                 },
                 dataType: "json",
                 success: function(messages) {
@@ -93,8 +94,9 @@ jQuery(function($) {
         checkNewMessages: function() {
             $.ajax({
                 url: "/get_messages",
+                type: "GET",
                 data: {
-                    chat_id: CHAT_ID,
+                    chat: CHAT_ID,
                     last_message_id: this.lastMessageId
                 },
                 dataType: "json",
@@ -152,6 +154,7 @@ jQuery(function($) {
             if ( this.isValid() ) {
                 $.ajax({
                     url: "/send_message",
+                    type: "POST",
                     data: {
                         "chat": CHAT_ID,
                         "message": this.content.val()

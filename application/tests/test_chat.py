@@ -16,10 +16,14 @@ class TestChatModel(BaseTestModel):
     def test_available_chat(self):
         self.assertTrue(hasattr(Chat, "id"))
         self.assertTrue(hasattr(Chat, "name"))
+        self.assertTrue(hasattr(Chat, "create_time"))
+        self.assertTrue(hasattr(Chat, "remove_time"))
 
     def test_type_model_chat(self):
         self.assertIsInstance(Chat.id.type, db.Integer)
         self.assertIsInstance(Chat.name.type, db.String)
+        self.assertIsInstance(Chat.create_time.type, db.DateTime)
+        self.assertIsInstance(Chat.remove_time.type, db.DateTime)
 
     def test_create_chat(self):
         chat = Chat.get(self.chat_id)
@@ -35,10 +39,6 @@ class TestChatModel(BaseTestModel):
         self.assertEqual(len(got_messages), 3)
         self.assertEqual(got_messages[1].get('id'), second_message.id)
         self.assertEqual(got_messages[2].get('id'), third_message.id)
-
-    def test_was_chat_created(self):
-        self.assertTrue(Chat.was_created(str(self.chat_id)))
-        self.assertFalse(Chat.was_created(str(self.chat_id + 1)))
 
     def test_chat_has_message(self):
         chat = Chat.get(self.chat_id)

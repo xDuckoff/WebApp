@@ -2,20 +2,20 @@
 
 """FlaskWTF и Session Формы"""
 
-from wtforms import StringField, FileField
-from wtforms.validators import DataRequired
+from wtforms import StringField, FileField, IntegerField, validators, ValidationError
 from flask_wtf import FlaskForm
 from application import app
+from application.models import Chat
 
 
 class LoginForm(FlaskForm):
     """Данный класс содержит имя пользователя для сессии"""
-    login = StringField('login', validators=[DataRequired()])
+    login = StringField('login', validators=[validators.DataRequired()])
 
 
 class CreateChatForm(FlaskForm):
     """Создаёт чат"""
-    name = StringField('name', validators=[DataRequired()])
+    name = StringField('name', validators=[validators.DataRequired()])
     code_type = StringField('codetype')
     file = FileField('file')
     code = StringField('code', default='')
@@ -32,9 +32,52 @@ class FindChatForm(FlaskForm):
     chat_title = StringField('chat_title', default='')
 
 
+def chat_required(form, field):
+    """Проверка чата на существование"""
+    if not Chat.get(field.data):
+        raise ValidationError
+
+
+class ChatForm(FlaskForm):
+    """Базовый класс для форм в чате"""
+    chat = IntegerField('chat', validators=[validators.DataRequired(), chat_required])
+
+
 class AuthChatForm(FlaskForm):
     """Форма авторизации в чате"""
     password = StringField('password')
+
+
+class SendMessageForm(ChatForm):
+    """Форма отправки сообщений"""
+    message = StringField('message', validators=[
+        validators.DataRequired(), validators.Length(min=1, max=10000)
+    ])
+
+
+class GetTreeForm(ChatForm):
+    """Форма получения дерева коммитов"""
+    pass
+
+
+class GetMessagesForm(ChatForm):
+    """Форма получения сообщений"""
+    last_message_id = IntegerField('last_message_id', default=0)
+
+
+class SendCodeForm(ChatForm):
+    """Форма отправки кода"""
+    code = StringField('code', validators=[
+        validators.DataRequired(), validators.Length(min=1, max=10000)
+    ])
+    parent = IntegerField('parent', default=None)
+    message = StringField('message')
+
+
+class GetCodeForm(FlaskForm):
+    """Форма получения кода"""
+    index = IntegerField('index', validators=[validators.DataRequired()])
+
 
 class FeedbackForm(FlaskForm):
     """данные для Feedback"""

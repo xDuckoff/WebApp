@@ -33,8 +33,10 @@ class BaseTestModel(unittest.TestCase):
         app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['TEST_DATABASE_URL']
         db.create_all()
         app.config['SOCKET_MODE'] = 'True'
+        app.config['WTF_CSRF_ENABLED'] = False
         self.real = User
-        self.real.check_csrf = Mock()
+        self.real.get_access_key = Mock()
+        self.real.get_access_key.return_value = CHAT_ACCESS_KEY
         self.real.get_login = Mock()
         self.real.get_login.return_value = USERNAME
 

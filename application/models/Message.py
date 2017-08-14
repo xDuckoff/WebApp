@@ -13,6 +13,8 @@ class Message(db.Model):
     :param content:  исходное содержание сообщения
     :param chat_link:  ссылка на чат, которому принадлежит сообщение
     :param message_type: тип сообщения: системное или пользовательское
+    :param create_time: время создания сообщения
+    :param remove_time: время удаления сообщения, если значение не равно null
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text)
@@ -20,12 +22,15 @@ class Message(db.Model):
     type = db.Column(db.String(3))
     chat_link = db.Column(db.Integer, db.ForeignKey('chat.id'))
     chat = db.relationship('Chat', backref=db.backref('messages', lazy='dynamic'))
+    create_time = db.Column(db.DateTime, nullable=False, default=db.func.now())
+    remove_time = db.Column(db.DateTime)
 
     def __init__(self, content, chat_link, message_type):
         self.content = MarkdownMixin.decode(content)
         self.author = User.get_login()
         self.chat_link = chat_link
         self.type = message_type
+
 
     @staticmethod
     def send(chat_id, text, message_type):
@@ -36,8 +41,6 @@ class Message(db.Model):
         :param message_type: Тип сообщения
         :return: Объект созданного сообщения
         """
-        if len(text) > 1000 or not text:
-            raise OverflowError
         message = Message(text, chat_id, message_type)
         db.session.add(message)
         db.session.commit()

@@ -14,8 +14,8 @@ class Feedback(db.Model):
     """
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Text)
-    email = db.Column(db.Text)
+    name = db.Column(db.String(256))
+    email = db.Column(db.String(256))
     text = db.Column(db.Text)
 
     def __init__(self, name, email, text):

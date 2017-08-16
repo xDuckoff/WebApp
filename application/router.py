@@ -2,28 +2,12 @@
 
 """Основные веб-страницы проекта"""
 
-from application import app, recaptcha
+from application import app
 from application.forms import CreateChatForm, FeedbackForm, FindChatForm, LoginForm
-from application.models import Chat, User, Feedback, flask_recaptcha
+from application.models import Chat, User, Feedback
 from config import RECAPTCHA_SITE_KEY
 from flask import render_template, redirect
 
-@app.route("/send_feedbacks", methods=["POST"])
-def send_feedbacks():
-    """Функция проверки капчи
-
-    :return: Переход на страницу обратной связи вслучае не заполнения капчи \
-    и переход на главную страницу при правильном заполнении
-    """
-    feedback_form = FeedbackForm()
-    name = feedback_form.name.data
-    email = feedback_form.email.data
-    text = feedback_form.text.data
-
-    if recaptcha.verify():
-        Feedback.send(name, email, text)
-        return redirect('/')
-    return redirect('/feedback')
 
 @app.route('/feedback')
 def feedback_page():
@@ -34,6 +18,12 @@ def feedback_page():
     feedback_form = FeedbackForm()
     chat_create_form = CreateChatForm()
     login_form = LoginForm()
+    if feedback_form.validate_on_submit():
+        name = feedback_form.name.data
+        email = feedback_form.email.data
+        text = feedback_form.text.data
+        Feedback.send(name, email, text)
+        return redirect('/')
     return render_template('feedback.html',
                            feedback_form=feedback_form,
                            RECAPTCHA_SITE_KEY=RECAPTCHA_SITE_KEY,
@@ -43,6 +33,7 @@ def feedback_page():
                            allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
                            allowed_languages=app.config["ALLOWED_LANGUAGES"]
                           )
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

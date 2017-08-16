@@ -81,6 +81,15 @@ class GetCodeForm(FlaskForm):
 
 class FeedbackForm(FlaskForm):
     """данные для Feedback"""
-    name = StringField('name')
-    email = StringField('email')
-    text = StringField('text')
+    name = StringField('name', validators=[
+        validators.DataRequired(), validators.Length(min=1, max=10000)
+    ])
+    email = StringField('email', validators=[
+        validators.DataRequired(),
+        validators.Email(),
+        validators.Length(max=1000)
+    ])
+    text = StringField('text', validators=[
+        validators.DataRequired(),
+        validators.Length(min=1, max=10000)
+    ])

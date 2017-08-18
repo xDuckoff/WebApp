@@ -9,7 +9,7 @@ from config import RECAPTCHA_SITE_KEY
 from flask import render_template, redirect
 
 
-@app.route('/feedback')
+@app.route('/feedback', methods=['GET', 'POST'])
 def feedback_page():
     """Функция переходан на страницу обратной связи
 

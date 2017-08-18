@@ -32,6 +32,7 @@ class Feedback(db.Model):
         :param text: вопрос пользователя
         :return: Объект созданных данных
         """
-        feedback_object = Feedback(name, email, text)
-        db.session.add(feedback_object)
+        feedback = Feedback(name, email, text)
+        db.session.add(feedback)
         db.session.commit()
+        return feedback

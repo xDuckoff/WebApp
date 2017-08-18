@@ -3,7 +3,7 @@
 """FlaskWTF и Session Формы"""
 
 from wtforms import StringField, FileField, IntegerField, validators, ValidationError
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from application import app
 from application.models import Chat
 
@@ -93,3 +93,4 @@ class FeedbackForm(FlaskForm):
         validators.DataRequired(),
         validators.Length(min=1, max=10000)
     ])
+    recaptcha = RecaptchaField()

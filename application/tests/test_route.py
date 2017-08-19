@@ -7,7 +7,7 @@ from application import app
 from application.models import Chat, Message, Code
 
 MAIN_PAGE_URL = "/"
-LOGOUT_PAGE_URL = "/logout"
+FEEDBACK_PAGE_URL = "/"
 TREE_PAGE_URL = '/tree?chat={chat_id}'
 CHAT_PAGE_URL = "/chat/{chat_id}"
 CHAT_GET_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'
@@ -25,10 +25,17 @@ class BaseTestPages(BaseTestModel):
         self.app = app.test_client()
 
 
-class TestMainPages(BaseTestPages):
+class TestMainPage(BaseTestPages):
 
     def test_index_page(self):
         response = self.app.get(MAIN_PAGE_URL)
+        self.assertEqual(response.status_code, 200)
+
+
+class TestFeedbackPage(BaseTestPages):
+
+    def test_feedback_page(self):
+        response = self.app.get(FEEDBACK_PAGE_URL)
         self.assertEqual(response.status_code, 200)
 
 

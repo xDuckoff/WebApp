@@ -4,7 +4,9 @@
 
 from base_test_model import *
 from application.forms import LoginForm, CreateChatForm, FindChatForm, AuthChatForm, ChatForm, \
-    SendMessageForm, GetTreeForm, GetMessagesForm, SendCodeForm, GetCodeForm
+    SendMessageForm, GetTreeForm, GetMessagesForm, SendCodeForm, GetCodeForm, \
+    FeedbackForm
+from flask_wtf import RecaptchaField
 from wtforms import StringField, FileField, IntegerField
 
 
@@ -112,3 +114,18 @@ class TestGetCodeForm(BaseTestModel):
 
     def test_type_get_tree_form(self):
         self.assertIs(GetCodeForm.index.field_class, IntegerField)
+
+
+class TestFeedbackForm(BaseTestModel):
+
+    def test_available_feedback_form(self):
+        self.assertTrue(hasattr(FeedbackForm, "name"))
+        self.assertTrue(hasattr(FeedbackForm, "email"))
+        self.assertTrue(hasattr(FeedbackForm, "text"))
+        self.assertTrue(hasattr(FeedbackForm, "recaptcha"))
+
+    def test_type_feedback_form(self):
+        self.assertIs(FeedbackForm.name.field_class, StringField)
+        self.assertIs(FeedbackForm.email.field_class, StringField)
+        self.assertIs(FeedbackForm.text.field_class, StringField)
+        self.assertIs(FeedbackForm.recaptcha.field_class, RecaptchaField)

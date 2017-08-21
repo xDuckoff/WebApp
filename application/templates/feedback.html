@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block includes %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container main-container">
+    <div class="row">
+        <form class="col-md-offset-2 col-md-8" method="POST" action="/feedback">
+            <h1>Обратная связь</h1>
+            {{ feedback_form.hidden_tag() }}
+            {% with messages = get_flashed_messages(category_filter=["feedback"]) %}
+            {% if messages %}
+            <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {%- for msg in messages %}
+                <p>{{ msg }}</p>
+                {% endfor -%}
+            </div>
+            {% endif %}
+            {% endwith %}
+            <div class="row">
+                <div class="form-group  col-md-6 {{ 'has-error' if feedback_form.errors.name}}">
+                    <label class="control-label">
+                        Имя <span class="glyphicon require-icon"></span>
+                    </label>
+                    <input type="text" class="form-control" name="name"
+                           placeholder="Иван Иванов"
+                           value="{{feedback_form.data.name|d('', true)}}"
+                           required/>
+                </div>
+                <div class="form-group col-md-6 {{ 'has-error' if feedback_form.errors.email}}">
+                    <label class="control-label">
+                        E-mail <span class="glyphicon require-icon"></span>
+                    </label>
+                    <input type="email"
+                           class="form-control"
+                           name="email"
+                           placeholder="ivan.ivanov@mail.ru"
+                           value="{{feedback_form.data.email|d('', true)}}"
+                           required>
+                </div>
+            </div>
+            <div class="form-group {{ 'has-error' if feedback_form.errors.text}}">
+                <label class="control-label">
+                    Сообщение <span class="glyphicon require-icon"></span>
+                </label>
+                <textarea class="form-control" name="text" rows=4 required>
+                    {{- feedback_form.data.text|d('', true) -}}
+                </textarea>
+            </div>
+            <div class="form-group">
+                <span class="glyphicon require-icon"></span> Поля со звездочкой обязательны для заполнения!!!
+            </div>
+            <div class="form-group">
+                {% if feedback_form.errors.recaptcha %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    Не пройдена проверка, что вы не робот
+                </div>
+                {% endif %}
+                {{ feedback_form.recaptcha }}
+            </div>
+            <div class="form-group">
+                <button type="submit"
+                        class="btn btn-primary col-md-2 col-md-offset-10">
+                    Отправить
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

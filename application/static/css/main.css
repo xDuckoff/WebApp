@@ -119,3 +119,13 @@ body{
 p{
     margin: 0;
 }
+
+.require-icon{
+    top: -.5em;
+    font-size: .6em;
+    color: #c00;
+}
+.require-icon:after{
+    content: '*';
+}
+

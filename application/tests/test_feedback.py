@@ -13,10 +13,6 @@ FEEDBACK_TEXT = "Lorem Ipsum"
 
 class TestFeedbackModel(BaseTestModel):
 
-    def setUp(self):
-        BaseTestModel.setUp(self)
-        # self.feedback_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
-
     def test_available_code(self):
         feedback_params = {
             "name": FEEDBACK_NAME,

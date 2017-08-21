@@ -7,7 +7,7 @@ from application import app
 from application.models import Chat, Message, Code
 
 MAIN_PAGE_URL = "/"
-FEEDBACK_PAGE_URL = "/"
+FEEDBACK_PAGE_URL = "/feedback"
 TREE_PAGE_URL = '/tree?chat={chat_id}'
 CHAT_PAGE_URL = "/chat/{chat_id}"
 CHAT_GET_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'

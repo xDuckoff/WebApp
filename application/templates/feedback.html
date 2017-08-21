@@ -41,14 +41,15 @@
                            class="form-control"
                            name="email"
                            placeholder="ivan.ivanov@mail.ru"
-                           value="{{feedback_form.data.email|d('', true)}}">
+                           value="{{feedback_form.data.email|d('', true)}}"
+                           required>
                 </div>
             </div>
             <div class="form-group {{ 'has-error' if feedback_form.errors.text}}">
                 <label class="control-label">
                     Сообщение <span class="glyphicon require-icon"></span>
                 </label>
-                <textarea class="form-control" name="text" rows=4>
+                <textarea class="form-control" name="text" rows=4 required>
                     {{- feedback_form.data.text|d('', true) -}}
                 </textarea>
             </div>

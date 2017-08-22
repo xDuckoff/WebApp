@@ -12,7 +12,7 @@ class TestMessageModel(BaseTestModel):
 
     def setUp(self):
         BaseTestModel.setUp(self)
-        self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        self.chat_id = Chat.create(CHAT_NAME)
         self.message = Message.send(self.chat_id, MESSAGE, MESSAGE_TYPE)
 
     def test_available_message(self):

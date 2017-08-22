@@ -42,7 +42,7 @@ class TestFeedbackPage(BaseTestPages):
 class TestChatPage(BaseTestPages):
 
     def test_access_chat_page(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        chat_id = Chat.create(CHAT_NAME)
         chat_page_url = CHAT_PAGE_URL.format(chat_id=chat_id)
         response = self.app.get(chat_page_url)
         self.assertEqual(response.status_code, 200)
@@ -56,19 +56,19 @@ class TestChatPage(BaseTestPages):
 class TestMessagePage(BaseTestPages):
 
     def test_get_messages(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        chat_id = Chat.create(CHAT_NAME)
         response = self.app.get(MESSAGES_GET_PAGE_URL.format(chat_id=chat_id))
         self.assertEqual(response.status_code, 200)
 
     def test_get_last_messages(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        chat_id = Chat.create(CHAT_NAME)
         last_message = Message.send(chat_id, MESSAGE, MESSAGE_TYPE)
         url = MESSAGES_GET_LAST_PAGE_URL.format(chat_id=chat_id, last_message_id=last_message.id)
         response = self.app.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_send_message(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        chat_id = Chat.create(CHAT_NAME)
         params = {
             "chat": chat_id,
             "message": MESSAGE
@@ -77,7 +77,7 @@ class TestMessagePage(BaseTestPages):
         self.assertEqual(response.status_code, 200)
 
     def test_get_tree(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        chat_id = Chat.create(CHAT_NAME)
         response = self.app.get(TREE_PAGE_URL.format(chat_id=chat_id))
         self.assertEqual(response.status_code, 200)
 
@@ -85,7 +85,7 @@ class TestMessagePage(BaseTestPages):
 class TestCodePage(BaseTestPages):
 
     def test_send_code(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        chat_id = Chat.create(CHAT_NAME)
         params = {
             "chat": chat_id,
             "code": CODE,
@@ -96,7 +96,7 @@ class TestCodePage(BaseTestPages):
         self.assertEqual(response.status_code, 200)
 
     def test_get_code(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        chat_id = Chat.create(CHAT_NAME)
         code_id = Code.send(chat_id, CODE, 1, COMMIT_MESSAGE)
         response = self.app.get(CODE_GET_PAGE_URL.format(code_id=code_id))
         self.assertEqual(response.status_code, 200)
@@ -105,7 +105,7 @@ class TestCodePage(BaseTestPages):
 class TestHandlers(BaseTestPages):
 
     def test_access_required_handler(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, CHAT_ACCESS_KEY)
+        chat_id = Chat.create(CHAT_NAME, CHAT_ACCESS_KEY)
         self.real.get_access_key.return_value = CHAT_INCORRECT_ACCESS_KEY
         response = self.app.get(MESSAGES_GET_PAGE_URL.format(chat_id=chat_id))
         self.assertEqual(response.status_code, 403)
@@ -114,7 +114,7 @@ class TestHandlers(BaseTestPages):
         self.assertEqual(response.status_code, 200)
 
     def test_form_required_handler(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        chat_id = Chat.create(CHAT_NAME)
         response = self.app.get(MESSAGES_GET_PAGE_URL.format(chat_id=chat_id))
         self.assertEqual(response.status_code, 200)
         response = self.app.get(MESSAGES_GET_PAGE_URL.format(chat_id=chat_id + 1))

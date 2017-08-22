@@ -95,7 +95,7 @@
          tabindex="-1" role="dialog"
          aria-hidden="true">
         <div class="modal-dialog" >
-            <form action="/"
+            <form action="/create_chat"
                   method="POST"
                   class="main-content"
                   enctype="multipart/form-data">
@@ -120,36 +120,12 @@
                                        name="name"
                                        required="required" />
                             </div>
-                            <div class = "form-group">
-                                <select class="form-control" name="chat_type">
-                                    <option value="public">Публичный</option>
-                                    <option value="private">Приватный</option>
-                                </select>
-                            </div>
                             <div class="form-group"
-                                 id="pass_div"
-                                 style="display:none;">
+                                 id="pass_div">
                                 <input type="password"
                                        class="form-control"
-                                       placeholder="Пароль"
+                                       placeholder="Пароль (по желанию)"
                                        name="access_key" />
-                            </div>
-                            <div class="form-group">
-                                <select class="form-control"
-                                        id="Compile"
-                                        name="code_type"
-                                        required="required">
-                                    <option value="" disabled selected>Язык программирования</option>
-                                    {%- for lang in allowed_languages -%}
-                                    <option value="{{ lang.type }}">{{ lang.name }}</option>
-                                    {%- endfor -%}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <textarea name="code" id="codeField"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <input type="file" name="file" accept="{{ allowed_ex }}">
                             </div>
                         </div>
                     </div>
@@ -166,46 +142,6 @@
             headers: {
                 'X-Csrf-Token': "{{ csrf_token() }}"
             }
-        });
-        var editor,
-            openModalCount = false;
-        function init_codemirror() {
-            var codeField = $('#codeField');
-            codeField.empty();
-            editor = CodeMirror.fromTextArea(codeField.get(0), {
-                mode: {
-                    name: "text/x-c++src",
-                    version: 2,
-                    singleLineStringErrors: false
-                },
-                lineNumbers: true,
-                indentUnit: 4,
-                matchBrackets: true
-            });
-        }
-        jQuery(function($) {
-            $("[data-toggle='tooltip']").tooltip();
-
-            $('#chat-create').on('shown.bs.modal', function () {
-                if(!openModalCount){
-                    init_codemirror();
-                    openModalCount = true;
-                }
-            });
-            var div = $('#pass_div');
-            if ( $("select[name='chat_type']").val() == 'public' ) {
-                div.hide();
-            } else if ( $("select[name='chat_type']").val() == 'private' ) {
-                div.show();
-            }
-            $("select[name='chat_type']").change(function(){
-                var div = $('#pass_div');
-                if ( $(this).val() == 'public' ) {
-                    div.hide();
-                } else if ( $(this).val() == 'private' ) {
-                    div.show();
-                }
-            })
         });
     </script>
     {% block scripts %}{% endblock %}

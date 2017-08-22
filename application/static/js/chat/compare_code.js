@@ -6,25 +6,8 @@ jQuery(function ($) {
 
         init: function() {
             this.field = this.element.find('.code-compare__field');
-            this._loadStartCode();
             this._bindEvents();
         },
-
-        _loadStartCode: function() {
-            $.ajax({
-                url: "/get_code",
-                type: 'GET',
-                data: {
-                    chat: CHAT_ID,
-                    index: CODE_START_COMMIT
-                },
-                dataType: "json",
-                success: function(data){
-                    CodeCompare.startCode = data.code;
-                }
-            });
-        },
-
         _setCodeMirrorToField: function() {
             CodeMirror.MergeView(this.field[0], {
                 value: CodeEditor.getCode(),

@@ -11,7 +11,7 @@ class TestCodeModel(BaseTestModel):
 
     def setUp(self):
         BaseTestModel.setUp(self)
-        self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        self.chat_id = Chat.create(CHAT_NAME)
 
     def test_available_code(self):
         code_params = {

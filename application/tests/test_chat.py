@@ -11,7 +11,7 @@ class TestChatModel(BaseTestModel):
 
     def setUp(self):
         BaseTestModel.setUp(self)
-        self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        self.chat_id = Chat.create(CHAT_NAME)
 
     def test_available_chat(self):
         self.assertTrue(hasattr(Chat, "id"))
@@ -83,7 +83,7 @@ class TestChatModel(BaseTestModel):
         self.assertEqual(got_last_messages[0].get('id'), new_message.id)
 
     def test_is_access_key_valid(self):
-        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, CHAT_ACCESS_KEY)
+        chat_id = Chat.create(CHAT_NAME, CHAT_ACCESS_KEY)
         chat = Chat.get(chat_id)
         self.assertTrue(chat.is_access_key_valid(CHAT_ACCESS_KEY))
         self.assertFalse(chat.is_access_key_valid(CHAT_INCORRECT_ACCESS_KEY))

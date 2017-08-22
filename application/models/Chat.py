@@ -22,26 +22,22 @@ class Chat(db.Model):
     create_time = db.Column(db.DateTime, nullable=False, default=db.func.now())
     remove_time = db.Column(db.DateTime)
 
-    def __init__(self, name, code_type, access_key):
+    def __init__(self, name, access_key):
         self.name = MarkdownMixin.decode(name)
-        self.code_type = code_type
         self.access_key = access_key
 
     @staticmethod
-    def create(chat_name, code, code_type, access_key=''):
+    def create(chat_name, access_key=''):
         """Создаёт чат
 
         :param chat_name: Имя чата
-        :param code: Код чата
-        :param code_type: Язык программирования
         :param access_key: Ключ доступа
         :return: Номер чата
         """
-        chat_to_create = Chat(chat_name, code_type, access_key)
+        chat_to_create = Chat(chat_name, access_key)
         db.session.add(chat_to_create)
         db.session.commit()
         chat_id = chat_to_create.id
-        Code.send(chat_id, code, None, u'Начальная версия')
         return chat_id
 
     @staticmethod
@@ -60,8 +56,7 @@ class Chat(db.Model):
         """
         return {
             'name': self.name,
-            'code_type': self.code_type,
-            'start_code': Code.get_root_in_chat(self.id)
+            'code_type': self.code_type
         }
 
     @staticmethod

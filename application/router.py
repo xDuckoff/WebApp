@@ -6,6 +6,7 @@ from flask import render_template, redirect, flash
 from application import app
 from application.forms import CreateChatForm, FeedbackForm, FindChatForm, LoginForm
 from application.models import Chat, User, Feedback
+from application.handlers import form_required
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -20,15 +21,6 @@ def index():
     login_form = LoginForm()
     if login_form.validate_on_submit():
         User.login(login_form.login.data)
-    if chat_create_form.validate_on_submit():
-        name = chat_create_form.name.data
-        code_type = chat_create_form.code_type.data
-        code = chat_create_form.code.data
-        access_key = chat_create_form.access_key.data
-        if chat_create_form.is_file_valid():
-            code = chat_create_form.file.data.read()
-        chat_id = Chat.create(name, code, code_type, access_key)
-        return redirect('/chat/' + str(chat_id))
     return render_template('index.html',
                            chats=Chat.find(find_chat_form.chat_title.data),
                            login_form=login_form,
@@ -38,6 +30,21 @@ def index():
                            allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
                            allowed_languages=app.config["ALLOWED_LANGUAGES"]
                           )
+
+
+@app.route('/create_chat', methods=['POST'])
+@form_required(CreateChatForm)
+def create_chat():
+    """Создание чата
+
+    :return: Перенаправление на страницу чата
+    """
+    chat_create_form = CreateChatForm()
+    name = chat_create_form.name.data
+    access_key = chat_create_form.access_key.data
+    chat_id = Chat.create(name, access_key)
+    return redirect('/chat/' + str(chat_id))
+
 
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback_page():

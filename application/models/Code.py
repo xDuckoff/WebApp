@@ -90,8 +90,10 @@ class Code(db.Model):
 
         :return: Сгенерированное дерево коммитов
         """
-        tree = Code.get_root_in_chat(chat_id).get_tree_node()
-        return tree
+        root = Code.get_root_in_chat(chat_id)
+        if not root:
+            return ''
+        return root.get_tree_node()
 
     def get_tree_node(self):
         """Получение вершины в дереве коммитов, форматированной для TreantJS

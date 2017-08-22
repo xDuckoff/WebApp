@@ -1,3 +1,35 @@
+.chat-title{
+    margin: 30px 0;
+}
+.chat-title__viewer * {
+    display: inline-block;
+    vertical-align: middle;
+}
+.chat-title__viewer{
+    margin: 0;
+}
+.chat-title__edit{
+    font-size: 14px;
+    cursor: pointer;
+    visibility: hidden;
+}
+.chat-title__viewer:hover .chat-title__edit{
+    visibility: visible;
+}
+.chat-title__editor{
+    display: none;
+    position: relative;
+    width: 60%;
+    margin: 0 auto;
+    left: 80px;
+}
+.chat-title__input{
+    font-size: 26px;
+}
+.chat-title__save{
+    width: 160px;
+}
+
 .chat-panel{
     position: relative;
     padding: 0;

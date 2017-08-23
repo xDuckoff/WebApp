@@ -4,7 +4,7 @@
 
 from base_test_model import *
 from application.forms import LoginForm, CreateChatForm, FindChatForm, AuthChatForm, ChatForm, \
-    SendMessageForm, GetTreeForm, GetMessagesForm, SendCodeForm, GetCodeForm, \
+    ChatNameForm, SendMessageForm, GetTreeForm, GetMessagesForm, SendCodeForm, GetCodeForm, \
     FeedbackForm
 from flask_wtf import RecaptchaField
 from wtforms import StringField, FileField, IntegerField
@@ -59,6 +59,17 @@ class TestChatForm(BaseTestModel):
 
     def test_type_chat_form(self):
         self.assertIs(ChatForm.chat.field_class, IntegerField)
+
+
+class TestChatNameForm(BaseTestModel):
+
+    def test_available_send_message_form(self):
+        self.assertTrue(hasattr(ChatNameForm, "chat"))
+        self.assertTrue(hasattr(ChatNameForm, "name"))
+
+    def test_type_send_message_form(self):
+        self.assertIs(ChatNameForm.chat.field_class, IntegerField)
+        self.assertIs(ChatNameForm.name.field_class, StringField)
 
 
 class TestSendMessageForm(BaseTestModel):

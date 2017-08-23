@@ -53,24 +53,30 @@ jQuery(function($) {
         changeTitle: function() {
             var me = this,
                 title = this.input.val();
-            me.setLoading(true);
-            $.ajax({
-                url: "/set_chat_name",
-                type: "POST",
-                data: {
-                    chat: CHAT_ID,
-                    name: title
-                },
-                dataType: "json",
-                success: function(response) {
-                    if (response.success) {
-                        me.setName(response.data);
+            if (title) {
+                me.setLoading(true);
+                $.ajax({
+                    url: "/set_chat_name",
+                    type: "POST",
+                    data: {
+                        chat: CHAT_ID,
+                        name: title
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            me.setName(response.data);
+                        } else {
+                            me.hideEditor();
+                        }
+                    },
+                    complete: function () {
+                        me.setLoading(false);
                     }
-                },
-                complete: function() {
-                    me.setLoading(false);
-                }
-            });
+                });
+            } else {
+                me.hideEditor();
+            }
         },
 
         setName: function(names) {

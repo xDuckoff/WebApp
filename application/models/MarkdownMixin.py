@@ -40,5 +40,10 @@ class MarkdownMixin(object):
 
     @staticmethod
     def plain(text):
+        """Удаление из текста HTML тегов
+
+        :param text: исходный текст
+        :return: текст без html-тегов
+        """
         template = Template('{{ text | striptags }}')
         return template.render(text=text)

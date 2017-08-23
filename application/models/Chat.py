@@ -118,10 +118,12 @@ class Chat(db.Model):
         """Установка названия чата
 
         :param name: новое название чата
-        :return: объект в разных написаниях названия чата: оригинальное, без тегов, экрнированные теги
+        :return: объект в разных написаниях названия чата: \
+            оригинальное, без тегов, экрнированные теги
         """
         self.name = MarkdownMixin.decode(name)
         db.session.commit()
+        Message.send_about_change_chat_name(self.id, MarkdownMixin.plain(self.name))
         return {
             "original": self.name,
             "plain": MarkdownMixin.plain(self.name),

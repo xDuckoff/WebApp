@@ -5,6 +5,7 @@
 
 import cgi
 from markdown import markdown
+from jinja2 import Template
 
 
 class MarkdownMixin(object):
@@ -36,3 +37,8 @@ class MarkdownMixin(object):
         text = cls.escape_html(text)
         text = markdown(text)
         return text
+
+    @staticmethod
+    def plain(text):
+        template = Template('{{ text | striptags }}')
+        return template.render(text=text)

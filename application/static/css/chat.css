@@ -1,12 +1,24 @@
 .chat-title{
     margin: 30px 0;
+    width: 60%;
 }
-.chat-title__viewer * {
-    display: inline-block;
-    vertical-align: middle;
+.chat-title_loading{
+    opacity: .8;
 }
 .chat-title__viewer{
     margin: 0;
+    line-height: 46px;
+}
+.chat-title__title{
+    font-size: 26px;
+    max-width: 80%;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 46px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .chat-title__edit{
     font-size: 14px;
@@ -18,17 +30,15 @@
 }
 .chat-title__editor{
     display: none;
-    position: relative;
-    width: 60%;
-    margin: 0 auto;
-    left: 80px;
+    margin-left: -17px;
+    margin-top: 2px;
 }
 .chat-title__input{
     font-size: 26px;
 }
-.chat-title__save{
-    width: 160px;
-}
+/*.chat-title__save{*/
+    /*width: 160px;*/
+/*}*/
 
 .chat-panel{
     position: relative;

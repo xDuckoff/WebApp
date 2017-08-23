@@ -113,3 +113,17 @@ class Chat(db.Model):
         :return: Является ли пароль валидным
         """
         return not self.access_key or self.access_key == password
+
+    def set_name(self, name):
+        """Установка названия чата
+
+        :param name: новое название чата
+        :return: объект в разных написаниях названия чата: оригинальное, без тегов, экрнированные теги
+        """
+        self.name = MarkdownMixin.decode(name)
+        db.session.commit()
+        return {
+            "original": self.name,
+            "plain": MarkdownMixin.plain(self.name),
+            "escaped": MarkdownMixin.escape_html(self.name)
+        }

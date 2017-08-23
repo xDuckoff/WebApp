@@ -34,12 +34,13 @@
 {% endif %}
 <div class="container-fluid fill-height fill-cover">
     <div class="chat-title">
-        <h2 class="chat-title__viewer text-center">
-            {{ chat_info["name"] | safe }} <span class="chat-title__edit glyphicon glyphicon-pencil"></span>
-        </h2>
+        <div class="chat-title__viewer">
+            <h2 class="chat-title__title">{{ chat_info["name"] | safe }}</h2>&nbsp;
+            <span class="chat-title__edit glyphicon glyphicon-pencil"></span>
+        </div>
         <div class="chat-title__editor input-group">
             <input type="text"
-                   class="chat-title__input form-control input-lg text-center"
+                   class="chat-title__input form-control input-lg"
                    value="{{ chat_info["name"] | striptags }}" />
             <span class="input-group-btn">
                 <input class="chat-title__save btn btn-primary btn-lg" type="button" value="Сохранить">

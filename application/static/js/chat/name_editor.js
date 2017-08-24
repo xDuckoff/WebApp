@@ -1,21 +1,21 @@
 jQuery(function($) {
-    var TitleEditor = {
-        block: $('.chat-title'),
+    var NameEditor = {
+        block: $('.chat-name'),
 
         init: function() {
-            this.viewer = this.block.find('.chat-title__viewer');
-            this.title = this.block.find('.chat-title__title');
-            this.editor = this.block.find('.chat-title__editor');
-            this.input = this.block.find('.chat-title__input');
-            this.save = this.block.find('.chat-title__save');
-            this._prepareTitle();
+            this.viewer = this.block.find('.chat-name__viewer');
+            this.title = this.block.find('.chat-name__title');
+            this.editor = this.block.find('.chat-name__editor');
+            this.input = this.block.find('.chat-name__input');
+            this.save = this.block.find('.chat-name__save');
+            this._prepareName();
             this._bindEvents();
         },
 
-        _prepareTitle: function(){
-            var title = this.title.children('p').html();
-            if (title) {
-                this.title.html(title);
+        _prepareName: function(){
+            var name = this.title.children('p').html();
+            if (name) {
+                this.title.html(name);
             }
         },
 
@@ -31,11 +31,11 @@ jQuery(function($) {
             });
             this.input.on('keypress', function(e) {
                 if ( e.which === 13 ) {
-                    me.changeTitle();
+                    me.changeName();
                 }
             });
             me.save.on('click', function() {
-                me.changeTitle();
+                me.changeName();
             });
         },
 
@@ -50,17 +50,17 @@ jQuery(function($) {
             this.editor.hide();
         },
 
-        changeTitle: function() {
+        changeName: function() {
             var me = this,
-                title = this.input.val();
-            if (title) {
+                name = this.input.val();
+            if (name) {
                 me.setLoading(true);
                 $.ajax({
                     url: "/set_chat_name",
                     type: "POST",
                     data: {
                         chat: CHAT_ID,
-                        name: title
+                        name: name
                     },
                     dataType: "json",
                     success: function (response) {
@@ -82,7 +82,7 @@ jQuery(function($) {
         setName: function(names) {
             var me = this;
             this.title.html(names.original);
-            this._prepareTitle();
+            this._prepareName();
             me.hideEditor();
             this.input.val(names.plain);
         },
@@ -91,12 +91,12 @@ jQuery(function($) {
             this.input.prop("disabled", isStart);
             this.save.prop("disabled", isStart);
             if (isStart) {
-                this.block.addClass('chat-title_loading');
+                this.block.addClass('chat-name_loading');
             } else {
-                this.block.removeClass('chat-title_loading');
+                this.block.removeClass('chat-name_loading');
             }
         }
     };
 
-    TitleEditor.init();
+    NameEditor.init();
 });

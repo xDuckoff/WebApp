@@ -6,8 +6,15 @@ from json import dumps
 from flask import render_template, request, redirect
 from application import app, socketio
 from application import csrf
-from application.forms import CreateChatForm, AuthChatForm, LoginForm, SendMessageForm, \
-    GetTreeForm, GetMessagesForm, SendCodeForm, GetCodeForm, ChatNameForm
+from application.forms import AuthChatForm
+from application.forms import ChatNameForm
+from application.forms import CreateChatForm
+from application.forms import GetCodeForm
+from application.forms import GetMessagesForm
+from application.forms import GetTreeForm
+from application.forms import LoginForm
+from application.forms import SendCodeForm
+from application.forms import SendMessageForm
 from application.handlers import access_required, form_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room

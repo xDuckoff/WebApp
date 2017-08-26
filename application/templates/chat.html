@@ -152,7 +152,8 @@
         IS_USE_SOCKET = {{ socket_mode | tojson }},
         MAIN_ICON_URL = "{{ url_for('static', filename='img/logo-x32.png') }}",
         CHAT_ID = "{{ chat_id }}",
-        CODE_TYPE = "{{ chat_info['code_type'] }}";
+        CODE_TYPE = "{{ chat_info['code_type'] }}",
+        CODE_START_COMMIT = {{ chat_info.start_code.id }};
     {% if not have_access %}
         $('#myModal').modal()
     {% endif %}

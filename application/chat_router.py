@@ -115,20 +115,6 @@ def get_code():
     return dumps(Code.get(index))
 
 
-@app.route('/api/create_chat', methods=['GET', 'POST'])
-@csrf.exempt
-def api_create_chat():
-    """Данная функция создаёт чат по параметрам, используется для api
-
-    :return: Адрес новой страницы чата
-    """
-    form = CreateChatForm()
-    name = form.name.data
-    access_key = form.access_key.data
-    chat_id = Chat.create(name, access_key)
-    return '/chat/' + str(chat_id)
-
-
 if app.config['SOCKET_MODE'] == 'True':
 
     @access_required

@@ -25,6 +25,7 @@ class Chat(db.Model):
     def __init__(self, name, access_key):
         self.name = MarkdownMixin.decode(name)
         self.access_key = access_key
+        self.initialized = False
 
     @staticmethod
     def create(chat_name, access_key=''):
@@ -56,7 +57,8 @@ class Chat(db.Model):
         """
         return {
             'name': self.name,
-            'code_type': self.code_type
+            'code_type': self.code_type,
+            'start_code': Code.get_root_in_chat(self.id)
         }
 
     @staticmethod

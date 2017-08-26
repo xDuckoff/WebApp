@@ -1,9 +1,11 @@
 jQuery(function($) {
     window.CodeEditor = {
         field: null,
+        currentCommit: CODE_START_COMMIT,
 
         init: function() {
             this.setCodeMirrorToField();
+            this.setCode(this.currentCommit);
         },
 
         setCodeMirrorToField: function() {

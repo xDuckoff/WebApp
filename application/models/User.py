@@ -3,8 +3,7 @@
 """Функции пользователя"""
 
 import cgi
-from flask import session, request
-from flask_wtf import csrf
+from flask import session
 
 
 class User(object):

@@ -98,6 +98,16 @@ API
    .. automodule:: application.models.User
       :members:
 
+   **Feedback**
+
+   .. automodule:: application.models.Feedback
+      :members:
+
+   **MarkdownMixin**
+
+   .. automodule:: application.models.MarkdownMixin
+      :members:
+
 **application.router**
 
 .. automodule:: application.router

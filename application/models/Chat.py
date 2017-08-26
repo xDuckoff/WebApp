@@ -21,11 +21,11 @@ class Chat(db.Model):
     access_key = db.Column(db.Text)
     create_time = db.Column(db.DateTime, nullable=False, default=db.func.now())
     remove_time = db.Column(db.DateTime)
+    initialized = db.Column(db.Boolean, default=False)
 
     def __init__(self, name, access_key):
         self.name = MarkdownMixin.decode(name)
         self.access_key = access_key
-        self.initialized = False
 
     @staticmethod
     def create(chat_name, access_key=''):
@@ -40,6 +40,11 @@ class Chat(db.Model):
         db.session.commit()
         chat_id = chat_to_create.id
         return chat_id
+
+    def initialize(self, code_type):
+        self.code_type = code_type
+        self.initialized = True
+        db.session.commit()
 
     @staticmethod
     def get(uid):

@@ -52,7 +52,8 @@ def chat_page(chat_id):
                            have_access=chat.is_access_key_valid(User.get_access_key(chat_id)),
                            auth_form=auth_form,
                            allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
-                           allowed_languages=app.config["ALLOWED_LANGUAGES"]
+                           allowed_languages=app.config["ALLOWED_LANGUAGES"],
+                           initialized=chat.initialized
                           )
 
 

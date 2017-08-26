@@ -79,8 +79,17 @@
         </div>
         <div class="fill-height fill-width__content col-sm-6">
             <div class="fill-height fill-height__content">
+                {% if initialized %}
                 <textarea class="code-editor"></textarea>
+                {% else %}
+                <div class="btn btn-default btn-xl btn-block"
+                      data-toggle="modal"
+                      data-target="#start-code-sender">
+                    Загрузить код
+                </div>
+                {% endif %}
             </div>
+            {% if initialized %}
             <div class="row" style="margin-top: 10px;">
                 <div class="col-md-6">
                     <div class="btn btn-default btn-block code-button"
@@ -98,10 +107,12 @@
                 </div>
             </div>
             <div class="code-tree fill-height__content"></div>
+            {% endif %}
         </div>
     </div>
-
 </div>
+
+{% if initialized %}
 <div class="modal modal-wide fade" id="code-compare" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="main-content">
@@ -139,6 +150,29 @@
         </div>
     </div>
 </div>
+{% else %}
+<div class="modal fade" id="start-code-sender" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="main-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <p class="modal-title">Отправка кода</p>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text"
+                               class="code-sender__message form-control"
+                               placeholder="Название коммита">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="code-sender__to-send btn btn-primary">Отправить</div>
+                    <div class="btn btn-default" data-dismiss="modal">Отмена</div>
+                </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 {% endblock %}
 
@@ -151,9 +185,11 @@
     var INTERVAL = 1000,
         IS_USE_SOCKET = {{ socket_mode | tojson }},
         MAIN_ICON_URL = "{{ url_for('static', filename='img/logo-x32.png') }}",
-        CHAT_ID = "{{ chat_id }}",
-        CODE_TYPE = "{{ chat_info['code_type'] }}",
+        CHAT_ID = "{{ chat_id }}";
+    {% if initialized %}
+    var CODE_TYPE = "{{ chat_info['code_type'] }}",
         CODE_START_COMMIT = {{ chat_info.start_code.id }};
+    {% endif %}
     {% if not have_access %}
         $('#myModal').modal()
     {% endif %}
@@ -167,7 +203,9 @@
 
     <script src="{{ url_for('static', filename='js/chat/voice.kit.js') }}"></script>
     <script src="{{ url_for('static', filename='js/chat/messages.js') }}"></script>
+    {% if initialized %}
     <script src="{{ url_for('static', filename='js/chat/code.js') }}"></script>
     <script src="{{ url_for('static', filename='js/chat/compare_code.js') }}"></script>
+    {% endif %}
 {% endif %}
 {% endblock %}

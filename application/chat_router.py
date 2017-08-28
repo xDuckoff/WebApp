@@ -6,7 +6,7 @@ from json import dumps
 from flask import render_template, request, redirect
 from application import app, socketio
 from application.forms import CreateChatForm, AuthChatForm, LoginForm, SendMessageForm, \
-    GetTreeForm, GetMessagesForm, SendCodeForm, GetCodeForm, InitChatForm
+    GetTreeForm, GetMessagesForm, SendCodeForm, GetCodeForm, InitChatForm, ChatNameForm
 from application.handlers import access_required, form_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
@@ -56,6 +56,20 @@ def chat_page(chat_id):
                            allowed_languages=app.config["ALLOWED_LANGUAGES"],
                            initialized=chat.initialized
                           )
+
+
+@app.route('/set_chat_name', methods=['POST'])
+@form_required(ChatNameForm)
+@access_required
+def set_chat_name():
+    """Изменение названия чата
+
+    :return: успешность сохранения названия
+    """
+    chat_name_form = ChatNameForm()
+    chat = Chat.get(chat_name_form.chat.data)
+    chat_name = chat.set_name(chat_name_form.name.data)
+    return dumps({"success": True, "error": "", "data": chat_name})
 
 
 @app.route('/send_message', methods=['POST'])

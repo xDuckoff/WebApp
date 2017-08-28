@@ -40,6 +40,11 @@ class AuthChatForm(FlaskForm):
     password = StringField('password')
 
 
+class ChatNameForm(ChatForm):
+    """Форма изменения заголовка в чате"""
+    name = StringField('name', validators=[validators.DataRequired()])
+
+
 class SendMessageForm(ChatForm):
     """Форма отправки сообщений"""
     message = StringField('message', validators=[

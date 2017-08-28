@@ -10,6 +10,7 @@ MAIN_PAGE_URL = "/"
 FEEDBACK_PAGE_URL = "/feedback"
 TREE_PAGE_URL = '/tree?chat={chat_id}'
 CHAT_PAGE_URL = "/chat/{chat_id}"
+SET_CHAT_NAME_PAGE_URL = "/set_chat_name"
 CHAT_GET_INFO_PAGE_URL = '/get_chat_info?chat={chat_id}'
 CODE_SEND_PAGE_URL = '/send_code'
 CODE_GET_PAGE_URL = '/get_code?index={code_id}'
@@ -51,6 +52,15 @@ class TestChatPage(BaseTestPages):
         chat_page_url = CHAT_PAGE_URL.format(chat_id=1)
         response = self.app.get(chat_page_url)
         self.assertEqual(response.status_code, 302)
+
+    def test_set_chat_name(self):
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
+        params = {
+            "chat": chat_id,
+            "name": MESSAGE
+        }
+        response = self.app.post(SET_CHAT_NAME_PAGE_URL, data=params)
+        self.assertEqual(response.status_code, 200)
 
 
 class TestMessagePage(BaseTestPages):

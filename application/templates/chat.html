@@ -10,31 +10,43 @@
 
 {% block content %}
 {% if not have_access %}
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="accessModal" tabindex="-1" role="dialog"
+     aria-hidden="false"
+     data-backdrop="static"
+     data-keyboard="false">
     <div class="modal-dialog">
-        <div class="main-content">
-            <form method="POST">
-                {{ auth_form.hidden_tag() }}
-                <div class="form-group">
-                    <div class="modal-header">
-                        <label class="center-block">Авторизация</label>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group">
-                            <input autofocus type="password" class="form-control" placeholder="Пароль" name="password" />
-                            <span class="input-group-btn">
-                                <input class="btn btn-primary" type="submit" value="Вход">
-                            </span>
-                        </div>
-                    </div>
+        <form class="main-content" method="POST">
+            {{ auth_form.hidden_tag() }}
+            <div class="modal-header">
+                <label class="center-block">Авторизация</label>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <input autofocus type="password" class="form-control" placeholder="Пароль" name="password" />
+                    <span class="input-group-btn">
+                        <input class="btn btn-primary" type="submit" value="Вход">
+                    </span>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
 {% endif %}
 <div class="container-fluid fill-height fill-cover">
-    <h2 class="text-center">{{ chat_info["name"] | safe }}</h2>
+    <div class="chat-title">
+        <div class="chat-title__viewer">
+            <h2 class="chat-title__title">{{ chat_info["name"] | safe }}</h2>&nbsp;
+            <span class="chat-title__edit glyphicon glyphicon-pencil"></span>
+        </div>
+        <div class="chat-title__editor input-group">
+            <input type="text"
+                   class="chat-title__input form-control input-lg"
+                   value="{{ chat_info["name"] | striptags }}" />
+            <span class="input-group-btn">
+                <input class="chat-title__save btn btn-primary btn-lg" type="button" value="Сохранить">
+            </span>
+        </div>
+    </div>
     <div class="fill-height__content fill-width row">
         <div class="fill-height fill-width__content col-sm-6">
             <div class="panel panel-default fill-height fill-height__content">
@@ -200,7 +212,7 @@
         CODE_START_COMMIT = {{ chat_info.start_code.id }};
     {% endif %}
     {% if not have_access %}
-        $('#myModal').modal()
+        $('#accessModal').modal();
     {% endif %}
 
 </script>
@@ -211,6 +223,7 @@
     {% endif %}
 
     <script src="{{ url_for('static', filename='js/chat/voice.kit.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat/title_editor.js') }}"></script>
     <script src="{{ url_for('static', filename='js/chat/messages.js') }}"></script>
     {% if initialized %}
     <script src="{{ url_for('static', filename='js/chat/code.js') }}"></script>

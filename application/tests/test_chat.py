@@ -87,3 +87,21 @@ class TestChatModel(BaseTestModel):
         chat = Chat.get(chat_id)
         self.assertTrue(chat.is_access_key_valid(CHAT_ACCESS_KEY))
         self.assertFalse(chat.is_access_key_valid(CHAT_INCORRECT_ACCESS_KEY))
+
+    def test_change_chat_name(self):
+        new_chat_name = CHAT_NAME * 2
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, CHAT_ACCESS_KEY)
+        chat = Chat.get(chat_id)
+        chat.set_name(new_chat_name)
+        chat = Chat.get(chat_id)
+        self.assertEqual(chat.name, MarkdownMixin.decode(new_chat_name))
+
+    def test_set_chat_name_return(self):
+        new_chat_name = CHAT_NAME * 2
+        chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE, CHAT_ACCESS_KEY)
+        chat = Chat.get(chat_id)
+        set_chat_name_return = chat.set_name(new_chat_name)
+        self.assertIsInstance(set_chat_name_return, dict)
+        self.assertEqual(set_chat_name_return.get('original', None), chat.name)
+        self.assertNotEqual(set_chat_name_return.get('plain', None), None)
+        self.assertNotEqual(set_chat_name_return.get('escaped', None), None)

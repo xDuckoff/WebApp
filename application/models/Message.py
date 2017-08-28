@@ -25,6 +25,9 @@ class Message(db.Model):
     create_time = db.Column(db.DateTime, nullable=False, default=db.func.now())
     remove_time = db.Column(db.DateTime)
 
+    SYSTEM_TYPE = "sys"
+    USER_TYPE = "usr"
+
     def __init__(self, content, chat_link, message_type):
         self.content = MarkdownMixin.decode(content)
         self.author = User.get_login()
@@ -47,6 +50,18 @@ class Message(db.Model):
         if app.config['SOCKET_MODE'] == 'True':
             socketio.emit('message', message.get_info(), room=str(chat_id), broadcast=True)
         return message
+
+    @staticmethod
+    def send_about_change_chat_name(chat_id, chat_name):
+        """Отправляет сообщение в базу для сохранения
+
+        :param chat_id: Номер чата
+        :param chat_name: Новое название чата
+        :return: Объект созданного сообщения
+        """
+        template = u'изменил название чата на _{chat_name}_'
+        text = template.format(chat_name=chat_name)
+        return Message.send(chat_id, text, Message.SYSTEM_TYPE)
 
     def plain(self):
         """Функция удаляет html-теги из текста

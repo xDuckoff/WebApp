@@ -13,6 +13,7 @@ class Chat(db.Model):
     :param code_type: тип исходного кода в этом чате
     :param create_time: время создания чата
     :param remove_time: время удаления чата, если значение не равно null
+    :param initialized: инициализирован ли чат
     """
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -41,8 +42,14 @@ class Chat(db.Model):
         chat_id = chat_to_create.id
         return chat_id
 
-    def initialize(self, code_type):
+    def initialize(self, code_type, code):
+        """Инициализирует чат
+
+        :param code_type: Тип исходного кода
+        :param code: Начальная версия исходного кода
+        """
         self.code_type = code_type
+        Code.send(self.id, code, None, u'Начальная версия')
         self.initialized = True
         db.session.commit()
 

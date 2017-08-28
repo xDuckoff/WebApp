@@ -16,15 +16,7 @@ class LoginForm(FlaskForm):
 class CreateChatForm(FlaskForm):
     """Создаёт чат"""
     name = StringField('name', validators=[validators.DataRequired()])
-    code_type = StringField('codetype')
-    file = FileField('file')
-    code = StringField('code', default='')
     access_key = StringField('access_key', default='')
-
-    def is_file_valid(self):
-        """Проверка на валидный файл для создания чата"""
-        return self.file.data and '.' in self.file.data.filename and \
-               self.file.data.filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 class FindChatForm(FlaskForm):
@@ -94,3 +86,11 @@ class FeedbackForm(FlaskForm):
         validators.Length(min=1, max=10000)
     ])
     recaptcha = RecaptchaField()
+
+
+class InitChatForm(ChatForm):
+    """Инициализация чата"""
+    code_type = StringField('codetype', validators=[validators.DataRequired()])
+    code = StringField('code', validators=[
+        validators.DataRequired(), validators.Length(min=1, max=10000)
+    ])

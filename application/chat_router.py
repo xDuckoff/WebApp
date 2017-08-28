@@ -5,9 +5,8 @@
 from json import dumps
 from flask import render_template, request, redirect
 from application import app, socketio
-from application import csrf
 from application.forms import CreateChatForm, AuthChatForm, LoginForm, SendMessageForm, \
-    GetTreeForm, GetMessagesForm, SendCodeForm, GetCodeForm
+    GetTreeForm, GetMessagesForm, SendCodeForm, GetCodeForm, InitChatForm
 from application.handlers import access_required, form_required
 from application.models import Chat, Message, Code, User
 from flask_socketio import join_room, leave_room
@@ -35,6 +34,7 @@ def chat_page(chat_id):
     """
     chat_create_form = CreateChatForm()
     login_form = LoginForm()
+    init_chat_form = InitChatForm()
     chat = Chat.get(chat_id)
     if not chat:
         return redirect('/')
@@ -49,6 +49,7 @@ def chat_page(chat_id):
                            login=User.get_login(),
                            login_form=login_form,
                            chat_create_form=chat_create_form,
+                           init_chat_form=init_chat_form,
                            have_access=chat.is_access_key_valid(User.get_access_key(chat_id)),
                            auth_form=auth_form,
                            allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
@@ -114,6 +115,23 @@ def get_code():
     get_code_form = GetCodeForm(request.args)
     index = get_code_form.index.data
     return dumps(Code.get(index))
+
+
+@app.route('/init_chat', methods=['POST'])
+@form_required(InitChatForm)
+@access_required
+def init_chat():
+    """Данная функция отправляет код с сервера к клиенту
+
+    :return: Код
+    """
+    init_chat_form = InitChatForm()
+    chat_id = init_chat_form.chat.data
+    code_type = init_chat_form.code_type.data
+    code = init_chat_form.code.data
+    chat = Chat.get(chat_id)
+    chat.initialized(code_type, code)
+    return dumps({"success": True, "error": ""})
 
 
 if app.config['SOCKET_MODE'] == 'True':

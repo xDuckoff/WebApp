@@ -160,13 +160,22 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="text"
-                               class="code-sender__message form-control"
-                               placeholder="Название коммита">
+                        <select class="form-control start-code-sender__code-type"
+                                id="Compile"
+                                name="code_type"
+                                required="required">
+                            <option value="" disabled selected>Язык программирования</option>
+                            {%- for lang in allowed_languages -%}
+                            <option value="{{ lang.type }}">{{ lang.name }}</option>
+                            {%- endfor -%}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="code" class="start-code-sender__code-editor"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div class="code-sender__to-send btn btn-primary">Отправить</div>
+                    <div class="start-code-sender__to-send btn btn-primary">Отправить</div>
                     <div class="btn btn-default" data-dismiss="modal">Отмена</div>
                 </div>
         </div>
@@ -206,6 +215,8 @@
     {% if initialized %}
     <script src="{{ url_for('static', filename='js/chat/code.js') }}"></script>
     <script src="{{ url_for('static', filename='js/chat/compare_code.js') }}"></script>
+    {% else %}
+    <script src="{{ url_for('static', filename='js/chat/start-code.js') }}"></script>
     {% endif %}
 {% endif %}
 {% endblock %}

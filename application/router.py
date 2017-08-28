@@ -26,9 +26,7 @@ def index():
                            login_form=login_form,
                            chat_create_form=chat_create_form,
                            find_chat_form=find_chat_form,
-                           login=User.get_login(),
-                           allowed_ex=",".join(['.' + i for i in app.config["ALLOWED_EXTENSIONS"]]),
-                           allowed_languages=app.config["ALLOWED_LANGUAGES"]
+                           login=User.get_login()
                           )
 
 

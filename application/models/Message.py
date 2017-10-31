@@ -90,5 +90,6 @@ class Message(db.Model):
             'message': self.content,
             'plain_message': self.plain(),
             'author': self.author,
-            'type': client_type
+            'type': client_type,
+            'create_time': self.create_time.strftime('%Y-%m-%d %H:%M')
         }

@@ -74,6 +74,10 @@
     font-weight: bold;
     font-size: 1.1em;
 }
+.system-message__date{
+    font-size: .7em;
+    color: #b1b1b1;
+}
 
 .user-message{
     color: #000;
@@ -86,6 +90,11 @@
 .user-message__author{
     font-weight: bold;
     font-size: 1.1em;
+}
+.user-message__date{
+    text-align: right;
+    font-size: .7em;
+    color: #b1b1b1;
 }
 
 .message-sender__content{

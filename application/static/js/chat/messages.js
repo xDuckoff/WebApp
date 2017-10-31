@@ -3,10 +3,12 @@ jQuery(function($) {
         SYSTEM_TEMPLATE: "<div class=\"well well-sm system-message\">" +
             "<div class=\"system-message__author\">{{author}}</div>" +
             "<div class=\"system-message__content\">{{content}}</div>" +
+            "<div class=\"system-message__date\">{{date}}</div>" +
         "</div>",
         USER_TEMPLATE: "<div class=\"well well-sm user-message\">" +
             "<div class=\"user-message__author\">{{author}}</div>" +
             "<div class=\"user-message__content\">{{content}}</div>" +
+            "<div class=\"user-message__date\">{{date}}</div>" +
         "</div>",
         SYSTEM_TYPE: 'sys',
         element: $('.chat-panel'),
@@ -72,7 +74,8 @@ jQuery(function($) {
 
         renderSystemMessage: function(message) {
             var messageEl = this.SYSTEM_TEMPLATE.replace('{{author}}', message.author)
-                    .replace('{{content}}', message.message);
+                    .replace('{{content}}', message.message)
+                    .replace('{{date}}', message.create_time);
             messageEl = $(messageEl);
             messageEl.data('id', message.id);
             this.area.append(messageEl);
@@ -80,7 +83,8 @@ jQuery(function($) {
 
         renderUserMessage: function(message) {
             var messageEl = this.USER_TEMPLATE.replace('{{author}}', message.author)
-                    .replace('{{content}}', message.message);
+                    .replace('{{content}}', message.message)
+                    .replace('{{date}}', message.create_time);
             messageEl = $(messageEl);
             messageEl.data('id', message.id);
             this.area.append(messageEl);

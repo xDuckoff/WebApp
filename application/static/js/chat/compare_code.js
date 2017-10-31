@@ -20,7 +20,7 @@ jQuery(function ($) {
                 },
                 dataType: "json",
                 success: function(data){
-                    CodeCompare.startCode = data.code;
+                    CodeCompare.startCode = data.code.replace(/\r\n/g, '\n');
                 }
             });
         },

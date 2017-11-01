@@ -19,7 +19,7 @@ class Feedback(db.Model):
     name = db.Column(db.String(256))
     email = db.Column(db.String(256))
     text = db.Column(db.Text)
-    trello_link = db.Column(db.String(256))
+    trello_link = db.Column(db.Text)
 
     def __init__(self, name, email, text):
         self.name = name
@@ -34,7 +34,7 @@ class Feedback(db.Model):
         API_URL = "https://api.trello.com/1/cards"
         querystring = {
             "name": self.text,
-            "desc": self._get_trello_description(),
+            "desc": self.__get_trello_description(),
             "idList": app.config["TRELLO_LIST_ID"],
             "key": app.config["TRELLO_API_KEY"],
             "token": app.config["TRELLO_API_TOKEN"]
@@ -43,12 +43,12 @@ class Feedback(db.Model):
         card = json.loads(response.text)
         return card.get('url')
 
-    def _get_trello_description(self):
+    def __get_trello_description(self):
         """Получение текста внутреннего содержания карточки
 
         :return: содержание карточки
         """
-        template = "От: {name} <{email}>\n{text}"
+        template = u"От: {name} <{email}>\n{text}"
         return template.format(
             name=self.name,
             email=self.email,

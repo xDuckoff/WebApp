@@ -86,7 +86,8 @@ jQuery(function($) {
                     .replace('{{content}}', message.message)
                     .replace('{{date}}', message.create_time);
             messageEl = $(messageEl);
-            messageEl.data('id', message.id);
+            messageEl.data('id', message.id)
+                .addClass("user-message_" + message.type);
             this.area.append(messageEl);
         },
 

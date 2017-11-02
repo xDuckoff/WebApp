@@ -47,6 +47,7 @@ class Message(db.Model):
         message = Message(text, chat_id, message_type)
         db.session.add(message)
         db.session.commit()
+        User.register_message(message.id)
         if app.config['SOCKET_MODE'] == 'True':
             socketio.emit('message', message.get_info(), room=str(chat_id), broadcast=True)
         return message
@@ -79,7 +80,7 @@ class Message(db.Model):
         :return: Информация о сообщении
         """
         if self.type == "usr":
-            if self.author == User.get_login():
+            if User.has_message(self.id):
                 client_type = "mine"
             else:
                 client_type = "others"

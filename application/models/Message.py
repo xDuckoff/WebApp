@@ -27,6 +27,8 @@ class Message(db.Model):
 
     SYSTEM_TYPE = "sys"
     USER_TYPE = "usr"
+    USER_MINE_TYPE = "mine"
+    USER_OTHER_TYPE = "other"
 
     def __init__(self, content, chat_link, message_type):
         self.content = MarkdownMixin.decode(content)
@@ -79,13 +81,13 @@ class Message(db.Model):
 
         :return: Информация о сообщении
         """
-        if self.type == "usr":
+        if self.type == Message.USER_TYPE:
             if User.has_message(self.id):
-                client_type = "mine"
+                client_type = Message.USER_MINE_TYPE
             else:
-                client_type = "others"
+                client_type = Message.USER_OTHER_TYPE
         else:
-            client_type = "sys"
+            client_type = Message.SYSTEM_TYPE
         return {
             'id': self.id,
             'message': self.content,

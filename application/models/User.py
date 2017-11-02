@@ -58,6 +58,7 @@ class User(object):
         if "messages" not in session:
             session["messages"] = []
         session["messages"].append(message_id)
+        session.modified = True
 
     @staticmethod
     def has_message(message_id):
@@ -66,4 +67,3 @@ class User(object):
         :param message_id: идентификатор сообщения
         """
         return "messages" in session and message_id in session["messages"]
-

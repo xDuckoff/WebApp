@@ -90,6 +90,9 @@
 .user-message_mine {
     margin-left: auto;
     margin-right: 0;
+    color: #333;
+    background: #bfd3f8;
+    border-color: #92b4f2;
 }
 
 .user-message__author{

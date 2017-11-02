@@ -64,14 +64,13 @@ class TestMessageModel(BaseTestModel):
 
     def test_get_info_should_mine_type(self):
         message_info = self.message.get_info()
-        self.assertEqual(message_info.get('type'), 'mine')
+        self.real.has_message.return_value = True
+        self.assertEqual(message_info.get('type'), MESSAGE_USER_MINE_TYPE)
 
     def test_get_info_should_others_type(self):
-        other_user = "SOME_LOGIN"
-        self.real.get_login.return_value = other_user
+        self.real.has_message.return_value = False
         message_info = self.message.get_info()
-        self.assertEqual(message_info.get('type'), 'others')
-        self.real.get_login.return_value = USERNAME
+        self.assertEqual(message_info.get('type'), MESSAGE_USER_OTHER_TYPE)
 
     def test_get_info_should_system_type(self):
         other_message = Message.send(self.chat_id, MESSAGE, MESSAGE_SYSTEM_TYPE)

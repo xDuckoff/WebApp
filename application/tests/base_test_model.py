@@ -25,6 +25,8 @@ NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{id}<
 MESSAGE_ESCAPE = """&lt;p&gt;Hello, I am &lt;strong&gt;Bot&lt;/strong&gt;!&lt;/p&gt;"""
 MESSAGE_TYPE = 'usr'
 MESSAGE_SYSTEM_TYPE = 'sys'
+MESSAGE_USER_MINE_TYPE = 'mine'
+MESSAGE_USER_OTHER_TYPE = 'other'
 
 
 class BaseTestModel(unittest.TestCase):
@@ -39,6 +41,8 @@ class BaseTestModel(unittest.TestCase):
         self.real.get_access_key.return_value = CHAT_ACCESS_KEY
         self.real.get_login = Mock()
         self.real.get_login.return_value = USERNAME
+        self.real.register_message = Mock()
+        self.real.has_message = Mock()
 
     def tearDown(self):
         db.session.remove()

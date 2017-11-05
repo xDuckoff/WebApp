@@ -26,6 +26,7 @@ class TestCodeModel(BaseTestModel):
         self.assertTrue(hasattr(code, "content"))
         self.assertTrue(hasattr(code, "author"))
         self.assertTrue(hasattr(code, "message"))
+        self.assertTrue(hasattr(code, "number"))
         self.assertTrue(hasattr(code, "chat_link"))
         self.assertTrue(hasattr(code, "parent_link"))
         self.assertTrue(hasattr(code, "create_time"))
@@ -36,6 +37,7 @@ class TestCodeModel(BaseTestModel):
         self.assertIsInstance(Code.content.type, db.Text)
         self.assertIsInstance(Code.author.type, db.String)
         self.assertIsInstance(Code.message.type, db.String)
+        self.assertIsInstance(Code.number.type, db.Integer)
         self.assertIsInstance(Code.chat_link.type, db.Integer)
         self.assertIsInstance(Code.parent_link.type, db.Integer)
         self.assertIsInstance(Code.remove_time.type, db.DateTime)
@@ -78,3 +80,8 @@ class TestCodeModel(BaseTestModel):
         self.assertIsInstance(tree['children'][0], dict)
         self.assertIsInstance(tree['children'][0].get('text'), dict)
         self.assertEqual(tree['children'][0]['text'].get('name'), child_code_id)
+
+    def test_get_count_in_chat(self):
+        self.assertEqual(Code.get_count_in_chat(self.chat_id), 1)
+        Code.send(self.chat_id, CHAT_CODE, None, COMMIT_MESSAGE)
+        self.assertEqual(Code.get_count_in_chat(self.chat_id), 2)

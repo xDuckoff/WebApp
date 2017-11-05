@@ -31,6 +31,7 @@ class Code(db.Model):
     chat = db.relationship('Chat', backref=db.backref('codes'))
     children = db.relationship('Code')
 
+    NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{number}</div>"
     SYS_MESSAGE_ADD_TEMPLATE = u'Новое изменение {number} : {message}'
 
     def __init__(self, **params):
@@ -105,13 +106,16 @@ class Code(db.Model):
 
         :return: Вершина в дереве коммитов
         """
-        NODE_MARKUP = "<div class=\"commit_node circle unchosen\" data-id=\"{id}\">{number}</div>"
+        # TODO надо все number = None пересчитать (сделать в миграции)
+        number = self.number
+        if number is None:
+            number = self.id
         node = {
             "text": {
                 "name": self.id,
                 "title": self.message
             },
-            "innerHTML": NODE_MARKUP.format(id=self.id, number=self.number)
+            "innerHTML": Code.NODE_MARKUP.format(id=self.id, number=number)
         }
         children = [child.get_tree_node() for child in self.children]
         node["children"] = children

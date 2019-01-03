@@ -65,3 +65,4 @@ def feedback_page():
                           )
 
 import application.chat_router
+import application.api_router

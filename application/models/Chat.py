@@ -2,7 +2,7 @@
 
 """Функции работы с чатами и их поиска"""
 
-from application import db
+from application import app, db
 from application.models import Code, Message, MarkdownMixin
 
 
@@ -129,3 +129,21 @@ class Chat(db.Model):
             "plain": MarkdownMixin.plain(self.name),
             "escaped": MarkdownMixin.escape_html(self.name)
         }
+
+    def to_dict(self):
+        """Возвращает объект в виде словаря (для вывода через api)
+
+        :return: словарь объекта
+        """
+        language = False
+        for lang in app.config['ALLOWED_LANGUAGES']:
+            if lang['type'] == self.code_type:
+                language = lang
+        return dict(
+            id=self.id,
+            name=self.name,
+            code_type=self.code_type,
+            language=language,
+            has_password=bool(self.access_key),
+            create_time=self.create_time.isoformat(' '),
+            remove_time=None if self.remove_time is None else self.remove_time.isoformat(' '))

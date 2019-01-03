@@ -8,3 +8,4 @@ venv/
 /docs/_build/
 .DS_Store
 *.swp
+.vscode/

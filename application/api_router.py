@@ -2,7 +2,7 @@
 
 """Endpoints для api запросов"""
 
-from flask import redirect, jsonify
+from flask import jsonify, request
 from application import app
 from application.models import Chat, User, Feedback
 
@@ -13,6 +13,9 @@ def api_chat_list():
 
     :return: список созданных чатов
     """
-    chats = Chat.query.all()
+    search = request.args.get('search', '')
+    limit = int(request.args.get('limit', 0))
+    page = int(request.args.get('page', 1))
+    chats = Chat.find(search, limit, page)
     data = [chat.to_dict() for chat in chats]
     return jsonify(data)

@@ -65,19 +65,26 @@ class Chat(db.Model):
         }
 
     @staticmethod
-    def find(name):
+    def find(name, limit=10, page=1):
         """Нахождение чатов по названию или по идентификатору,\
         если ``name`` является числом
 
         :param name: Имя чата
+        :param limit: Количество чатов на странице
+        :param page: Номер страницы
         :return: Все чаты, в названии которых содержится имя чата
         """
-        if name == '':
-            return Chat.query.all()[:-10:-1]
         if name.isdigit():
             chat_id = int(name)
-            return Chat.query.filter_by(id=chat_id).all()
-        return Chat.query.filter(Chat.name.like('%' + name + '%')).all()[::-1]
+            return [Chat.query.get(chat_id)]
+        offset = (page - 1) * limit
+        query = Chat.query.order_by(db.desc(Chat.create_time))
+        if name != '':
+            query = query.filter(Chat.name.like('%' + name + '%'))
+        if limit > 0:
+            offset = (page - 1) * limit
+            query = query.offset(offset).limit(limit)
+        return query.all()
 
     def get_last_messages(self, last_message_id=0):
         """Получение последних сообщений в чате в форматированном виде, \

@@ -13,6 +13,15 @@ class TestChatModel(BaseTestModel):
         BaseTestModel.setUp(self)
         self.chat_id = Chat.create(CHAT_NAME, CHAT_CODE, CODE_TYPE)
 
+    def __create_mock_chats(self, count):
+        db.session.remove()
+        db.drop_all()
+        db.create_all()
+        langs = app.config['ALLOWED_LANGUAGES']
+        for i in xrange(count):
+            Chat.create('Chat name', 'Chat code', langs[i % len(langs)]['type'])
+
+
     def test_available_chat(self):
         self.assertTrue(hasattr(Chat, "id"))
         self.assertTrue(hasattr(Chat, "name"))
@@ -71,8 +80,27 @@ class TestChatModel(BaseTestModel):
         self.assertEqual(found_chat_list[0].id, int(search_id))
 
     def test_find_chat_all(self):
-        self.assertGreaterEqual(len(Chat.find('')), 1)
-        self.assertLessEqual(len(Chat.find('')), 10)
+        CHAT_COUNT = 15
+        INFINITELY_LIMIT = 0
+        self.__create_mock_chats(CHAT_COUNT)
+        chats = Chat.find('', limit=INFINITELY_LIMIT)
+        self.assertEqual(len(chats), CHAT_COUNT)
+        # self.assertLessEqual(len(Chat.find('')), 10)
+
+    def test_find_with_limit(self):
+        CHAT_COUNT = 10
+        LIMIT = 5
+        self.__create_mock_chats(CHAT_COUNT)
+        chats = Chat.find('', limit=LIMIT)
+        self.assertEqual(len(chats), LIMIT)
+
+    def test_find_with_page(self):
+        CHAT_COUNT = 6
+        LIMIT = 5
+        PAGE = 2
+        self.__create_mock_chats(CHAT_COUNT)
+        chats = Chat.find('', limit=LIMIT, page=PAGE)
+        self.assertEqual(len(chats), CHAT_COUNT - LIMIT)
 
     def test_get_last_messages(self):
         chat = Chat.get(self.chat_id)

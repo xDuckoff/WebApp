@@ -2,7 +2,7 @@
 
 """Функции работы с чатами и их поиска"""
 
-from application import db
+from application import app, db
 from application.models import Code, Message, MarkdownMixin
 
 
@@ -65,19 +65,26 @@ class Chat(db.Model):
         }
 
     @staticmethod
-    def find(name):
+    def find(name, limit=10, page=1):
         """Нахождение чатов по названию или по идентификатору,\
         если ``name`` является числом
 
         :param name: Имя чата
+        :param limit: Количество чатов на странице
+        :param page: Номер страницы
         :return: Все чаты, в названии которых содержится имя чата
         """
-        if name == '':
-            return Chat.query.all()[:-10:-1]
         if name.isdigit():
             chat_id = int(name)
-            return Chat.query.filter_by(id=chat_id).all()
-        return Chat.query.filter(Chat.name.like('%' + name + '%')).all()[::-1]
+            return [Chat.query.get(chat_id)]
+        offset = (page - 1) * limit
+        query = Chat.query.order_by(db.desc(Chat.create_time))
+        if name != '':
+            query = query.filter(Chat.name.like('%' + name + '%'))
+        if limit > 0:
+            offset = (page - 1) * limit
+            query = query.offset(offset).limit(limit)
+        return query.all()
 
     def get_last_messages(self, last_message_id=0):
         """Получение последних сообщений в чате в форматированном виде, \
@@ -129,3 +136,21 @@ class Chat(db.Model):
             "plain": MarkdownMixin.plain(self.name),
             "escaped": MarkdownMixin.escape_html(self.name)
         }
+
+    def to_dict(self):
+        """Возвращает объект в виде словаря (для вывода через api)
+
+        :return: словарь объекта
+        """
+        language = False
+        for lang in app.config['ALLOWED_LANGUAGES']:
+            if lang['type'] == self.code_type:
+                language = lang
+        return dict(
+            id=self.id,
+            name=self.name,
+            code_type=self.code_type,
+            language=language,
+            has_password=bool(self.access_key),
+            create_time=self.create_time.isoformat(' '),
+            remove_time=None if self.remove_time is None else self.remove_time.isoformat(' '))

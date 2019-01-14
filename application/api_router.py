@@ -23,6 +23,10 @@ def api_chat_list():
 
 @app.route('/api/user', methods=['GET', 'PUT'])
 def api_user():
+    """Получение и сохранение данных пользователя
+
+    :return: параметры пользователя/статус операции сохранения
+    """
     if request.method == 'GET':
         user = dict(name=User.get_login())
         return jsonify(user)

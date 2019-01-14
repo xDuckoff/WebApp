@@ -3,7 +3,8 @@
 """Endpoints для api запросов"""
 
 from flask import jsonify, request
-from application import app
+from werkzeug.exceptions import HTTPException, BadRequest, InternalServerError
+from application import app, csrf
 from application.models import Chat, User, Feedback
 
 
@@ -22,6 +23,7 @@ def api_chat_list():
 
 
 @app.route('/api/user', methods=['GET', 'PUT'])
+@csrf.exempt
 def api_user():
     """Получение и сохранение данных пользователя
 
@@ -31,4 +33,16 @@ def api_user():
         user = dict(name=User.get_login())
         return jsonify(user)
     elif request.method == 'PUT':
-        return jsonify(dict(message='Error'))
+        try:
+            data = request.get_json()
+            name = data.get('name')
+            if name is None:
+                raise BadRequest('"name" parameter is required')
+            User.login(name)
+            return jsonify(dict(success=True))
+        except HTTPException as e:
+            response = jsonify(dict(
+                message=e.get_description()
+            ))
+            response.status_code = e.code
+            return response

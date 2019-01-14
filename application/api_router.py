@@ -19,3 +19,12 @@ def api_chat_list():
     chats = Chat.find(search, limit, page)
     data = [chat.to_dict() for chat in chats]
     return jsonify(data)
+
+
+@app.route('/api/user', methods=['GET', 'PUT'])
+def api_user():
+    if request.method == 'GET':
+        user = dict(name=User.get_login())
+        return jsonify(user)
+    elif request.method == 'PUT':
+        return jsonify(dict(message='Error'))

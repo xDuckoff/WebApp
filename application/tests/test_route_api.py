@@ -8,6 +8,7 @@ from application import app
 from application.models import Chat, Message, Code
 
 CHAT_PATH = "/api/chat"
+USER_PATH = "/api/user"
 
 class BaseTestApi(BaseTestModel):
 
@@ -16,7 +17,7 @@ class BaseTestApi(BaseTestModel):
         self.app = app.test_client()
 
 
-class TestChatPath(BaseTestApi):
+class TestApiChatPath(BaseTestApi):
 
     def __create_chats(self, count):
         langs = app.config['ALLOWED_LANGUAGES']
@@ -55,3 +56,27 @@ class TestChatPath(BaseTestApi):
         response = self.app.get(CHAT_PATH, query_string=dict(limit=LIMIT_PARAM, page=PAGE))
         data = json.loads(response.data)
         self.assertEqual(len(data), CHAT_COUNT - LIMIT_PARAM)
+
+class TestApiUserPath(BaseTestApi):
+
+    def test_status_user_get_path(self):
+        response = self.app.get(USER_PATH)
+        self.assertEqual(response.status_code, 200)
+
+    def test_format_user_get_path(self):
+        response = self.app.get(USER_PATH)
+        data = json.loads(response.data)
+        self.assertIsInstance(data, dict)
+
+    def test_has_user_name_in_response(self):
+        response = self.app.get(USER_PATH)
+        data = json.loads(response.data)
+        self.assertIsNotNone(data.get('name'))
+
+    def test_format_user_save_params(self):
+        USER_NAME = 'user'
+        PARAMS = dict(name=USER_NAME)
+        response = self.app.put(USER_PATH, data=json.dumps(PARAMS), content_type='application/json')
+        data = json.loads(response.data)
+        self.assertIsInstance(data, dict)
+        self.assertTrue(data.get('success'))

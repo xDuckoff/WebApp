@@ -4,6 +4,7 @@ services:
   - postgres
 
 variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   POSTGRES_DB: project51_test
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
@@ -13,6 +14,11 @@ variables:
   TEST_DATABASE_URL: "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$DATABASE_HOST/$POSTGRES_DB"
   FLASK_APP: 'run.py'
   SOCKET_MODE: 'False'
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
 
 before_script:
   - echo "ipv6" >> /etc/modules

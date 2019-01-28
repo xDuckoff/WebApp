@@ -2,13 +2,15 @@
 
 """Endpoints для api запросов"""
 
-from flask import jsonify, request
+from flask import Blueprint, jsonify, request
 from werkzeug.exceptions import HTTPException, BadRequest, InternalServerError
 from application import app, csrf
 from application.models import Chat, User, Feedback
 
 
-@app.route('/api/chat', methods=['GET'])
+api = Blueprint('api', __name__, url_prefix='/api')
+
+@api.route('/chat', methods=['GET'])
 def api_chat_list():
     """Получение списка созданных чатов
 
@@ -22,7 +24,7 @@ def api_chat_list():
     return jsonify(data)
 
 
-@app.route('/api/user', methods=['GET', 'PUT'])
+@api.route('/user', methods=['GET', 'PUT'])
 @csrf.exempt
 def api_user():
     """Получение и сохранение данных пользователя

@@ -3,7 +3,7 @@
 """Endpoints для api запросов"""
 
 from flask import Blueprint, jsonify, request, abort
-from application import app, csrf
+from application import csrf
 from application.models import Chat, User, Feedback
 
 

@@ -16,4 +16,9 @@ csrf = CSRFProtect()
 csrf.init_app(app)
 socketio = SocketIO(app)
 
+
 import router
+from api import api
+
+
+app.register_blueprint(api)

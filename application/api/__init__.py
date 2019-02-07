@@ -2,13 +2,14 @@
 
 """Endpoints для api запросов"""
 
-from flask import jsonify, request
-from werkzeug.exceptions import HTTPException, BadRequest, InternalServerError
-from application import app, csrf
+from flask import Blueprint, jsonify, request, abort
+from application import csrf
 from application.models import Chat, User, Feedback
 
 
-@app.route('/api/chat', methods=['GET'])
+api = Blueprint('api', __name__, url_prefix='/api')
+
+@api.route('/chat', methods=['GET'])
 def api_chat_list():
     """Получение списка созданных чатов
 
@@ -22,7 +23,7 @@ def api_chat_list():
     return jsonify(data)
 
 
-@app.route('/api/user', methods=['GET', 'PUT'])
+@api.route('/user', methods=['GET', 'PUT'])
 @csrf.exempt
 def api_user():
     """Получение и сохранение данных пользователя
@@ -33,16 +34,11 @@ def api_user():
         user = dict(name=User.get_login())
         return jsonify(user)
     elif request.method == 'PUT':
-        try:
-            data = request.get_json()
-            name = data.get('name')
-            if name is None:
-                raise BadRequest('"name" parameter is required')
-            User.login(name)
-            return jsonify(dict(success=True))
-        except HTTPException as e:
-            response = jsonify(dict(
-                message=e.get_description()
-            ))
-            response.status_code = e.code
-            return response
+        data = request.get_json()
+        name = data.get('name')
+        if name is None:
+            abort(400, '"name" parameter is required')
+        User.login(name)
+        return jsonify(dict(success=True))
+
+import exception
